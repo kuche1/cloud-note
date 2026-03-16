@@ -5,5 +5,5 @@ import (
 )
 
 func SceneCancel(window *fyne.Window) {
-	SceneMainMenu(window)
+	FirstScene(window)
 }
