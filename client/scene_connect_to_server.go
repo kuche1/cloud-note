@@ -16,12 +16,12 @@ func SceneConnectToServer(window *fyne.Window) {
 func connectToServer(window *fyne.Window, output *widget.TextGrid) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")
-		go func() {
-			time.Sleep(1 * time.Second)
-			fyne.Do(func() {
-				output.Append("Connected!")
-				SceneEditNote(window)
-			})
-		}()
+	})
+
+	time.Sleep(1 * time.Second)
+
+	fyne.Do(func() {
+		output.Append("Connected!")
+		SceneEditNote(window)
 	})
 }
