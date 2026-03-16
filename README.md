@@ -6,8 +6,6 @@ go run . -help
 
 ## Compile for Phone
 
-(untested)
-
 Source: https://docs.fyne.io/started/mobile/
 
 ```
