@@ -7,13 +7,14 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func SceneConnectToServer(window *fyne.Window) {
+func (self *App) SceneConnectToServer() {
 	output := widget.NewTextGrid()
-	(*window).SetContent(output)
-	go connectToServer(window, output)
+	self.window.SetContent(output)
+
+	go connectToServer(self, output)
 }
 
-func connectToServer(window *fyne.Window, output *widget.TextGrid) {
+func connectToServer(app *App, output *widget.TextGrid) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")
 	})
@@ -22,6 +23,6 @@ func connectToServer(window *fyne.Window, output *widget.TextGrid) {
 
 	fyne.Do(func() {
 		output.Append("Connected!")
-		SceneEditNote(window)
+		app.SceneEditNote()
 	})
 }

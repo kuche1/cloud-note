@@ -2,10 +2,8 @@ package client
 
 import (
 	"fmt"
-
-	"fyne.io/fyne/v2"
 )
 
-func SceneSubmit(window *fyne.Window) {
+func (self *App) SceneSubmit() {
 	fmt.Printf("Submit pressed\n")
 }

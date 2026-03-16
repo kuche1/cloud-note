@@ -1,18 +1,17 @@
 package client
 
 import (
-	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
-func SceneEditNote(window *fyne.Window) {
+func (self *App) SceneEditNote() {
 	editor := widget.NewMultiLineEntry()
 	editor.PlaceHolder = "Enter some text"
 	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
 
-	cancel := widget.NewButton("Cancel", func() { SceneCancel(window) })
-	submit := widget.NewButton("Submit", func() { SceneSubmit(window) })
+	cancel := widget.NewButton("Cancel", func() { self.SceneCancel() })
+	submit := widget.NewButton("Submit", func() { self.SceneSubmit() })
 	buttons := container.NewGridWithColumns(
 		2,
 		cancel,
@@ -27,5 +26,5 @@ func SceneEditNote(window *fyne.Window) {
 		editor,
 	)
 
-	(*window).SetContent(container)
+	self.window.SetContent(container)
 }
