@@ -1,7 +1,19 @@
 package main
 
-import "github.com/kuche1/cloud-note/client"
+import (
+	"flag"
+
+	"github.com/kuche1/cloud-note/client"
+	"github.com/kuche1/cloud-note/server"
+)
 
 func main() {
-	client.Main()
+	runServer := flag.Bool("run-server", false, "Run server")
+	flag.Parse()
+
+	if *runServer {
+		server.Main()
+	} else {
+		client.Main()
+	}
 }
