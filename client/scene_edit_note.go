@@ -7,8 +7,9 @@ import (
 
 func (self *App) SceneEditNote() {
 	editor := widget.NewMultiLineEntry()
-	editor.PlaceHolder = "Enter some text"
 	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
+	editor.PlaceHolder = "Enter some text"
+	editor.TextStyle.Monospace = true
 
 	cancel := widget.NewButton("Cancel", func() { self.SceneCancel() })
 	submit := widget.NewButton("Submit", func() { self.SceneSubmit() })
