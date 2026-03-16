@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -10,7 +8,7 @@ import (
 
 func SceneEditNote(window *fyne.Window) {
 	cancel := widget.NewButton("Cancel", func() { SceneCancel(window) })
-	submit := widget.NewButton("Submit", func() { fmt.Printf("Submit pressed\n") })
+	submit := widget.NewButton("Submit", func() { SceneSubmit(window) })
 	buttons := container.NewGridWithColumns(2,
 		cancel,
 		submit,
