@@ -12,7 +12,7 @@ type App struct {
 
 func RunApp() {
 	app := app.New()
-	window := app.NewWindow("Simple Label")
+	window := app.NewWindow("Cloud Note")
 	window.Resize(fyne.NewSize(400, 600))
 
 	self := App{
