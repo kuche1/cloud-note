@@ -8,8 +8,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func EditNote(window *fyne.Window) {
-	cancel := widget.NewButton("Cancel", func() { fmt.Printf("Cancel pressed\n") })
+func SceneEditNote(window *fyne.Window) {
+	cancel := widget.NewButton("Cancel", func() { SceneCancel(window) })
 	submit := widget.NewButton("Submit", func() { fmt.Printf("Submit pressed\n") })
 	buttons := container.NewGridWithColumns(2,
 		cancel,
