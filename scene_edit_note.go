@@ -7,16 +7,17 @@ import (
 )
 
 func SceneEditNote(window *fyne.Window) {
-	cancel := widget.NewButton("Cancel", func() { SceneCancel(window) })
-	submit := widget.NewButton("Submit", func() { SceneSubmit(window) })
-	buttons := container.NewGridWithColumns(2,
-		cancel,
-		submit,
-	)
-
 	editor := widget.NewMultiLineEntry()
 	editor.PlaceHolder = "Enter some text"
 	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
+
+	cancel := widget.NewButton("Cancel", func() { SceneCancel(window) })
+	submit := widget.NewButton("Submit", func() { SceneSubmit(window) })
+	buttons := container.NewGridWithColumns(
+		2,
+		cancel,
+		submit,
+	)
 
 	container := container.NewBorder(
 		buttons,
