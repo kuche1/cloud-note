@@ -24,6 +24,7 @@ go install fyne.io/fyne/v2/cmd/fyne@latest
 # ```
 # then you need to relogin
 
-~/go/bin/fyne package -os android -app-id com.example.myapp -icon mobile_icon.png
+~/go/bin/fyne package -os android -app-id com.example.myapp -icon mobile_icon.png -name "Cloud Note"
 # for ios you can simply use `-os ios`
+# for some more options you can check `~/go/bin/fyne package --help`
 ```

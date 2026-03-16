@@ -1,6 +1,8 @@
 package client
 
 import (
+	"os"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 )
@@ -23,4 +25,13 @@ func RunApp() {
 	self.FirstScene()
 
 	window.ShowAndRun()
+}
+
+func (self *App) Quit() {
+	self.app.Quit()
+	// NOTE: This causes the GUI to freeze on mobile,
+	// but it does not exit the app, so we have to
+	// call `os.Exit` manually
+
+	os.Exit(0)
 }
