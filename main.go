@@ -1,16 +1,38 @@
 package main
 
 import (
+	"fmt"
+
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
 func main() {
-	a := app.New()
-	w := a.NewWindow("Simple Label")
+	app := app.New()
+	window := app.NewWindow("Simple Label")
+	window.Resize(fyne.NewSize(400, 600))
 
-	label := widget.NewLabel("Hello, Fyne!")
+	cancel := widget.NewButton("Cancel", func() { fmt.Printf("Cancel pressed\n") })
+	submit := widget.NewButton("Submit", func() { fmt.Printf("Submit pressed\n") })
+	buttons := container.NewGridWithColumns(2,
+		cancel,
+		submit,
+	)
 
-	w.SetContent(label)
-	w.ShowAndRun()
+	editor := widget.NewMultiLineEntry()
+	editor.PlaceHolder = "Enter some text"
+	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
+
+	container := container.NewBorder(
+		buttons,
+		nil,
+		nil,
+		nil,
+		editor,
+	)
+
+	window.SetContent(container)
+	window.ShowAndRun()
 }
