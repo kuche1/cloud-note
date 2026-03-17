@@ -1,12 +1,15 @@
-// TODO: None of this has been tested
+// IMPROVE: Call `conn.CloseWithError(0, "Info")` in case of failure
 
 package server
 
 import (
 	"context"
-	"io"
+	"errors"
+	"io/fs"
 	"log"
+	"os"
 
+	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
@@ -42,15 +45,36 @@ func handleNewConnections(listener *quic.Listener) {
 }
 
 func handleConnection(conn *quic.Conn) {
+	// TODO: Make some mechanism for automatically sending errors relevant to the client
+
+	if _, err := os.Stat(NoteFile); err != nil {
+		if errors.Is(err, fs.ErrNotExist) {
+			err = os.WriteFile(NoteFile, []byte{}, 0644)
+			if err != nil {
+				log.Printf("Could not create initial note file: %v", err)
+				return
+			}
+		} else {
+			log.Printf("Could not check for note file's existance: %v", err)
+			return
+		}
+	}
+
+	// IMPROVE: Read the file piece by piece
+	data, err := os.ReadFile(NoteFile)
+	if err != nil {
+		log.Printf("Could not read note: %v", err)
+		return
+	}
+
+	// TODO: Use the nonblocking version
 	stream, err := conn.OpenStreamSync(context.Background())
 	if err != nil {
 		log.Printf("Could not open stream: %v", err)
 		return
 	}
 
-	// TODO: Send the actual file content
 	// TODO: Add a timeout
-	data := []byte("asd fgh\ngfdsf\ncgsrevcgsre resgcfrsegcser ggsrescgsresc\ntsrcghetrcgstre")
 	bytesWritten, err := stream.Write(data)
 	if err != nil {
 		log.Printf("Could not send data: %v", err)
@@ -62,13 +86,34 @@ func handleConnection(conn *quic.Conn) {
 	}
 
 	// Close only for writing
-	stream.Close()
-
-	// TODO: Add a timeout
-	data, err = io.ReadAll(stream)
+	err = stream.Close()
 	if err != nil {
-		log.Printf("Could not read data: %v", err)
+		log.Printf("Clould not close stream for writing: %v", err)
 		return
 	}
-	// TODO: write new `data` to file
+
+	log.Printf("Getting new note content...")
+
+	data, err = lib.ReadUntilEOF(stream)
+	if err != nil {
+		log.Printf("Could not receive new note content: %v", err)
+		return
+	}
+	// // TODO: Add a timeout
+	// data, err = io.ReadAll(stream)
+	// if err != nil {
+	// 	log.Printf("Could not read data: %v", err)
+	// 	return
+	// }
+
+	log.Printf("Got new note content")
+
+	err = os.WriteFile(NoteFile, data, 0644)
+	if err != nil {
+		log.Printf("Could not write note: %v", err)
+		// TODO: This definetely needs to be sent to the client
+		return
+	}
+
+	log.Printf("Wrote new note content")
 }
