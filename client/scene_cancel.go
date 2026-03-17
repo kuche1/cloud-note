@@ -7,6 +7,8 @@ import (
 )
 
 func (self *App) SceneCancel(conn *quic.Conn, stream *quic.Stream) {
+	// TODO: Add a GUI
+
 	fmt.Printf("DBG: Cancelling stream for writing...\n")
 
 	err := stream.Close()

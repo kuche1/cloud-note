@@ -1,16 +1,25 @@
 package client
 
 import (
-	"fmt"
-
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
 func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText string) {
-	// TODO: Add GUI indication, a simple lable or the other thing will suffice
+	output := widget.NewTextGrid()
+	self.window.SetContent(output)
 
-	fmt.Printf("DBG: Sending new text: %v\n", newText)
+	go submit(self, output, conn, stream, newText)
+}
+
+func submit(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream, newText string) {
+	fyne.Do(func() {
+		// IMPROVE: Only do so if the content has actually changed
+		// (or maybe not, we'll see what architecture I'll go for)
+		output.Append("Sending new note content...")
+	})
 
 	err := lib.SendDatalenSliceByte(stream, []byte(newText))
 	if err != nil {
@@ -18,9 +27,9 @@ func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText strin
 		panic(err)
 	}
 
-	fmt.Printf("DBG: Sent\n")
-
-	fmt.Printf("DBG: Receiving EOF\n")
+	fyne.Do(func() {
+		output.Append("Receiving acknowledgement...")
+	})
 
 	err = lib.RecvEOF(stream)
 	if err != nil {
@@ -28,10 +37,11 @@ func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText strin
 		panic(err)
 	}
 
-	fmt.Printf("DBG: Received EOF\n")
+	fyne.Do(func() {
+		output.Append("Done!")
+	})
 
-	// TODO: Without this THE SHIT DOESNT WORK AAAAAA
-	// time.Sleep(time.Second * 1)
-
-	self.SceneCancel(conn, stream)
+	fyne.Do(func() {
+		self.SceneCancel(conn, stream)
+	})
 }
