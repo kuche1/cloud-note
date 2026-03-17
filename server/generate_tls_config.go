@@ -22,7 +22,7 @@ func generateTLSConfig() *tls.Config {
 	template := x509.Certificate{
 		SerialNumber: big.NewInt(1),
 		NotBefore:    time.Now(),
-		NotAfter:     time.Now().Add(24 * time.Hour), // TODO: Increase time
+		NotAfter:     time.Now().Add(CertValidity),
 	}
 
 	certDER, err := x509.CreateCertificate(
