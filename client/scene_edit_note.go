@@ -6,6 +6,9 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
+// IMPROVE: Add some space between the buttons and the text editing
+// and maybe move the buttons so that they don't get in the say (in case
+// they currently do)
 func (self *App) SceneEditNote(conn *quic.Conn, stream *quic.Stream, previousText string) {
 	editor := widget.NewMultiLineEntry()
 	editor.Text = previousText
