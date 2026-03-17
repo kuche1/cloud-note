@@ -43,18 +43,18 @@ func connectToServer(app *App, output *widget.TextGrid) {
 
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
-		// TODO: Show in GUI
-		panic(err)
+		app.ScenePanic(fmt.Sprintf("Could not acacept stream:\n%v", err))
+		return
 	}
 
 	fyne.Do(func() {
-		output.Append("Downloading data...")
+		output.Append("Receiving note content...")
 	})
 
 	data, err := lib.RecvDatalenSliceByte(stream)
 	if err != nil {
-		// TODO: Show in GUI
-		panic(err)
+		app.ScenePanic(fmt.Sprintf("Could not receive note content:\n%v", err))
+		return
 	}
 
 	dataAsStr := string(data)

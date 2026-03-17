@@ -1,6 +1,8 @@
 package client
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/lib"
@@ -14,7 +16,7 @@ func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText strin
 	go submit(self, output, conn, stream, newText)
 }
 
-func submit(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream, newText string) {
+func submit(app *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream, newText string) {
 	fyne.Do(func() {
 		// IMPROVE: Only do so if the content has actually changed
 		// (or maybe not, we'll see what architecture I'll go for)
@@ -23,8 +25,8 @@ func submit(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.St
 
 	err := lib.SendDatalenSliceByte(stream, []byte(newText))
 	if err != nil {
-		// TODO: Show in GUI
-		panic(err)
+		app.ScenePanic(fmt.Sprintf("Could not send new note content:\n%v", err))
+		return
 	}
 
 	fyne.Do(func() {
@@ -33,8 +35,8 @@ func submit(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.St
 
 	err = lib.RecvEOF(stream)
 	if err != nil {
-		// TODO: Show in GUI
-		panic(err)
+		app.ScenePanic(fmt.Sprintf("Did not receive acknowledgement that the new note content has been received:\n%v", err))
+		return
 	}
 
 	fyne.Do(func() {
@@ -42,6 +44,6 @@ func submit(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.St
 	})
 
 	fyne.Do(func() {
-		self.SceneCancel(conn, stream)
+		app.SceneCancel(conn, stream)
 	})
 }
