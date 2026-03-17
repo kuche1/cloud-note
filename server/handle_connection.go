@@ -49,7 +49,6 @@ func handleConnectionInner(conn *quic.Conn) error {
 		return fmt.Errorf("Could not open stream: %v", err)
 	}
 
-	// TODO: Add a timeout
 	err = lib.SendDatalenSliceByte(stream, data)
 	if err != nil {
 		return fmt.Errorf("Clould not send note content: %v", err)
@@ -57,7 +56,6 @@ func handleConnectionInner(conn *quic.Conn) error {
 
 	log.Printf("Getting new note content...")
 
-	// TODO: Add a timeout
 	data, err = lib.RecvDatalenSliceByte(stream)
 	if err != nil {
 		return fmt.Errorf("Could not receive note content: %v", err)
