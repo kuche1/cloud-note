@@ -1,10 +1,14 @@
 package client
 
 import (
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 )
 
+// Can also be called from within other threads
+// Theoretically it is still possible to bug the panic screen, if
+// any `self.window.SetContent`s have call queued after the panic
 func (self *App) ScenePanic(info string) {
 	output := widget.NewTextGrid()
 	output.Append("Panic:")
@@ -20,5 +24,8 @@ func (self *App) ScenePanic(info string) {
 		output,
 	)
 
-	self.window.SetContent(container)
+	// Wrapping this in a `fyne.Do` so that it can be called from anywhere, even other threads
+	fyne.Do(func() {
+		self.window.SetContent(container)
+	})
 }

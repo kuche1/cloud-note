@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
@@ -32,8 +33,8 @@ func connectToServer(app *App, output *widget.TextGrid) {
 		nil,
 	)
 	if err != nil {
-		// TODO: Show error in GUI instead
-		panic(err)
+		app.ScenePanic(fmt.Sprintf("Could not connect to server:\n%v", err))
+		return
 	}
 
 	fyne.Do(func() {
