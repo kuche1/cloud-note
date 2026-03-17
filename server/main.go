@@ -5,11 +5,11 @@ package server
 import (
 	"context"
 	"errors"
+	"io"
 	"io/fs"
 	"log"
 	"os"
 
-	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
@@ -94,17 +94,18 @@ func handleConnection(conn *quic.Conn) {
 
 	log.Printf("Getting new note content...")
 
-	data, err = lib.ReadUntilEOF(stream)
-	if err != nil {
-		log.Printf("Could not receive new note content: %v", err)
-		return
-	}
-	// // TODO: Add a timeout
-	// data, err = io.ReadAll(stream)
+	// data, err = lib.ReadUntilEOF(stream)
 	// if err != nil {
-	// 	log.Printf("Could not read data: %v", err)
+	// 	log.Printf("Could not receive new note content: %v", err)
 	// 	return
 	// }
+	//
+	// TODO: Add a timeout
+	data, err = io.ReadAll(stream)
+	if err != nil {
+		log.Printf("Could not read data: %v", err)
+		return
+	}
 
 	log.Printf("Got new note content")
 
