@@ -1,15 +1,24 @@
 package client
 
 import (
-	"fmt"
-
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/widget"
 	"github.com/quic-go/quic-go"
 )
 
 func (self *App) SceneCancel(conn *quic.Conn, stream *quic.Stream) {
-	// TODO: Add a GUI
+	output := widget.NewTextGrid()
+	self.window.SetContent(output)
 
-	fmt.Printf("DBG: Cancelling stream for writing...\n")
+	go cancel(self, output, conn, stream)
+}
+
+func cancel(self *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream) {
+	fyne.Do(func() {
+		// IMPROVE: Only do so if the content has actually changed
+		// (or maybe not, we'll see what architecture I'll go for)
+		output.Append("Closing stream for writing...")
+	})
 
 	err := stream.Close()
 	if err != nil {
@@ -17,9 +26,15 @@ func (self *App) SceneCancel(conn *quic.Conn, stream *quic.Stream) {
 		panic(err)
 	}
 
-	fmt.Printf("DBG: Cancelled\n")
-
 	// conn.CloseWithError(0, "")
 
-	self.Quit()
+	fyne.Do(func() {
+		// IMPROVE: Only do so if the content has actually changed
+		// (or maybe not, we'll see what architecture I'll go for)
+		output.Append("Quitting GUI...")
+	})
+
+	fyne.Do(func() {
+		self.Quit()
+	})
 }
