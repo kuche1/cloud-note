@@ -2,13 +2,12 @@ package client
 
 import (
 	"os"
-
-	"fyne.io/fyne/v2/storage"
+	"path/filepath"
 )
 
 // IMPROVE: Actually make a struct with some settings
-func LoadServerAddr() (_addr string, _alreadySet bool, _err error) {
-	settingsFile := getConfigFile()
+func LoadServerAddr(app *App) (_addr string, _alreadySet bool, _err error) {
+	settingsFile := getConfigFile(app)
 
 	data, err := os.ReadFile(settingsFile)
 	if err != nil {
@@ -21,8 +20,8 @@ func LoadServerAddr() (_addr string, _alreadySet bool, _err error) {
 	return string(data), true, nil
 }
 
-func SaveServerAddr(addr string) error {
-	settingsFile := getConfigFile()
+func SaveServerAddr(app *App, addr string) error {
+	settingsFile := getConfigFile(app)
 
 	err := os.WriteFile(settingsFile, []byte(addr), 0600)
 	if err != nil {
@@ -32,17 +31,12 @@ func SaveServerAddr(addr string) error {
 	return nil
 }
 
-func getConfigFile() string {
-	uri := storage.NewFileURI("myfile.txt")
-	return uri.Path()
+func getConfigFile(app *App) string {
+	root := app.app.Storage().RootURI().Path()
+	// On PC this is: ~/fyne/could-note
+	// This also works on Android
 
-	// TODO: `os.UserConfigDir` does not work on android
-	// val, err := os.UserConfigDir()
-	// if err != nil {
-	// 	return "", fmt.Errorf("Could not get configuration file:\n%v", err)
-	// }
-	// // IMPROVE: Actually create a folder, do not use a file
-	// return filepath.Join(val, "could-note-server-addr.txt"), nil
+	return filepath.Join(root, "myfile.txt")
 }
 
 // type Settings struct {

@@ -27,7 +27,7 @@ func cancel(app *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Str
 	// stuck, but ideally we would simply let the user change it
 	// OR make it so that if the connection fails the user is prompted to change
 	// the server address
-	err := SaveServerAddr(serverAddr)
+	err := SaveServerAddr(app, serverAddr)
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not save settings:\n%v", err))
 		return

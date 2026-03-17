@@ -8,7 +8,7 @@ import (
 )
 
 func (self *App) SceneLoadSettings() {
-	addr, ok, err := LoadServerAddr()
+	addr, ok, err := LoadServerAddr(self)
 	if err != nil {
 		self.ScenePanic(fmt.Sprintf("Could not load server address: %v", err))
 		return
