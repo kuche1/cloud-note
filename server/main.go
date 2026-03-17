@@ -9,13 +9,13 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func Main() {
-	listener, err := quic.ListenAddr(Addr, generateTLSConfig(), nil)
+func Main(address string) {
+	listener, err := quic.ListenAddr(address, generateTLSConfig(), nil)
 	if err != nil {
 		log.Fatalf("Could not listen: %v", err)
 	}
 
-	log.Printf("Server listening on address %v", Addr)
+	log.Printf("Server listening on address %v", address)
 
 	handleNewConnections(listener)
 }

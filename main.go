@@ -9,10 +9,11 @@ import (
 
 func main() {
 	runServer := flag.Bool("run-server", false, "Run server")
+	serverAddress := flag.String("server-adress", ":4242", "Address to run server on")
 	flag.Parse()
 
 	if *runServer {
-		server.Main()
+		server.Main(*serverAddress)
 	} else {
 		client.Main()
 	}
