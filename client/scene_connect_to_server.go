@@ -11,21 +11,21 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func (self *App) SceneConnectToServer() {
+func (self *App) SceneConnectToServer(serverAddr string) {
 	output := widget.NewTextGrid()
 	self.window.SetContent(output)
 
-	go connectToServer(self, output)
+	go connectToServer(self, output, serverAddr)
 }
 
-func connectToServer(app *App, output *widget.TextGrid) {
+func connectToServer(app *App, output *widget.TextGrid, serverAddr string) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")
 	})
 
 	conn, err := quic.DialAddr(
 		context.Background(),
-		ServerAddr,
+		serverAddr,
 		&tls.Config{
 			InsecureSkipVerify: true,
 			NextProtos:         []string{lib.QuicProto},
@@ -61,6 +61,6 @@ func connectToServer(app *App, output *widget.TextGrid) {
 
 	fyne.Do(func() {
 		output.Append("Done!")
-		app.SceneEditNote(conn, stream, dataAsStr)
+		app.SceneEditNote(conn, stream, dataAsStr, serverAddr)
 	})
 }

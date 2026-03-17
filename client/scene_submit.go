@@ -9,14 +9,14 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText string) {
+func (self *App) SceneSubmit(conn *quic.Conn, stream *quic.Stream, newText string, serverAddr string) {
 	output := widget.NewTextGrid()
 	self.window.SetContent(output)
 
-	go submit(self, output, conn, stream, newText)
+	go submit(self, output, conn, stream, newText, serverAddr)
 }
 
-func submit(app *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream, newText string) {
+func submit(app *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Stream, newText string, serverAddr string) {
 	fyne.Do(func() {
 		// IMPROVE: Only do so if the content has actually changed
 		// (or maybe not, we'll see what architecture I'll go for)
@@ -44,6 +44,6 @@ func submit(app *App, output *widget.TextGrid, conn *quic.Conn, stream *quic.Str
 	})
 
 	fyne.Do(func() {
-		app.SceneCancel(conn, stream)
+		app.SceneCancel(conn, stream, serverAddr)
 	})
 }
