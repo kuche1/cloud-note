@@ -3,7 +3,6 @@ package client
 import (
 	"context"
 	"crypto/tls"
-	"io"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
@@ -51,8 +50,7 @@ func connectToServer(app *App, output *widget.TextGrid) {
 		output.Append("Downloading data...")
 	})
 
-	// No need to add a timeout here
-	data, err := io.ReadAll(stream)
+	data, err := lib.RecvDatalenSliceByte(stream)
 	if err != nil {
 		// TODO: Show in GUI
 		panic(err)

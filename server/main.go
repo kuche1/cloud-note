@@ -5,11 +5,11 @@ package server
 import (
 	"context"
 	"errors"
-	"io"
 	"io/fs"
 	"log"
 	"os"
 
+	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
@@ -34,7 +34,7 @@ func handleNewConnections(listener *quic.Listener) {
 			continue
 		}
 
-		// IMPROVE: Handling only 1 client at a time
+		// IMPROVE: Currently we're handling only 1 client at a time
 		// Reason: So that we don't have to lock the note
 		handleConnection(conn)
 
@@ -60,7 +60,7 @@ func handleConnection(conn *quic.Conn) {
 		}
 	}
 
-	// IMPROVE: Read the file piece by piece
+	// IMPROVE: Read the file by chunks
 	data, err := os.ReadFile(NoteFile)
 	if err != nil {
 		log.Printf("Could not read note: %v", err)
@@ -75,39 +75,32 @@ func handleConnection(conn *quic.Conn) {
 	}
 
 	// TODO: Add a timeout
-	bytesWritten, err := stream.Write(data)
+	err = lib.SendDatalenSliceByte(stream, data)
 	if err != nil {
-		log.Printf("Could not send data: %v", err)
-		return
-	}
-	if bytesWritten != len(data) {
-		// TODO: Loop instead
-		panic("Not all data sent")
-	}
-
-	// Close only for writing
-	err = stream.Close()
-	if err != nil {
-		log.Printf("Clould not close stream for writing: %v", err)
+		log.Printf("Clould not send note content: %v", err)
 		return
 	}
 
 	log.Printf("Getting new note content...")
 
-	// data, err = lib.ReadUntilEOF(stream)
-	// if err != nil {
-	// 	log.Printf("Could not receive new note content: %v", err)
-	// 	return
-	// }
-	//
 	// TODO: Add a timeout
-	data, err = io.ReadAll(stream)
+	data, err = lib.RecvDatalenSliceByte(stream)
 	if err != nil {
-		log.Printf("Could not read data: %v", err)
+		log.Printf("Could not receive note content: %v", err)
 		return
 	}
 
 	log.Printf("Got new note content")
+
+	log.Printf("Sending EOF")
+
+	err = lib.SendEOF(stream)
+	if err != nil {
+		log.Printf("Could not send EOF: %v", err)
+		return
+	}
+
+	log.Printf("Sent EOF")
 
 	err = os.WriteFile(NoteFile, data, 0644)
 	if err != nil {
