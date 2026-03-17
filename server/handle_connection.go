@@ -44,6 +44,7 @@ func handleConnectionInner(conn *quic.Conn) error {
 	}
 
 	// TODO: Use the nonblocking version
+	// TODO: Fix the same issue for the client
 	stream, err := conn.OpenStreamSync(context.Background())
 	if err != nil {
 		return fmt.Errorf("Could not open stream: %v", err)
