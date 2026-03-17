@@ -51,6 +51,7 @@ func connectToServer(app *App, output *widget.TextGrid, serverAddr string) {
 		output.Append("Receiving note content...")
 	})
 
+	// IMPROVE: Make this into a loading bar
 	data, err := lib.RecvDatalenSliceByte(stream)
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not receive note content:\n%v", err))
