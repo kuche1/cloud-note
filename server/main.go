@@ -4,9 +4,9 @@ package server
 
 import (
 	"context"
-	"io"
 	"log"
 
+	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
@@ -23,6 +23,8 @@ func Main() {
 
 func handleNewConnections(listener *quic.Listener) {
 	for {
+		log.Printf("Waiting for new connection...")
+
 		conn, err := listener.Accept(context.Background())
 		if err != nil {
 			log.Printf("Could not accept connection: %v", err)
@@ -34,6 +36,8 @@ func handleNewConnections(listener *quic.Listener) {
 		handleConnection(conn)
 
 		// conn.CloseWithError(0, "")
+
+		log.Printf("Connection handled!")
 	}
 }
 
@@ -60,8 +64,7 @@ func handleConnection(conn *quic.Conn) {
 	// Close only for writing
 	stream.Close()
 
-	// TODO: Add a timeout
-	data, err = io.ReadAll(stream)
+	data, err = lib.ReadUntilEOF(stream)
 	if err != nil {
 		log.Printf("Could not read data: %v", err)
 		return
