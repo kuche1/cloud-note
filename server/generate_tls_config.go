@@ -9,6 +9,8 @@ import (
 	"log"
 	"math/big"
 	"time"
+
+	"github.com/kuche1/cloud-note/lib"
 )
 
 func generateTLSConfig() *tls.Config {
@@ -44,6 +46,6 @@ func generateTLSConfig() *tls.Config {
 
 	return &tls.Config{
 		Certificates: []tls.Certificate{tlsCert},
-		NextProtos:   []string{"cloud-note"},
+		NextProtos:   []string{lib.QuicProto},
 	}
 }

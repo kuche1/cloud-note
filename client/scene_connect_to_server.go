@@ -1,10 +1,14 @@
 package client
 
 import (
-	"time"
+	"context"
+	"crypto/tls"
+	"io"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/lib"
+	"github.com/quic-go/quic-go"
 )
 
 func (self *App) SceneConnectToServer() {
@@ -19,16 +23,45 @@ func connectToServer(app *App, output *widget.TextGrid) {
 		output.Append("Connecting to server...")
 	})
 
-	time.Sleep(1 * time.Second)
+	conn, err := quic.DialAddr(
+		context.Background(),
+		ServerAddr,
+		&tls.Config{
+			InsecureSkipVerify: true,
+			NextProtos:         []string{lib.QuicProto},
+		},
+		nil,
+	)
+	if err != nil {
+		// TODO: Show error in GUI instead
+		panic(err)
+	}
+
+	fyne.Do(func() {
+		output.Append("Accepting stream...")
+	})
+
+	stream, err := conn.AcceptStream(context.Background())
+	if err != nil {
+		// TODO: Show in GUI
+		panic(err)
+	}
 
 	fyne.Do(func() {
 		output.Append("Downloading data...")
 	})
 
-	time.Sleep(1 * time.Second)
+	// No need to add a timeout here
+	data, err := io.ReadAll(stream)
+	if err != nil {
+		// TODO: Show in GUI
+		panic(err)
+	}
+
+	dataAsStr := string(data)
 
 	fyne.Do(func() {
 		output.Append("Done!")
-		app.SceneEditNote()
+		app.SceneEditNote(conn, stream, dataAsStr)
 	})
 }

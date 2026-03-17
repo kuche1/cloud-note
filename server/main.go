@@ -33,15 +33,14 @@ func handleNewConnections(listener *quic.Listener) {
 		// Reason: So that we don't have to lock the note
 		handleConnection(conn)
 
-		conn.CloseWithError(0, "")
+		// conn.CloseWithError(0, "")
 	}
 }
 
 func handleConnection(conn *quic.Conn) {
-	// TODO: Add a timeout
-	stream, err := conn.AcceptStream(context.Background()) // TODO: The code should get stuck here since the client won't actually send any data on the stream
+	stream, err := conn.OpenStreamSync(context.Background())
 	if err != nil {
-		log.Printf("Could not accept stream: %v", err)
+		log.Printf("Could not open stream: %v", err)
 		return
 	}
 

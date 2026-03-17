@@ -1,7 +1,9 @@
 package client
 
-func (self *App) SceneCancel() {
-	self.Quit()
+import "github.com/quic-go/quic-go"
 
-	// self.FirstScene()
+func (self *App) SceneCancel(conn *quic.Conn, stream *quic.Stream) {
+	stream.Close()
+	// conn.CloseWithError(0, "")
+	self.Quit()
 }
