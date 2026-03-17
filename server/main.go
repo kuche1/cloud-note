@@ -36,6 +36,7 @@ func handleNewConnections(listener *quic.Listener) {
 
 		// IMPROVE: Currently we're handling only 1 client at a time
 		// Reason: So that we don't have to lock the note
+		log.Printf("Handling connection...")
 		handleConnection(conn)
 
 		// conn.CloseWithError(0, "")

@@ -43,7 +43,7 @@ func connectToServer(app *App, output *widget.TextGrid) {
 
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
-		app.ScenePanic(fmt.Sprintf("Could not acacept stream:\n%v", err))
+		app.ScenePanic(fmt.Sprintf("Could not accept stream:\n%v", err))
 		return
 	}
 
