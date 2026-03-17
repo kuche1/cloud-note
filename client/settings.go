@@ -2,14 +2,13 @@ package client
 
 import (
 	"os"
-)
 
-// IMPROVE: Use the user config directory instead of CWD
-// TODO: This actually fails on android
-const settingsFile = "server_addr.txt"
+	"fyne.io/fyne/v2/storage"
+)
 
 // IMPROVE: Actually make a struct with some settings
 func LoadServerAddr() (_addr string, _alreadySet bool, _err error) {
+	settingsFile := getConfigFile()
 
 	data, err := os.ReadFile(settingsFile)
 	if err != nil {
@@ -23,11 +22,27 @@ func LoadServerAddr() (_addr string, _alreadySet bool, _err error) {
 }
 
 func SaveServerAddr(addr string) error {
+	settingsFile := getConfigFile()
+
 	err := os.WriteFile(settingsFile, []byte(addr), 0600)
 	if err != nil {
 		return err
 	}
+
 	return nil
+}
+
+func getConfigFile() string {
+	uri := storage.NewFileURI("myfile.txt")
+	return uri.Path()
+
+	// TODO: `os.UserConfigDir` does not work on android
+	// val, err := os.UserConfigDir()
+	// if err != nil {
+	// 	return "", fmt.Errorf("Could not get configuration file:\n%v", err)
+	// }
+	// // IMPROVE: Actually create a folder, do not use a file
+	// return filepath.Join(val, "could-note-server-addr.txt"), nil
 }
 
 // type Settings struct {

@@ -15,7 +15,7 @@ import (
 func handleConnection(conn *quic.Conn) {
 	err := handleConnectionInner(conn)
 	if err != nil {
-		fmt.Printf("%v", err)
+		fmt.Printf("%v\n", err)
 
 		err := conn.CloseWithError(0, err.Error())
 		if err != nil {
