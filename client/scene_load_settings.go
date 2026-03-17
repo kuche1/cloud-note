@@ -25,6 +25,7 @@ func sceneEnterServerAddr(app *App) {
 	label := widget.NewLabel("Enter Server Address:")
 
 	entry := widget.NewEntry()
+	entry.PlaceHolder = "some.address:1234"
 
 	button := widget.NewButton("OK", func() {
 		app.SceneConnectToServer(entry.Text)

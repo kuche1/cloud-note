@@ -4,7 +4,13 @@
 go run . -help
 ```
 
-## Compile for Phone
+## Build Dependencies
+
+```
+sudo apt install libxxf86vm-dev
+```
+
+## Build for Phone
 
 Source: https://docs.fyne.io/started/mobile/
 

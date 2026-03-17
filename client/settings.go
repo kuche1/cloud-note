@@ -5,6 +5,7 @@ import (
 )
 
 // IMPROVE: Use the user config directory instead of CWD
+// TODO: This actually fails on android
 const settingsFile = "server_addr.txt"
 
 // IMPROVE: Actually make a struct with some settings
