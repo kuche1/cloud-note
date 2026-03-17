@@ -27,6 +27,7 @@ func RunApp() {
 	window.ShowAndRun()
 }
 
+// Must not rely on `self.ScenePanic`
 func (self *App) Quit() {
 	self.app.Quit()
 	// NOTE: This causes the GUI to freeze on mobile,
