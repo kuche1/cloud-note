@@ -22,7 +22,13 @@ func connectToServer(app *App, output *widget.TextGrid) {
 	time.Sleep(1 * time.Second)
 
 	fyne.Do(func() {
-		output.Append("Connected!")
+		output.Append("Downloading data...")
+	})
+
+	time.Sleep(1 * time.Second)
+
+	fyne.Do(func() {
+		output.Append("Done!")
 		app.SceneEditNote()
 	})
 }
