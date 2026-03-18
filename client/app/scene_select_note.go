@@ -1,16 +1,15 @@
 package app
 
 import (
-	"fmt"
-
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/config"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
 func (self *App) SceneSelectNote(settings *settings.Settings) {
 	list := widget.NewSelect(
-		[]string{"a.txt", "b.txt", "c.txt"},
+		[]string{config.NoteName}, // TODO: Get this list from the server
 		func(selection string) {},
 	)
 	list.PlaceHolder = "[Select Note]"
@@ -22,8 +21,7 @@ func (self *App) SceneSelectNote(settings *settings.Settings) {
 			if selection == "" {
 				return
 			}
-			fmt.Printf("DBG: Ignoring the actual choice of: %v\n", selection) // TODO
-			self.SceneReceiveNote(settings)
+			self.SceneReceiveNote(settings, selection)
 		},
 	)
 

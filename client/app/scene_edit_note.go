@@ -9,7 +9,7 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
-func (self *App) SceneEditNote(previousText string, settings *settings.Settings) {
+func (self *App) SceneEditNote(previousText string, settings *settings.Settings, noteName string) {
 	editor := widget.NewMultiLineEntry()
 	editor.Text = previousText
 	editor.TextStyle.Monospace = true
@@ -23,7 +23,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings)
 	)
 	submit := widget.NewButton(
 		"Submit",
-		func() { self.SceneSubmit(editor.Text, settings) },
+		func() { self.SceneSubmit(editor.Text, settings, noteName) },
 	)
 
 	scrollToTop := widget.NewButton(
