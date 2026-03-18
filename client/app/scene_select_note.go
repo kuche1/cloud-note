@@ -22,7 +22,7 @@ func (self *App) SceneSelectNote(settings *settings.Settings) {
 			if selection == "" {
 				return
 			}
-			fmt.Printf("DBG: Ignoring the actual choice of: %v\n", selection)
+			fmt.Printf("DBG: Ignoring the actual choice of: %v\n", selection) // TODO
 			self.SceneReceiveNote(settings)
 		},
 	)
