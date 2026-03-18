@@ -12,9 +12,6 @@ func (self *App) SceneCancel() {
 	go cancel(self, output)
 }
 
-// IMPROVE: Maybe just have a `NetState` that contains both `conn` and `stream`
-// And actually attempt to clean everything and just collect and print errorrs instead
-// of panicing
 func cancel(app *App, output *widget.TextGrid) {
 	fyne.Do(func() {
 		// IMPROVE: Only do so if the content has actually changed
