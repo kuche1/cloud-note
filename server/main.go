@@ -1,5 +1,3 @@
-// IMPROVE: Call `conn.CloseWithError(0, "Info")` in case of failure
-
 package server
 
 import (
