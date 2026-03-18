@@ -9,8 +9,8 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings, appStorage fyne.Storage) ([]byte, error) {
-	conn, err := connectToServer(window, output, settings, appStorage)
+func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings) ([]byte, error) {
+	conn, err := connectToServer(window, output, settings)
 	if err != nil {
 		return nil, err
 	}

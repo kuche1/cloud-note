@@ -12,7 +12,7 @@ func (self *App) SceneSubmit(newText string, settings *settings.Settings) {
 	self.window.SetContent(output)
 
 	go func() {
-		err := action.ActionSetNoteContent(self.window.FyneWindow, output, newText, settings, self.app.Storage())
+		err := action.ActionSetNoteContent(self.window.FyneWindow, output, newText, settings)
 		if err != nil {
 			self.ScenePanic(err.Error())
 			return

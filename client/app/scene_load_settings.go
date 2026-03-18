@@ -18,7 +18,8 @@ func (self *App) SceneLoadSettings() {
 func loadSettings(app *App, output *widget.TextGrid) {
 	fyne.Do(func() { output.Append("Loading settings...") })
 
-	settings, err := settings.Settings{}.NewFromPersistentStorage(app.app.Storage())
+	settings, err :=
+		settings.Settings{}.NewFromPersistentStorage(app.app.Storage().RootURI().Path())
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
 		return

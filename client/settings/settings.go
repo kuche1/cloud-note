@@ -6,25 +6,27 @@ import (
 	"path/filepath"
 	"strings"
 
-	"fyne.io/fyne/v2"
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/pelletier/go-toml/v2"
 )
 
 type Settings struct {
+	persistentStorage string
+
 	ServerAddr string
 }
 
-func (self Settings) NewFromDefaults() *Settings {
+func (self Settings) NewFromDefaults(persistentStorage string) *Settings {
 	return &Settings{
-		ServerAddr: ":4242",
+		persistentStorage: persistentStorage,
+		ServerAddr:        ":4242",
 	}
 }
 
-func (self Settings) NewFromPersistentStorage(appStorage fyne.Storage) (*Settings, error) {
-	settings := Settings{}.NewFromDefaults()
+func (self Settings) NewFromPersistentStorage(persistentStorage string) (*Settings, error) {
+	settings := Settings{}.NewFromDefaults(persistentStorage)
 
-	settingsFile, _ := getSettingsFile(appStorage)
+	settingsFile, _ := getSettingsFile(settings.persistentStorage)
 
 	data, err := os.ReadFile(settingsFile)
 	if err == nil {
@@ -44,13 +46,13 @@ func (self Settings) NewFromPersistentStorage(appStorage fyne.Storage) (*Setting
 	return settings, nil
 }
 
-func (self *Settings) Save(appStorage fyne.Storage) error {
+func (self *Settings) Save() error {
 	data, err := toml.Marshal(self)
 	if err != nil {
 		return fmt.Errorf("Could not marshal settings:\n%v", err)
 	}
 
-	settingsFile, settingsFileTmp := getSettingsFile(appStorage)
+	settingsFile, settingsFileTmp := getSettingsFile(self.persistentStorage)
 
 	err = lib.WriteFileAtomic(settingsFile, data, settingsFileTmp)
 	if err != nil {
@@ -60,12 +62,8 @@ func (self *Settings) Save(appStorage fyne.Storage) error {
 	return nil
 }
 
-func getSettingsFile(appStorage fyne.Storage) (_realFile string, _temporaryFile string) {
-	root := appStorage.RootURI().Path()
-	// On PC this is: ~/fyne/could-note
-	// This also works on Android
-
-	path := filepath.Join(root, "settings.toml")
+func getSettingsFile(persistentStorage string) (_realFile string, _temporaryFile string) {
+	path := filepath.Join(persistentStorage, "settings.toml")
 	pathTmp := path + ".tmp"
 
 	return path, pathTmp

@@ -12,7 +12,7 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings, appStorage fyne.Storage) (*quic.Conn, error) {
+func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings) (*quic.Conn, error) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")
 	})
@@ -33,10 +33,9 @@ func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *set
 		ok := settings.PromptNewServerAddr(
 			window,
 			retErr.Error(),
-			appStorage,
 		)
 		if ok {
-			return connectToServer(window, output, settings, appStorage)
+			return connectToServer(window, output, settings)
 		}
 
 		return nil, retErr

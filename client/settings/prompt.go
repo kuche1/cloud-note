@@ -7,9 +7,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-// Improve: I hate dragging `appStorage` like this
-// Better just ask for it on `Settings` creation
-func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string, appStorage fyne.Storage) (_ok bool) {
+func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok bool) {
 	wasChanged := make(chan bool)
 
 	fyne.Do(func() {
@@ -31,7 +29,7 @@ func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string, appS
 				if yes {
 					// Improve: This will block
 
-					err := self.SetServerAddr(appStorage, entry.Text)
+					err := self.SetServerAddr(entry.Text)
 
 					if err != nil {
 						// Improve: This is terrible
