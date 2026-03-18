@@ -8,7 +8,8 @@ const (
 	// IMPROVE000: Ideally we would also have some mechanism in place that checks if the content has changed in between the next 2 calls
 	ActionGetNoteContent Action = iota
 	ActionSetNoteContent
-	ActionListNotes // TODO
+	ActionListNotes
+	// ActionCreateNewNote // TODO
 	Actions
 )
 

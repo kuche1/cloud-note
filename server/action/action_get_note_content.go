@@ -20,8 +20,6 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 	// 	}
 	// }
 
-	// TODO: This currently crashes if you have not manually created the `note.txt` file
-
 	noteName, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return err
