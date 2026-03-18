@@ -2,6 +2,8 @@ package window
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/widget"
 )
 
 type Window struct {
@@ -20,4 +22,33 @@ func (self *Window) ShowAndRun() {
 
 func (self *Window) SetContent(content fyne.CanvasObject) {
 	(*self.FyneWindow).SetContent(content)
+}
+
+func (self *Window) ShowDialogOutput(
+	title string,
+	newThread func(output *widget.TextGrid),
+) {
+	fyne.Do(func() {
+		output := widget.NewTextGrid()
+
+		dialog := dialog.NewCustomWithoutButtons(
+			title,
+			output,
+			*self.FyneWindow,
+		)
+
+		dialog.Show()
+
+		go func() {
+			newThread(output)
+
+			fyne.Do(func() { dialog.Dismiss() })
+			// Update:
+			// Now that this is wrapped in `fyne.Do`, there will be less concern (yet still some)
+			//
+			// This may lead to some problems down the line, but it makes it impossible to accidentally forget to dismiss
+			// a dialog, we'll see how it turns out
+		}()
+	})
+
 }

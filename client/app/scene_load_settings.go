@@ -9,23 +9,22 @@ import (
 )
 
 func (self *App) SceneLoadSettings() {
-	output := widget.NewTextGrid()
-	self.window.SetContent(output)
+	self.window.ShowDialogOutput(
+		"Load Settings",
 
-	go loadSettings(self, output)
-}
+		func(output *widget.TextGrid) {
+			fyne.Do(func() { output.Append("Loading settings...") })
 
-func loadSettings(app *App, output *widget.TextGrid) {
-	fyne.Do(func() { output.Append("Loading settings...") })
+			settings, err :=
+				settings.Settings{}.NewFromPersistentStorage(self.app.Storage().RootURI().Path())
+			if err != nil {
+				self.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
+				return
+			}
 
-	settings, err :=
-		settings.Settings{}.NewFromPersistentStorage(app.app.Storage().RootURI().Path())
-	if err != nil {
-		app.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
-		return
-	}
+			fyne.Do(func() { output.Append("Done!") })
 
-	fyne.Do(func() { output.Append("Done!") })
-
-	fyne.Do(func() { app.SceneReceiveNote(settings) })
+			fyne.Do(func() { self.SceneReceiveNote(settings) })
+		},
+	)
 }
