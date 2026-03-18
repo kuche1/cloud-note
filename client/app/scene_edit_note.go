@@ -9,8 +9,6 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
-// IMPROVE: I want to use something instead of dragging all this state, maybe have different structs
-// for the different states and embed the previous structs along the way
 func (self *App) SceneEditNote(previousText string, settings *settings.Settings) {
 	editor := widget.NewMultiLineEntry()
 	editor.Text = previousText
