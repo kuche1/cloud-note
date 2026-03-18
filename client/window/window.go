@@ -1,6 +1,8 @@
 package window
 
-import "fyne.io/fyne/v2"
+import (
+	"fyne.io/fyne/v2"
+)
 
 type Window struct {
 	FyneWindow *fyne.Window
@@ -16,6 +18,6 @@ func (self *Window) ShowAndRun() {
 	(*self.FyneWindow).ShowAndRun()
 }
 
-func (self *Window) SetContent(container fyne.CanvasObject) {
-	(*self.FyneWindow).SetContent(container)
+func (self *Window) SetContent(content fyne.CanvasObject) {
+	(*self.FyneWindow).SetContent(content)
 }
