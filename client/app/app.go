@@ -5,26 +5,28 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"github.com/kuche1/cloud-note/client/window"
 )
 
 type App struct {
 	app    fyne.App
-	window fyne.Window
+	window *window.Window
 }
 
 func RunApp() {
 	app := app.NewWithID("cloud-note")
-	window := app.NewWindow("Cloud Note")
-	window.Resize(fyne.NewSize(400, 600))
+
+	windo := app.NewWindow("Cloud Note")
+	windo.Resize(fyne.NewSize(400, 600))
 
 	self := App{
 		app:    app,
-		window: window,
+		window: window.Window{}.NewFromFyneWindow(&windo),
 	}
 
 	self.FirstScene()
 
-	window.ShowAndRun()
+	self.window.ShowAndRun()
 }
 
 // Must not rely on `self.ScenePanic`
