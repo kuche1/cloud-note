@@ -24,7 +24,7 @@ func (self *App) SceneLoadSettings() {
 
 			fyne.Do(func() { output.Append("Done!") })
 
-			fyne.Do(func() { self.SceneReceiveNote(settings) })
+			fyne.Do(func() { self.SceneSelectNote(settings) })
 		},
 	)
 }
