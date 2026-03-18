@@ -9,12 +9,12 @@ import (
 )
 
 func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := lib.RecvChannelDatalenSliceByteEOF(conn)
+	noteName, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return err
 	}
 
-	noteContent, err := lib.RecvChannelDatalenSliceByteEOF(conn)
+	noteContent, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)
 	}
@@ -24,7 +24,7 @@ func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return fmt.Errorf("Could not write new note content: %v", err)
 	}
 
-	err = lib.SendChannelEOF(conn)
+	err = lib.ChanSendEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not send save confirmation: %v", err)
 	}

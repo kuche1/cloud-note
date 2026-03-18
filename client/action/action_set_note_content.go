@@ -19,7 +19,7 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 		output.Append("Sending action set note...")
 	})
 
-	err = lib.SendChannelActionEOF(conn, lib.ActionSetNoteContent)
+	err = lib.ChanSendActionEOF(conn, lib.ActionSetNoteContent)
 	if err != nil {
 		return fmt.Errorf("Could not send action set note: %v", err)
 	}
@@ -28,7 +28,7 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 		output.Append("Sending note name...")
 	})
 
-	err = lib.SendChannelDatalenSliceByteEOF(conn, []byte(noteName))
+	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(noteName))
 	if err != nil {
 		return err
 	}
@@ -37,7 +37,7 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 		output.Append("Sending note content...")
 	})
 
-	err = lib.SendChannelDatalenSliceByteEOF(conn, []byte(newText))
+	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(newText))
 	if err != nil {
 		return fmt.Errorf("Could not send new note content:\n%v", err)
 	}
@@ -46,7 +46,7 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 		output.Append("Receiving save confirmation...")
 	})
 
-	err = lib.RecvChannelEOF(conn)
+	err = lib.ChanRecvEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Did not receive save confirmation:\n%v", err)
 	}
@@ -55,7 +55,7 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 		output.Append("Closing connection...")
 	})
 
-	lib.SendConnEOF(conn)
+	lib.ConnSendEOF(conn)
 
 	fyne.Do(func() {
 		output.Append("Done!")

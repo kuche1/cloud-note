@@ -9,7 +9,7 @@ import (
 )
 
 func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	action, err := lib.RecvChannelActionEOF(conn)
+	action, err := lib.ChanRecvActionEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive action: %v", err)
 	}
@@ -23,6 +23,9 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		actionFunc = actionGetNoteContent
 	case lib.ActionSetNoteContent:
 		actionFunc = actionSetNoteContent
+	// TODO:
+	// case lib.ActionListNotes:
+	// 	actionFunc = actionListNotes
 	default:
 		return fmt.Errorf("Unhandled action: %v", action)
 	}
@@ -32,7 +35,7 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return fmt.Errorf("Could not execute action with ID %v: %v", action, err)
 	}
 
-	err = lib.RecvConnEOF(conn)
+	err = lib.ConnRecvEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive connection EOF: %v", err)
 	}

@@ -19,7 +19,7 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 		output.Append("Sending action get note...")
 	})
 
-	err = lib.SendChannelActionEOF(conn, lib.ActionGetNoteContent)
+	err = lib.ChanSendActionEOF(conn, lib.ActionGetNoteContent)
 	if err != nil {
 		return nil, fmt.Errorf("Could not send action get note: %v", err)
 	}
@@ -28,7 +28,7 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 		output.Append("Sending note name...")
 	})
 
-	err = lib.SendChannelDatalenSliceByteEOF(conn, []byte(noteName))
+	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(noteName))
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 	})
 
 	// IMPROVE000: ? Add a loading bar, maybe when sending too
-	data, err := lib.RecvChannelDatalenSliceByteEOF(conn)
+	data, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive note content:\n%v", err)
 	}
@@ -47,7 +47,7 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 		output.Append("Closing connection...")
 	})
 
-	lib.SendConnEOF(conn)
+	lib.ConnSendEOF(conn)
 
 	fyne.Do(func() {
 		output.Append("Done!")

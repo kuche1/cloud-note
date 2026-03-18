@@ -7,8 +7,8 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func RecvChannelActionEOF(conn *quic.Conn) (Action, error) {
-	data, err := RecvChannelUint8EOF(conn)
+func ChanRecvActionEOF(conn *quic.Conn) (Action, error) {
+	data, err := ChanRecvUint8EOF(conn)
 	if err != nil {
 		return 0, fmt.Errorf("Could not receive action: %v", err)
 	}
@@ -21,23 +21,23 @@ func RecvChannelActionEOF(conn *quic.Conn) (Action, error) {
 	return action, nil
 }
 
-func RecvChannelUint8EOF(conn *quic.Conn) (uint8, error) {
+func ChanRecvUint8EOF(conn *quic.Conn) (uint8, error) {
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
 		return 0, fmt.Errorf("Could not accept stream: %v", err)
 	}
 
-	data, err := RecvUint8(stream)
+	data, err := StreamRecvUint8(stream)
 	if err != nil {
 		return 0, fmt.Errorf("Clould not receive uint8: %v", err)
 	}
 
-	err = SendEOF(stream)
+	err = StreamSendEOF(stream)
 	if err != nil {
 		return 0, fmt.Errorf("Could not send EOF: %v", err)
 	}
 
-	err = RecvEOF(stream)
+	err = StreamRecvEOF(stream)
 	if err != nil {
 		return 0, fmt.Errorf("Could not receive EOF: %v", err)
 	}
@@ -45,7 +45,7 @@ func RecvChannelUint8EOF(conn *quic.Conn) (uint8, error) {
 	return data, nil
 }
 
-func RecvChannelDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
+func ChanRecvDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
 	// log.Printf("Accepting stream")
 
 	stream, err := conn.AcceptStream(context.Background())
@@ -55,7 +55,7 @@ func RecvChannelDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
 
 	// log.Printf("Receiving datalen slice byte")
 
-	data, err := RecvDatalenSliceByte(stream)
+	data, err := StreamRecvDatalenSliceByte(stream)
 	if err != nil {
 		return nil, fmt.Errorf("Clould not receive data: %v", err)
 	}
@@ -64,14 +64,14 @@ func RecvChannelDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
 
 	// log.Printf("Sending EOF")
 
-	err = SendEOF(stream)
+	err = StreamSendEOF(stream)
 	if err != nil {
 		return nil, fmt.Errorf("Could not send EOF: %v", err)
 	}
 
 	// log.Printf("Receiving EOF")
 
-	err = RecvEOF(stream)
+	err = StreamRecvEOF(stream)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive EOF: %v", err)
 	}
@@ -81,13 +81,13 @@ func RecvChannelDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
 	return data, nil
 }
 
-func RecvChannelEOF(conn *quic.Conn) error {
+func ChanRecvEOF(conn *quic.Conn) error {
 	streamRecv, err := conn.AcceptUniStream(context.Background())
 	if err != nil {
 		return fmt.Errorf("Could not accept stream recv: %v", err)
 	}
 
-	err = RecvEOF(streamRecv)
+	err = StreamRecvEOF(streamRecv)
 	if err != nil {
 		return fmt.Errorf("Could not receive EOF: %v", err)
 	}

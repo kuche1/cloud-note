@@ -8,7 +8,7 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func RecvConnEOF(conn *quic.Conn) error {
+func ConnRecvEOF(conn *quic.Conn) error {
 	// IMPROVE000: We can perhaps make something better using `conn.Context().Done()`
 	// and `conn.Context().Err()`
 	_, err := conn.AcceptStream(context.Background())

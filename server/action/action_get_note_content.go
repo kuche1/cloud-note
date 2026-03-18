@@ -22,7 +22,7 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 
 	// TODO: This currently crashes if you have not manually created the `note.txt` file
 
-	noteName, err := lib.RecvChannelDatalenSliceByteEOF(conn)
+	noteName, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return err
 	}
@@ -33,7 +33,7 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return fmt.Errorf("Could not read note content: %v", err)
 	}
 
-	err = lib.SendChannelDatalenSliceByteEOF(conn, noteContent)
+	err = lib.ChanSendDatalenSliceByteEOF(conn, noteContent)
 	if err != nil {
 		return fmt.Errorf("Could not send note content: %v", err)
 	}
