@@ -29,7 +29,6 @@ func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *set
 	if err != nil {
 		retErr := fmt.Errorf("Could not connect to server:\n%v", err)
 
-		// Improve: Because of this we're printing the prompt twice
 		ok := settings.PromptNewServerAddr(
 			window,
 			retErr.Error(),
