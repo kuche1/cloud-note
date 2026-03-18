@@ -44,6 +44,9 @@ func (self *Window) ShowDialogOutput(
 
 			fyne.Do(func() { dialog.Dismiss() })
 			// Update:
+			// IMPROVE000: I feel like this is going to bite me in the end
+			//
+			// Update:
 			// Now that this is wrapped in `fyne.Do`, there will be less concern (yet still some)
 			//
 			// This may lead to some problems down the line, but it makes it impossible to accidentally forget to dismiss
