@@ -14,8 +14,6 @@ func (self *App) SceneCancel() {
 
 func cancel(app *App, output *widget.TextGrid) {
 	fyne.Do(func() {
-		// IMPROVE: Only do so if the content has actually changed
-		// (or maybe not, we'll see what architecture I'll go for)
 		output.Append("Quitting GUI...")
 	})
 
