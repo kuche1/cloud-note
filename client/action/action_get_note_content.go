@@ -25,15 +25,6 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 	}
 
 	fyne.Do(func() {
-		output.Append("Receiving ACK...")
-	})
-
-	err = lib.RecvChannelEOF(conn)
-	if err != nil {
-		return nil, err
-	}
-
-	fyne.Do(func() {
 		output.Append("Sending note name...")
 	})
 
