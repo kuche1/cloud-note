@@ -12,8 +12,8 @@ func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok
 
 	fyne.Do(func() {
 
-		// Improve: This clips out of the screen
 		label := widget.NewLabel(info + "\n\nWould you like to set a new server address?")
+		label.Wrapping = fyne.TextWrapWord // TextWrapBreak is really ugly here
 
 		entry := widget.NewEntry()
 		entry.Text = self.ServerAddr
