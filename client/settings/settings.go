@@ -35,11 +35,16 @@ func (self Settings) NewFromPersistentStorage(persistentStorage string) (*Settin
 
 		err = decoder.Decode(settings)
 		if err != nil {
-			return nil, fmt.Errorf("Could not decode settings file: %v", err)
+			return nil, fmt.Errorf("Could not decode settings file:\n%v", err)
 		}
 	} else {
-		if !os.IsNotExist(err) {
-			return nil, fmt.Errorf("Could not load settings file: %v", err)
+		if os.IsNotExist(err) {
+			err := settings.Save()
+			if err != nil {
+				return nil, fmt.Errorf("Could not save settings:\n%v", err)
+			}
+		} else {
+			return nil, fmt.Errorf("Could not load settings file:\n%v", err)
 		}
 	}
 
