@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
@@ -10,9 +12,8 @@ import (
 // Theoretically it is still possible to bug the panic screen, if
 // any `self.window.SetContent`s have call queued after the panic
 func (self *App) ScenePanic(info string) {
-	output := widget.NewTextGrid()
-	output.Append("Panic:")
-	output.Append(info)
+	output := widget.NewRichTextWithText(fmt.Sprintf("Panic:\n%v", info))
+	output.Wrapping = fyne.TextWrapWord
 
 	button := widget.NewButton("Quit", func() { self.Quit() })
 
