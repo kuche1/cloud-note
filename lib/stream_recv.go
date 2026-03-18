@@ -6,6 +6,14 @@ import (
 	"io"
 )
 
+func StreamRecvDatalenString[T io.Reader](stream T) (string, error) {
+	data, err := StreamRecvDatalenSliceByte(stream)
+	if err != nil {
+		return "", err
+	}
+	return string(data), nil
+}
+
 func StreamRecvDatalenSliceByte[T io.Reader](stream T) ([]byte, error) {
 	length, err := StreamRecvUint64(stream)
 	if err != nil {

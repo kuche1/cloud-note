@@ -80,3 +80,27 @@ func (self *Filesystem) FileWrite(unsafePath string, data []byte) error {
 
 	return nil
 }
+
+// IMPROVE000: ? Recursively collect all files
+func (self *Filesystem) ListFiles() ([]string, error) {
+	self.lock.RLock()
+
+	entries, err := os.ReadDir(self.storagePersistent)
+	if err != nil {
+		self.lock.RUnlock()
+		return nil, err
+	}
+
+	self.lock.RUnlock()
+
+	ret := make([]string, 0, len(entries))
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		ret = append(ret, entry.Name())
+	}
+
+	return ret, nil
+}

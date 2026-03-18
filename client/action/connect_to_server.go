@@ -12,6 +12,7 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
+// TODO: Make this require `Window` rather than `fyne.Window`
 func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings) (*quic.Conn, error) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")

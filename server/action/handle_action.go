@@ -23,9 +23,8 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		actionFunc = actionGetNoteContent
 	case lib.ActionSetNoteContent:
 		actionFunc = actionSetNoteContent
-	// TODO:
-	// case lib.ActionListNotes:
-	// 	actionFunc = actionListNotes
+	case lib.ActionListNotes:
+		actionFunc = actionListNotes
 	default:
 		return fmt.Errorf("Unhandled action: %v", action)
 	}

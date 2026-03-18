@@ -6,6 +6,37 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
+func ChanSendSliceStringEOF(conn *quic.Conn, data []string) error {
+	stream, err := conn.OpenStream()
+	if err != nil {
+		return err
+	}
+
+	err = StreamSendUint64(stream, uint64(len(data)))
+	if err != nil {
+		return err
+	}
+
+	for _, item := range data {
+		err = StreamSendDatalenString(stream, item)
+		if err != nil {
+			return err
+		}
+	}
+
+	err = StreamRecvEOF(stream)
+	if err != nil {
+		return err
+	}
+
+	err = StreamSendEOF(stream)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func ChanSendActionEOF(conn *quic.Conn, action Action) error {
 	data := action.ToUint8()
 

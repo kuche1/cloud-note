@@ -7,6 +7,50 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
+func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
+	fmt.Printf("DBG: accept stream\n")
+
+	stream, err := conn.AcceptStream(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("DBG: recv uint64\n")
+
+	numberOfItems, err := StreamRecvUint64(stream)
+	if err != nil {
+		return nil, err
+	}
+
+	data := make([]string, 0, numberOfItems)
+
+	for range numberOfItems {
+		fmt.Printf("DBG: recv item [%v/%v]\n", "?", numberOfItems)
+
+		item, err := StreamRecvDatalenString(stream)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, item)
+	}
+
+	fmt.Printf("DBG: send EOF\n")
+
+	err = StreamSendEOF(stream)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("DBG: recv EOF\n")
+
+	err = StreamRecvEOF(stream)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
 func ChanRecvActionEOF(conn *quic.Conn) (Action, error) {
 	data, err := ChanRecvUint8EOF(conn)
 	if err != nil {
