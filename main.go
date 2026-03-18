@@ -10,10 +10,11 @@ import (
 func main() {
 	runServer := flag.Bool("run-server", false, "Run server")
 	serverAddress := flag.String("server-address", "localhost:4242", "Address to run server on")
+	serverFilesystemStorage := flag.String("server-filesystem-storage", "./server-storage", "Where to store the server files")
 	flag.Parse()
 
 	if *runServer {
-		server.Main(*serverAddress)
+		server.Main(*serverAddress, *serverFilesystemStorage)
 	} else {
 		client.Main()
 	}
