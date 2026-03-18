@@ -13,7 +13,7 @@ type Filesystem struct {
 	storagePersistent string
 	storageTemporary  string
 
-	// TODO: Having a single lock for the whole filesystem sucks
+	// IMPROVE000: Having a single lock for the whole filesystem sucks
 	lock sync.RWMutex
 }
 
