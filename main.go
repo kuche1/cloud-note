@@ -9,7 +9,7 @@ import (
 
 func main() {
 	runServer := flag.Bool("run-server", false, "Run server")
-	serverAddress := flag.String("server-address", ":4242", "Address to run server on")
+	serverAddress := flag.String("server-address", "localhost:4242", "Address to run server on")
 	flag.Parse()
 
 	if *runServer {

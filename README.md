@@ -1,36 +1,53 @@
 # cloud-note
 
+## Run Client or Server
+
+Both the client and server and bindled in the same executable.
+
+See command line arguments on how to select client or server mode:
+
 ```
 go run . -help
 ```
 
-## Build Dependencies
+## Build: PC
+
+```
+go build .
+```
+
+### Dependencies [Example: Mint]
 
 ```
 sudo apt install libxxf86vm-dev
 ```
 
-## Build for Phone
+## Build: Phone
+
+```
+~/go/bin/fyne package -os android -app-id com.example.myapp -icon mobile_icon.png -name "Cloud Note"
+```
+
+For ios you need to replace `-os android` with `-os ios`
+
+For some other options you can check `~/go/bin/fyne package --help`
+
+### Dependencies [Example: Arch]
 
 Source: https://docs.fyne.io/started/mobile/
+
+You must have "Android SDK and NDK" installed
 
 ```
 go install fyne.io/fyne/v2/cmd/fyne@latest
 
-# you must have "Android SDK and NDK" installed
-# on arch you can do that using:
-# ```
-### actually, I don't know if you need all of these, only the first and last may be sufficient
+## Actually, I don't know if you need all of these, only the first and last may be sufficient
 ## Source: https://wiki.archlinux.org/title/Android#SDK_packages
 # paru android-sdk-cmdline-tools-latest
 # paru android-sdk-build-tools
 # paru android-sdk-platform-tools
 # paru android-platform
 # paru android-ndk
-# ```
-# then you need to relogin
 
-~/go/bin/fyne package -os android -app-id com.example.myapp -icon mobile_icon.png -name "Cloud Note"
-# for ios you can simply use `-os ios`
-# for some more options you can check `~/go/bin/fyne package --help`
+# Then you need to relogin
 ```

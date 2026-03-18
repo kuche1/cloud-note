@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/kuche1/cloud-note/lib"
+	"github.com/kuche1/cloud-note/server/config"
 )
 
 func generateTLSConfig() *tls.Config {
@@ -22,7 +23,7 @@ func generateTLSConfig() *tls.Config {
 	template := x509.Certificate{
 		SerialNumber: big.NewInt(1),
 		NotBefore:    time.Now(),
-		NotAfter:     time.Now().Add(CertValidity),
+		NotAfter:     time.Now().Add(config.CertValidity),
 	}
 
 	certDER, err := x509.CreateCertificate(

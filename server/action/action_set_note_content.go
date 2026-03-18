@@ -1,0 +1,28 @@
+package action
+
+import (
+	"fmt"
+
+	"github.com/kuche1/cloud-note/lib"
+	"github.com/kuche1/cloud-note/server/config"
+	"github.com/quic-go/quic-go"
+)
+
+func actionSetNoteContent(conn *quic.Conn) error {
+	data, err := lib.RecvChannelDatalenSliceByteEOF(conn)
+	if err != nil {
+		return fmt.Errorf("Could not receive new note content: %v", err)
+	}
+
+	err = lib.WriteFileAtomic(config.NoteFile, data, config.NoteFileTemporary)
+	if err != nil {
+		return fmt.Errorf("Could not write new note content: %v", err)
+	}
+
+	err = lib.SendChannelEOF(conn)
+	if err != nil {
+		return fmt.Errorf("Could not send save confirmation: %v", err)
+	}
+
+	return nil
+}

@@ -4,11 +4,9 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-
-	"github.com/quic-go/quic-go"
 )
 
-func RecvDatalenSliceByte(stream *quic.Stream) ([]byte, error) {
+func RecvDatalenSliceByte[T io.Reader](stream T) ([]byte, error) {
 	length, err := RecvUint64(stream)
 	if err != nil {
 		return nil, err
@@ -22,7 +20,15 @@ func RecvDatalenSliceByte(stream *quic.Stream) ([]byte, error) {
 	return data, nil
 }
 
-func RecvUint64(stream *quic.Stream) (uint64, error) {
+func RecvUint8[T io.Reader](stream T) (uint8, error) {
+	buf, err := RecvSliceByte(stream, 1)
+	if err != nil {
+		return 0, err
+	}
+	return buf[0], nil
+}
+
+func RecvUint64[T io.Reader](stream T) (uint64, error) {
 	buf, err := RecvSliceByte(stream, 8)
 	if err != nil {
 		return 0, err
@@ -31,7 +37,7 @@ func RecvUint64(stream *quic.Stream) (uint64, error) {
 	return bits, nil
 }
 
-func RecvSliceByte(stream *quic.Stream, length uint64) ([]byte, error) {
+func RecvSliceByte[T io.Reader](stream T, length uint64) ([]byte, error) {
 	data := make([]byte, length)
 	// Allocating this on every receive should not be a big deal since
 	// the network should be much slower than the allocation of the memory
@@ -50,7 +56,7 @@ func RecvSliceByte(stream *quic.Stream, length uint64) ([]byte, error) {
 
 // This is a bit dangeround - an EOF has to be sent only once,
 // but it can be read many times
-func RecvEOF(stream *quic.Stream) error {
+func RecvEOF[T io.Reader](stream T) error {
 	buf := []byte{0}
 
 	_, err := stream.Read(buf)

@@ -1,0 +1,88 @@
+package lib
+
+import (
+	"fmt"
+
+	"github.com/quic-go/quic-go"
+)
+
+func SendChannelActionEOF(conn *quic.Conn, action Action) error {
+	data := action.ToUint8()
+
+	err := SendChannelUint8EOF(conn, data)
+	if err != nil {
+		return fmt.Errorf("Could not send action: %v", err)
+	}
+
+	return nil
+}
+
+func SendChannelUint8EOF(conn *quic.Conn, data uint8) error {
+	stream, err := conn.OpenStream()
+	if err != nil {
+		return fmt.Errorf("Could not open stream: %v", err)
+	}
+
+	err = SendUint8(stream, data)
+	if err != nil {
+		return fmt.Errorf("Clould not send uint8: %v", err)
+	}
+
+	err = RecvEOF(stream)
+	if err != nil {
+		return fmt.Errorf("Could not receive EOF: %v", err)
+	}
+
+	err = SendEOF(stream)
+	if err != nil {
+		return fmt.Errorf("Could not send EOF: %v", err)
+	}
+
+	return nil
+}
+
+func SendChannelDatalenSliceByteEOF(conn *quic.Conn, data []byte) error {
+	// log.Printf("Creating channel")
+
+	stream, err := conn.OpenStream()
+	if err != nil {
+		return fmt.Errorf("Could not open stream: %v", err)
+	}
+
+	// log.Printf("Sending datalen slice byte | %v", data)
+
+	err = SendDatalenSliceByte(stream, data)
+	if err != nil {
+		return fmt.Errorf("Clould not send data: %v", err)
+	}
+
+	// log.Printf("Receiving EOF")
+
+	err = RecvEOF(stream)
+	if err != nil {
+		return fmt.Errorf("Could not receive EOF: %v", err)
+	}
+
+	// log.Printf("Sending EOF")
+
+	err = SendEOF(stream)
+	if err != nil {
+		return fmt.Errorf("Could not send EOF: %v", err)
+	}
+
+	return nil
+}
+
+func SendChannelEOF(conn *quic.Conn) error {
+	streamSend, err := conn.OpenUniStream()
+	if err != nil {
+		return fmt.Errorf("Could not open stream send: %v", err)
+	}
+
+	err = SendEOF(streamSend)
+	if err != nil {
+		return fmt.Errorf("Could not send EOF: %v", err)
+	}
+
+	return nil
+}
