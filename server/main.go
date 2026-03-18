@@ -34,11 +34,10 @@ func handleNewConnections(listener *quic.Listener, fs *filesystem.Filesystem) {
 			continue
 		}
 
-		// IMPROVE000: Currently we're handling only 1 client at a time
-		// Reason: So that we don't have to lock the note
-		log.Printf("Handling connection...")
-		handleNewConnection(conn, fs)
-
-		log.Printf("Connection handled!")
+		go func() {
+			log.Printf("Handling connection...")
+			handleNewConnection(conn, fs)
+			log.Printf("Connection handled!")
+		}()
 	}
 }

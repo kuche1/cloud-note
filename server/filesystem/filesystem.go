@@ -56,8 +56,6 @@ func (self *Filesystem) FileRead(unsafePath string) ([]byte, error) {
 	self.lock.RLock()
 	defer self.lock.RUnlock()
 
-	// TODO: Test by adding a delay
-
 	data, err := os.ReadFile(persistent)
 	if err != nil {
 		return nil, fmt.Errorf("Could not read file: %v", err)
@@ -74,8 +72,6 @@ func (self *Filesystem) FileWrite(unsafePath string, data []byte) error {
 
 	self.lock.Lock()
 	defer self.lock.Unlock()
-
-	// TODO: Test by adding a delay
 
 	err = lib.WriteFileAtomic(persistent, data, temporary)
 	if err != nil {
