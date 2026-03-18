@@ -9,7 +9,10 @@ import (
 )
 
 func Main(address string, filesystemStorage string) {
-	fs := filesystem.NewFilesystem(filesystemStorage)
+	fs, err := filesystem.NewFilesystem(filesystemStorage)
+	if err != nil {
+		log.Fatalf("Could not initialise filesystem interface: %v", err)
+	}
 
 	listener, err := quic.ListenAddr(address, generateTLSConfig(), nil)
 	if err != nil {

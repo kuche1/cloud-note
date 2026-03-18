@@ -29,7 +29,7 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 
 	err = actionFunc(conn, fs)
 	if err != nil {
-		return fmt.Errorf("Could not execute action `%v`: %v", action, err)
+		return fmt.Errorf("Could not execute action with ID %v: %v", action, err)
 	}
 
 	err = lib.RecvConnEOF(conn)

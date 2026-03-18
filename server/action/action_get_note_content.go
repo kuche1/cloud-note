@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/kuche1/cloud-note/lib"
+	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
 	"github.com/quic-go/quic-go"
 )
@@ -20,8 +21,10 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 	// 	}
 	// }
 
+	// TODO: This currently crashes if you have not manually created the `note.txt` file
+
 	// IMPROVE000: Read the file by chunks
-	data, err := fs.FileRead("ERROR")
+	data, err := fs.FileRead(config.NoteFile)
 	if err != nil {
 		return fmt.Errorf("Could not read note content: %v", err)
 	}

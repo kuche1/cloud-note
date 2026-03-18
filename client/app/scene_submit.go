@@ -7,6 +7,7 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
+// IMPROVE000: Ideally we would only send the new note if the content has actually changed
 func (self *App) SceneSubmit(newText string, settings *settings.Settings) {
 	output := widget.NewTextGrid()
 	self.window.SetContent(output)
