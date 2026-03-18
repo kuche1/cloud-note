@@ -27,7 +27,7 @@ func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok
 			container,
 			func(yes bool) {
 				if yes {
-					// Improve: This will block
+					// Improve000: This will block
 
 					err := self.SetServerAddr(entry.Text)
 

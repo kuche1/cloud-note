@@ -5,7 +5,7 @@ import (
 	"io"
 )
 
-// IMPROVE: Make a variant that sends the data chunk by chunk rather than all of it at once
+// IMPROVE000: Make a variant that sends the data chunk by chunk rather than all of it at once
 func SendDatalenSliceByte[T io.Writer](stream T, data []byte) error {
 	err := SendUint64(stream, uint64(len(data)))
 	if err != nil {

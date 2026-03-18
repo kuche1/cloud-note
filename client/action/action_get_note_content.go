@@ -28,7 +28,7 @@ func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings
 		output.Append("Receiving note content...")
 	})
 
-	// IMPROVE?: Add a loading bar, maybe when sending too
+	// IMPROVE000: ? Add a loading bar, maybe when sending too
 	data, err := lib.RecvChannelDatalenSliceByteEOF(conn)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive note content:\n%v", err)

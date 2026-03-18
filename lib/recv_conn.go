@@ -9,7 +9,7 @@ import (
 )
 
 func RecvConnEOF(conn *quic.Conn) error {
-	// IMPROVE: We can perhaps make something better using `conn.Context().Done()`
+	// IMPROVE000: We can perhaps make something better using `conn.Context().Done()`
 	// and `conn.Context().Err()`
 	_, err := conn.AcceptStream(context.Background())
 	if err != nil {

@@ -23,7 +23,7 @@ func actionGetNoteContent(conn *quic.Conn) error {
 		}
 	}
 
-	// IMPROVE: Read the file by chunks
+	// IMPROVE000: Read the file by chunks
 	data, err := os.ReadFile(config.NoteFile)
 	if err != nil {
 		return fmt.Errorf("Could not read note: %v", err)
