@@ -19,6 +19,14 @@ func RunApp() {
 	windo := app.NewWindow("Cloud Note")
 	windo.Resize(fyne.NewSize(400, 600))
 
+	// TODO: Make something like that
+	// settings, err := settings.Settings{}.NewFromPersistentStorage(app.Storage().RootURI().Path())
+	// if err != nil {
+	// 	windo.ScenePanic(fmt.Sprintf("Could not initalise settings:\n%v", err))
+	// 	self.window.ShowAndRun()
+	//  quit(1)
+	// }
+
 	self := App{
 		app:    app,
 		window: window.Window{}.NewFromFyneWindow(&windo),
