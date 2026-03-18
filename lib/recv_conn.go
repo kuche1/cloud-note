@@ -30,7 +30,7 @@ func RecvConnEOF(conn *quic.Conn) error {
 
 		return fmt.Errorf("Could not receive connection EOF: %v", err)
 
-	} else {
-		return fmt.Errorf("Connection is not closed")
 	}
+
+	return fmt.Errorf("Expected to receive connection EOF, instead received a new stream")
 }
