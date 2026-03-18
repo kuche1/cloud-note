@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
+	"github.com/kuche1/cloud-note/client/config"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
@@ -13,7 +14,7 @@ func (self *App) SceneSubmit(newText string, settings *settings.Settings) {
 	self.window.SetContent(output)
 
 	go func() {
-		err := action.ActionSetNoteContent(self.window.FyneWindow, output, newText, settings)
+		err := action.ActionSetNoteContent(self.window.FyneWindow, output, newText, settings, config.NoteName)
 		if err != nil {
 			self.ScenePanic(err.Error())
 			return

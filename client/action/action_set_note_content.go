@@ -9,7 +9,7 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText string, settings *settings.Settings) error {
+func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText string, settings *settings.Settings, noteName string) error {
 	conn, err := connectToServer(window, output, settings)
 	if err != nil {
 		return err
@@ -22,6 +22,15 @@ func ActionSetNoteContent(window *fyne.Window, output *widget.TextGrid, newText 
 	err = lib.SendChannelActionEOF(conn, lib.ActionSetNoteContent)
 	if err != nil {
 		return fmt.Errorf("Could not send action set note: %v", err)
+	}
+
+	fyne.Do(func() {
+		output.Append("Sending note name...")
+	})
+
+	err = lib.SendChannelDatalenSliceByteEOF(conn, []byte(noteName))
+	if err != nil {
+		return err
 	}
 
 	fyne.Do(func() {
