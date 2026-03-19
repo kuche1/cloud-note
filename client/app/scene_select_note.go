@@ -29,11 +29,22 @@ func fetchNotes(app *App, output output.Output, settings *settings.Settings) {
 }
 
 func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
+	/////
+
 	list := widget.NewSelect(
 		notes,
 		func(selection string) {},
 	)
-	list.PlaceHolder = "[Select Note]"
+	// list.PlaceHolder = "[Select Note]"
+	list.PlaceHolder = "[No Pre-Existing Notes]"
+
+	if len(notes) > 0 {
+		// IMPROVE000: Instead of automatically picking the first one, remember the
+		// user's choice
+		list.SetSelected(notes[0])
+	}
+
+	/////
 
 	edit := widget.NewButton(
 		"Edit",
