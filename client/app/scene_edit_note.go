@@ -9,7 +9,6 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
-// TODO: Add undo button
 func (self *App) SceneEditNote(previousText string, settings *settings.Settings, noteName string) {
 	editor := widget.NewMultiLineEntry()
 	editor.Text = previousText
@@ -22,6 +21,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		"Cancel",
 		func() { self.SceneSelectNote(settings) },
 	)
+
 	submit := widget.NewButton(
 		"Submit",
 		func() { self.IntermissionSubmitNewNoteContent(editor.Text, settings, noteName) },
@@ -41,13 +41,14 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 			self.window.Focus(editor)
 		},
 	)
+
 	scrollToBottom := widget.NewButton(
 		"Jump bottom",
 
 		func() {
-			editor.Append("\n")
 			editor.CursorRow = math.MaxInt
 			editor.Refresh()
+			editor.TypedRune('\n')
 
 			self.window.Focus(editor)
 
@@ -62,12 +63,30 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		},
 	)
 
+	undo := widget.NewButton(
+		"Undo",
+		func() {
+			editor.Undo()
+			self.window.Focus(editor)
+		},
+	)
+
+	redo := widget.NewButton(
+		"Redo",
+		func() {
+			editor.Redo()
+			self.window.Focus(editor)
+		},
+	)
+
 	buttons := container.NewGridWithColumns(
 		2,
 		cancel,
 		submit,
 		scrollToTop,
 		scrollToBottom,
+		undo,
+		redo,
 	)
 
 	container := container.NewBorder(
