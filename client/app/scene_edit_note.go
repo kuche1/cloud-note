@@ -23,6 +23,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 	)
 	submit := widget.NewButton(
 		"Submit",
+		// TODO: This needs to become a popup rather than a scene
 		func() { self.SceneSubmit(editor.Text, settings, noteName) },
 	)
 

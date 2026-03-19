@@ -14,6 +14,8 @@ func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
+	// TODO: Add a limit to the note length
+	// This is also going to make the problem of reading by chunks from the filesystem irrelevant
 	noteContent, err := lib.ChanRecvDatalenSliceByteEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)

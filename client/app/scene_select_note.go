@@ -39,7 +39,7 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 	list.PlaceHolder = "[No Pre-Existing Notes]"
 
 	if len(notes) > 0 {
-		// IMPROVE000: Instead of automatically picking the first one, remember the
+		// TODO: Instead of automatically picking the first one, remember the
 		// user's choice
 		list.SetSelected(notes[0])
 	}
