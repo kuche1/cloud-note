@@ -3,6 +3,7 @@ package action
 import (
 	"fmt"
 
+	"github.com/kuche1/cloud-note/client/config"
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
@@ -29,7 +30,7 @@ func ActionListNotes(window *window.Window, output output.Output, settings *sett
 
 	output.Println("Receiving list of notes...")
 
-	notes, err := lib.ChanRecvSliceStringEOF(conn)
+	notes, err := lib.ChanRecvSliceStringEOF(conn, config.NumberOfNotesMaxLength)
 	if err != nil {
 		return nil, err
 	}

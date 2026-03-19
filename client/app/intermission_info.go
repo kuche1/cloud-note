@@ -9,7 +9,7 @@ import (
 func (self *App) IntermissionInfo(messaage string, callbackAfterTheUserHasPressedOk func()) {
 	previousFyneContent := self.window.Content()
 
-	output, outputWidget := output.NewOutputFyneTextGrid()
+	output, outputWidget := output.NewOutputFyneAny()
 	output.Println(messaage)
 
 	button := widget.NewButton(

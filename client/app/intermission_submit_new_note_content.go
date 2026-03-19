@@ -13,21 +13,22 @@ import (
 func (self *App) IntermissionSubmitNewNoteContent(newText string, settings *settings.Settings, noteName string) {
 	previousFyneContent := self.window.Content()
 
-	output, textGrid := output.NewOutputFyneTextGrid()
-	self.window.SetContent(textGrid)
+	output, outputWidget := output.NewOutputFyneAny()
+	self.window.SetContent(outputWidget)
 
 	go func() {
+		message := "Upload Successful"
+
 		err := action.ActionSetNoteContent(self.window, output, newText, settings, noteName)
 		if err != nil {
-			fyne.Do(func() {
-				self.IntermissionInfo(
-					fmt.Sprintf("Could not set note content:\n%v", err),
-					func() { self.window.SetContent(previousFyneContent) },
-				)
-			})
-			return
+			message = fmt.Sprintf("Could not set note content:\n%v", err)
 		}
 
-		fyne.Do(func() { self.window.SetContent(previousFyneContent) })
+		fyne.Do(func() {
+			self.IntermissionInfo(
+				message,
+				func() { self.window.SetContent(previousFyneContent) },
+			)
+		})
 	}()
 }

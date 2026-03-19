@@ -6,18 +6,22 @@ import (
 	"io"
 )
 
-func StreamRecvDatalenString[T io.Reader](stream T) (string, error) {
-	data, err := StreamRecvDatalenSliceByte(stream)
+func StreamRecvDatalenString[T io.Reader](stream T, maxLength uint64) (string, error) {
+	data, err := StreamRecvDatalenSliceByte(stream, maxLength)
 	if err != nil {
 		return "", err
 	}
 	return string(data), nil
 }
 
-func StreamRecvDatalenSliceByte[T io.Reader](stream T) ([]byte, error) {
+func StreamRecvDatalenSliceByte[T io.Reader](stream T, maxLength uint64) ([]byte, error) {
 	length, err := StreamRecvUint64(stream)
 	if err != nil {
 		return nil, err
+	}
+
+	if length > maxLength {
+		return nil, fmt.Errorf("Item size (%v) exceeds maximum allowed size (%v)", length, maxLength)
 	}
 
 	data, err := StreamRecvSliceByte(stream, length)

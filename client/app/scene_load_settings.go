@@ -10,11 +10,11 @@ import (
 )
 
 func (self *App) SceneLoadSettings() {
-	output, textGrid := output.NewOutputFyneTextGrid()
+	output, outputWidget := output.NewOutputFyneAny()
 
 	dialog := dialog.NewCustomWithoutButtons(
 		"Load Settings",
-		textGrid,
+		outputWidget,
 		*self.window.FyneWindow,
 	)
 

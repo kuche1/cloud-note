@@ -20,8 +20,8 @@ func (self *App) SceneCreateNewNote(settings *settings.Settings) {
 		"Ok",
 		func() {
 			// ok.Disable()
-			output, textGrid := output.NewOutputFyneTextGrid()
-			self.window.SetContent(textGrid)
+			output, outputWidget := output.NewOutputFyneAny()
+			self.window.SetContent(outputWidget)
 
 			go func() {
 				newNoteName := entry.Text

@@ -12,8 +12,8 @@ import (
 )
 
 func (self *App) SceneSelectNote(settings *settings.Settings) {
-	output, textGrid := output.NewOutputFyneTextGrid()
-	self.window.SetContent(textGrid)
+	output, outputWidget := output.NewOutputFyneAny()
+	self.window.SetContent(outputWidget)
 
 	go fetchNotes(self, output, settings)
 }

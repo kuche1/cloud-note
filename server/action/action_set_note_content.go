@@ -4,20 +4,18 @@ import (
 	"fmt"
 
 	"github.com/kuche1/cloud-note/lib"
+	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
 	"github.com/quic-go/quic-go"
 )
 
 func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	// TODO: Add a limit to the note name
-	noteName, err := lib.ChanRecvStringEOF(conn)
+	noteName, err := lib.ChanRecvStringEOF(conn, config.NoteNameMaxLength)
 	if err != nil {
 		return err
 	}
 
-	// TODO: Add a limit to the note length
-	// This is also going to make the problem of reading by chunks from the filesystem irrelevant
-	noteContent, err := lib.ChanRecvStringEOF(conn)
+	noteContent, err := lib.ChanRecvStringEOF(conn, config.NoteContentsMaxLength)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)
 	}

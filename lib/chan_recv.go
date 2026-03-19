@@ -7,7 +7,7 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
+func ChanRecvSliceStringEOF(conn *quic.Conn, maxLength uint64) ([]string, error) {
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
 		return nil, err
@@ -21,7 +21,7 @@ func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
 	data := make([]string, 0, numberOfItems)
 
 	for range numberOfItems {
-		item, err := StreamRecvDatalenString(stream)
+		item, err := StreamRecvDatalenString(stream, maxLength)
 		if err != nil {
 			return nil, err
 		}
@@ -79,8 +79,8 @@ func ChanRecvUint8EOF(conn *quic.Conn) (uint8, error) {
 	return data, nil
 }
 
-func ChanRecvStringEOF(conn *quic.Conn) (string, error) {
-	data, err := ChanRecvDatalenSliceByteEOF(conn)
+func ChanRecvStringEOF(conn *quic.Conn, maxLength uint64) (string, error) {
+	data, err := ChanRecvDatalenSliceByteEOF(conn, maxLength)
 	if err != nil {
 		return "", err
 	}
@@ -88,38 +88,26 @@ func ChanRecvStringEOF(conn *quic.Conn) (string, error) {
 	return string(data), nil
 }
 
-func ChanRecvDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {
-	// log.Printf("Accepting stream")
-
+func ChanRecvDatalenSliceByteEOF(conn *quic.Conn, maxLength uint64) ([]byte, error) {
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
 		return nil, fmt.Errorf("Could not accept stream: %v", err)
 	}
 
-	// log.Printf("Receiving datalen slice byte")
-
-	data, err := StreamRecvDatalenSliceByte(stream)
+	data, err := StreamRecvDatalenSliceByte(stream, maxLength)
 	if err != nil {
 		return nil, fmt.Errorf("Clould not receive data: %v", err)
 	}
-
-	// log.Printf("Received datalen slice byte | %v", data)
-
-	// log.Printf("Sending EOF")
 
 	err = StreamSendEOF(stream)
 	if err != nil {
 		return nil, fmt.Errorf("Could not send EOF: %v", err)
 	}
 
-	// log.Printf("Receiving EOF")
-
 	err = StreamRecvEOF(stream)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive EOF: %v", err)
 	}
-
-	// log.Printf("Received EOF")
 
 	return data, nil
 }

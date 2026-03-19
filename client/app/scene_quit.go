@@ -6,8 +6,8 @@ import (
 )
 
 func (self *App) SceneQuit() {
-	output, textGrid := output.NewOutputFyneTextGrid()
-	self.window.SetContent(textGrid)
+	output, outputWidget := output.NewOutputFyneAny()
+	self.window.SetContent(outputWidget)
 
 	go cancel(self, output)
 }

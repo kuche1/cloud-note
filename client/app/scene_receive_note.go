@@ -9,11 +9,11 @@ import (
 )
 
 func (self *App) SceneReceiveNote(settings *settings.Settings, noteName string) {
-	output, textGrid := output.NewOutputFyneTextGrid()
+	output, outputWidget := output.NewOutputFyneAny()
 
 	dialog := dialog.NewCustomWithoutButtons(
 		"Receive Note",
-		textGrid,
+		outputWidget,
 		*self.window.FyneWindow,
 	)
 

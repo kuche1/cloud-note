@@ -3,6 +3,7 @@ package action
 import (
 	"fmt"
 
+	"github.com/kuche1/cloud-note/client/config"
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
@@ -37,7 +38,7 @@ func ActionGetNoteContent(window *window.Window, output output.Output, settings 
 	output.Println("Receiving note content...")
 
 	// IMPROVE000: ? Add a loading bar, maybe when sending too
-	data, err := lib.ChanRecvDatalenSliceByteEOF(conn)
+	data, err := lib.ChanRecvDatalenSliceByteEOF(conn, config.NoteContentsMaxLength)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive note content:\n%v", err)
 	}
