@@ -1,6 +1,8 @@
 package app
 
 import (
+	"fmt"
+
 	"fyne.io/fyne/v2"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
@@ -17,13 +19,15 @@ func (self *App) IntermissionSubmitNewNoteContent(newText string, settings *sett
 	go func() {
 		err := action.ActionSetNoteContent(self.window, output, newText, settings, noteName)
 		if err != nil {
-			// TODO: Show popup and exit
-			self.ScenePanic(err.Error())
+			fyne.Do(func() {
+				self.IntermissionInfo(
+					fmt.Sprintf("Could not set note content:\n%v", err),
+					func() { self.window.SetContent(previousFyneContent) },
+				)
+			})
 			return
 		}
 
-		fyne.Do(func() {
-			self.window.SetContent(previousFyneContent)
-		})
+		fyne.Do(func() { self.window.SetContent(previousFyneContent) })
 	}()
 }
