@@ -2,6 +2,7 @@ package window
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 )
 
 type Window struct {
@@ -24,4 +25,9 @@ func (self *Window) SetContent(content fyne.CanvasObject) {
 
 func (self *Window) Focus(element fyne.Focusable) {
 	(*self.FyneWindow).Canvas().Focus(element)
+}
+
+func (self *Window) Popup() {
+	popup := dialog.NewInformation("title", "message", *self.FyneWindow)
+	popup.Show()
 }
