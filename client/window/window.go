@@ -56,3 +56,7 @@ func (self *Window) ShowDialogOutput(
 	})
 
 }
+
+func (self *Window) Focus(element fyne.Focusable) {
+	(*self.FyneWindow).Canvas().Focus(element)
+}

@@ -37,7 +37,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 			editor.CursorRow = 0
 			editor.Refresh()
 
-			(*self.window.FyneWindow).Canvas().Focus(editor)
+			self.window.Focus(editor)
 		},
 	)
 	scrollToBottom := widget.NewButton(
@@ -48,7 +48,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 			editor.CursorRow = math.MaxInt
 			editor.Refresh()
 
-			(*self.window.FyneWindow).Canvas().Focus(editor)
+			self.window.Focus(editor)
 
 			//// This also works but is also hacky
 			// editor.CursorRow = len(editor.Text)
