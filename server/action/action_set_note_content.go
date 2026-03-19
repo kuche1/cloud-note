@@ -9,19 +9,20 @@ import (
 )
 
 func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := lib.ChanRecvDatalenSliceByteEOF(conn)
+	// TODO: Add a limit to the note name
+	noteName, err := lib.ChanRecvStringEOF(conn)
 	if err != nil {
 		return err
 	}
 
 	// TODO: Add a limit to the note length
 	// This is also going to make the problem of reading by chunks from the filesystem irrelevant
-	noteContent, err := lib.ChanRecvDatalenSliceByteEOF(conn)
+	noteContent, err := lib.ChanRecvStringEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)
 	}
 
-	err = fs.FileWrite(string(noteName), noteContent)
+	err = fs.FileWrite(noteName, []byte(noteContent))
 	if err != nil {
 		return fmt.Errorf("Could not write new note content: %v", err)
 	}

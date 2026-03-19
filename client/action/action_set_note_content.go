@@ -35,14 +35,14 @@ func ActionSetNoteContent(
 
 	output.Println("Sending note name...")
 
-	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(noteName))
+	err = lib.ChanSendStringEOF(conn, noteName)
 	if err != nil {
 		return err
 	}
 
 	output.Println("Sending note content...")
 
-	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(newText))
+	err = lib.ChanSendStringEOF(conn, newText)
 	if err != nil {
 		return fmt.Errorf("Could not send new note content:\n%v", err)
 	}
