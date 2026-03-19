@@ -19,6 +19,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 
 	cancel := widget.NewButton(
 		"Cancel",
+		// TODO: Need to add confirmation here
 		func() { self.SceneSelectNote(settings) },
 	)
 
@@ -83,10 +84,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		2,
 		cancel,
 		submit,
-		scrollToTop,
-		scrollToBottom,
 		undo,
 		redo,
+		scrollToTop,
+		scrollToBottom,
 	)
 
 	container := container.NewBorder(

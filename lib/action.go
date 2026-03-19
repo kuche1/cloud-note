@@ -10,6 +10,7 @@ const (
 	ActionSetNoteContent
 	ActionListNotes
 	ActionCreateNewNote
+	ActionDeleteExistingNote // TODO
 	Actions
 )
 
