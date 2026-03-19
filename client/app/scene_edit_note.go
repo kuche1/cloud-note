@@ -27,18 +27,28 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 	)
 
 	scrollToTop := widget.NewButton(
-		"Scroll to Top",
+		"Jump Top",
+
 		func() {
 			editor.CursorColumn = 0
 			editor.CursorRow = 0
+			editor.TypedRune('\n')
+			editor.CursorColumn = 0
+			editor.CursorRow = 0
 			editor.Refresh()
+
+			(*self.window.FyneWindow).Canvas().Focus(editor)
 		},
 	)
 	scrollToBottom := widget.NewButton(
-		"Scroll to Bottom",
+		"Jump bottom",
+
 		func() {
+			editor.Append("\n")
 			editor.CursorRow = math.MaxInt
 			editor.Refresh()
+
+			(*self.window.FyneWindow).Canvas().Focus(editor)
 
 			//// This also works but is also hacky
 			// editor.CursorRow = len(editor.Text)
