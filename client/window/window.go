@@ -24,6 +24,7 @@ func (self *Window) SetContent(content fyne.CanvasObject) {
 	(*self.FyneWindow).SetContent(content)
 }
 
+// TODO: Yes, just get rid of this
 func (self *Window) ShowDialogOutput(
 	title string,
 	newThread func(output *widget.TextGrid),

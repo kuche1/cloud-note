@@ -8,12 +8,12 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/settings"
+	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
-// TODO: Make this require `Window` rather than `fyne.Window`
-func connectToServer(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings) (*quic.Conn, error) {
+func connectToServer(window *window.Window, output *widget.TextGrid, settings *settings.Settings) (*quic.Conn, error) {
 	fyne.Do(func() {
 		output.Append("Connecting to server...")
 	})

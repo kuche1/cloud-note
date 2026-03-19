@@ -2,6 +2,7 @@ package app
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/settings"
@@ -13,14 +14,26 @@ func (self *App) SceneSubmit(newText string, settings *settings.Settings, noteNa
 	self.window.SetContent(output)
 
 	go func() {
-		err := action.ActionSetNoteContent(self.window.FyneWindow, output, newText, settings, noteName)
+		err := action.ActionSetNoteContent(self.window, output, newText, settings, noteName)
 		if err != nil {
 			self.ScenePanic(err.Error())
 			return
 		}
 
 		fyne.Do(func() {
-			self.SceneCancel()
+			var popup *dialog.CustomDialog
+			popup = dialog.NewCustomWithoutButtons(
+				"Upload Successful",
+				widget.NewButton(
+					"Ok",
+					func() {
+						popup.Dismiss()
+						self.SceneEditNote(newText, settings, noteName)
+					},
+				),
+				*self.window.FyneWindow,
+			)
+			popup.Show()
 		})
 	}()
 }

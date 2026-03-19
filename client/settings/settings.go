@@ -19,7 +19,7 @@ type Settings struct {
 func (self Settings) NewFromDefaults(persistentStorage string) *Settings {
 	return &Settings{
 		persistentStorage: persistentStorage,
-		ServerAddr:        ":4242",
+		ServerAddr:        "localhost:4242",
 	}
 }
 

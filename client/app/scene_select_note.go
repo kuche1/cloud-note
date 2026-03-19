@@ -18,7 +18,7 @@ func (self *App) SceneSelectNote(settings *settings.Settings) {
 }
 
 func fetchNotes(app *App, output *widget.TextGrid, settings *settings.Settings) {
-	notes, err := action.ActionListNotes(app.window.FyneWindow, output, settings)
+	notes, err := action.ActionListNotes(app.window, output, settings)
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not fetch notes: %v", err))
 		return
@@ -34,7 +34,7 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 	)
 	list.PlaceHolder = "[Select Note]"
 
-	button := widget.NewButton(
+	edit := widget.NewButton(
 		"Edit",
 		func() {
 			selection := list.Selected
@@ -45,9 +45,29 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 		},
 	)
 
+	newNote := widget.NewButton(
+		"Create New Note",
+		func() {
+			app.SceneCreateNewNote(settings)
+		},
+	)
+
+	quit := widget.NewButton(
+		"Quit",
+		func() {
+			app.SceneQuit()
+		},
+	)
+
 	container := container.NewBorder(
 		list,
-		button,
+		container.NewVBox(
+			edit,
+			widget.NewSeparator(),
+			newNote,
+			widget.NewSeparator(),
+			quit,
+		),
 		nil,
 		nil,
 	)

@@ -9,7 +9,7 @@ const (
 	ActionGetNoteContent Action = iota
 	ActionSetNoteContent
 	ActionListNotes
-	// ActionCreateNewNote // TODO
+	ActionCreateNewNote
 	Actions
 )
 

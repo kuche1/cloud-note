@@ -6,10 +6,11 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/settings"
+	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionGetNoteContent(window *fyne.Window, output *widget.TextGrid, settings *settings.Settings, noteName string) ([]byte, error) {
+func ActionGetNoteContent(window *window.Window, output *widget.TextGrid, settings *settings.Settings, noteName string) ([]byte, error) {
 	conn, err := connectToServer(window, output, settings)
 	if err != nil {
 		return nil, err

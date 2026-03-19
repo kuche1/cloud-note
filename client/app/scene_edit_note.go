@@ -19,7 +19,7 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 
 	cancel := widget.NewButton(
 		"Cancel",
-		func() { self.SceneCancel() },
+		func() { self.SceneSelectNote(settings) },
 	)
 	submit := widget.NewButton(
 		"Submit",

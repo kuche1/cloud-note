@@ -8,14 +8,10 @@ import (
 )
 
 func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
-	fmt.Printf("DBG: accept stream\n")
-
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("DBG: recv uint64\n")
 
 	numberOfItems, err := StreamRecvUint64(stream)
 	if err != nil {
@@ -25,8 +21,6 @@ func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
 	data := make([]string, 0, numberOfItems)
 
 	for range numberOfItems {
-		fmt.Printf("DBG: recv item [%v/%v]\n", "?", numberOfItems)
-
 		item, err := StreamRecvDatalenString(stream)
 		if err != nil {
 			return nil, err
@@ -34,14 +28,10 @@ func ChanRecvSliceStringEOF(conn *quic.Conn) ([]string, error) {
 		data = append(data, item)
 	}
 
-	fmt.Printf("DBG: send EOF\n")
-
 	err = StreamSendEOF(stream)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("DBG: recv EOF\n")
 
 	err = StreamRecvEOF(stream)
 	if err != nil {
@@ -87,6 +77,15 @@ func ChanRecvUint8EOF(conn *quic.Conn) (uint8, error) {
 	}
 
 	return data, nil
+}
+
+func ChanRecvStringEOF(conn *quic.Conn) (string, error) {
+	data, err := ChanRecvDatalenSliceByteEOF(conn)
+	if err != nil {
+		return "", err
+	}
+
+	return string(data), nil
 }
 
 func ChanRecvDatalenSliceByteEOF(conn *quic.Conn) ([]byte, error) {

@@ -5,7 +5,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (self *App) SceneCancel() {
+func (self *App) SceneQuit() {
 	output := widget.NewTextGrid()
 	self.window.SetContent(output)
 

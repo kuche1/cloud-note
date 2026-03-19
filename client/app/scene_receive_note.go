@@ -12,7 +12,7 @@ func (self *App) SceneReceiveNote(settings *settings.Settings, noteName string) 
 		"Receive Note",
 
 		func(output *widget.TextGrid) {
-			data, err := action.ActionGetNoteContent(self.window.FyneWindow, output, settings, noteName)
+			data, err := action.ActionGetNoteContent(self.window, output, settings, noteName)
 			if err != nil {
 				self.ScenePanic(err.Error())
 				return

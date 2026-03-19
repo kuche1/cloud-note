@@ -72,6 +72,10 @@ func ChanSendUint8EOF(conn *quic.Conn, data uint8) error {
 	return nil
 }
 
+func ChanSendStringEOF(conn *quic.Conn, data string) error {
+	return ChanSendDatalenSliceByteEOF(conn, []byte(data))
+}
+
 func ChanSendDatalenSliceByteEOF(conn *quic.Conn, data []byte) error {
 	// log.Printf("Creating channel")
 

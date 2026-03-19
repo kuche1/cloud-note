@@ -5,9 +5,10 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/window"
 )
 
-func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok bool) {
+func (self *Settings) PromptNewServerAddr(window *window.Window, info string) (_ok bool) {
 	wasChanged := make(chan bool)
 
 	fyne.Do(func() {
@@ -36,13 +37,13 @@ func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok
 
 						fyne.Do(func() {
 							button12345 := widget.NewButton(
-								"ok",
+								"Ok",
 								func() { wasChanged <- false },
 							)
 							dialog12345 := dialog.NewCustomWithoutButtons(
 								"Error",
 								button12345,
-								*window,
+								*window.FyneWindow,
 							)
 							dialog12345.Show()
 						})
@@ -56,7 +57,7 @@ func (self *Settings) PromptNewServerAddr(window *fyne.Window, info string) (_ok
 					wasChanged <- false
 				}
 			},
-			*window,
+			*window.FyneWindow,
 		)
 
 		dialog.Show()
