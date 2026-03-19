@@ -12,6 +12,11 @@ func ActionCreateNewNote(newNoteName string, window *window.Window, output outpu
 	if err != nil {
 		return err
 	}
+	defer func() {
+		output.Println("Closing connection...")
+		lib.ConnSendEOF(conn)
+		output.Println("Done")
+	}()
 
 	output.Println("Sending action...")
 
@@ -33,8 +38,6 @@ func ActionCreateNewNote(newNoteName string, window *window.Window, output outpu
 	if err != nil {
 		return err
 	}
-
-	output.Println("Done!")
 
 	return nil
 }

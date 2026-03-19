@@ -20,6 +20,11 @@ func ActionSetNoteContent(
 	if err != nil {
 		return err
 	}
+	defer func() {
+		output.Println("Closing connection...")
+		lib.ConnSendEOF(conn)
+		output.Println("Done")
+	}()
 
 	output.Println("Sending action set note...")
 
@@ -48,12 +53,6 @@ func ActionSetNoteContent(
 	if err != nil {
 		return fmt.Errorf("Did not receive save confirmation:\n%v", err)
 	}
-
-	output.Println("Closing connection...")
-
-	lib.ConnSendEOF(conn)
-
-	output.Println("Done!")
 
 	return nil
 }

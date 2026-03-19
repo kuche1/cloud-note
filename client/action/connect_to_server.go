@@ -12,7 +12,11 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func connectToServer(window *window.Window, output output.Output, settings *settings.Settings) (*quic.Conn, error) {
+func connectToServer(
+	window *window.Window,
+	output output.Output,
+	settings *settings.Settings,
+) (_conn *quic.Conn, _err error) {
 	output.Println("Connecting to server...")
 
 	conn, err := quic.DialAddr(

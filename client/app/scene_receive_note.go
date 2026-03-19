@@ -20,7 +20,7 @@ func (self *App) SceneReceiveNote(settings *settings.Settings, noteName string) 
 	dialog.Show()
 
 	go func() {
-		defer dialog.Dismiss()
+		defer fyne.Do(func() { dialog.Dismiss() })
 
 		data, err := action.ActionGetNoteContent(self.window, output, settings, noteName)
 		if err != nil {

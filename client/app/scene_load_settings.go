@@ -21,7 +21,7 @@ func (self *App) SceneLoadSettings() {
 	dialog.Show()
 
 	go func() {
-		defer dialog.Dismiss()
+		defer fyne.Do(func() { dialog.Dismiss() })
 		// Won't be perfect but at least I'll know that it will be dismissed 100%
 
 		output.Println("Loading settings...")

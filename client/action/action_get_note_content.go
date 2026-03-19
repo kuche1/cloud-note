@@ -14,6 +14,11 @@ func ActionGetNoteContent(window *window.Window, output output.Output, settings 
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		output.Println("Closing connection...")
+		lib.ConnSendEOF(conn)
+		output.Println("Done")
+	}()
 
 	output.Println("Sending action get note...")
 
@@ -36,12 +41,6 @@ func ActionGetNoteContent(window *window.Window, output output.Output, settings 
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive note content:\n%v", err)
 	}
-
-	output.Println("Closing connection...")
-
-	lib.ConnSendEOF(conn)
-
-	output.Println("Done!")
 
 	return data, nil
 }

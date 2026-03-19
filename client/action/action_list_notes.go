@@ -18,6 +18,11 @@ func ActionListNotes(window *window.Window, output output.Output, settings *sett
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		output.Println("Closing connection...")
+		lib.ConnSendEOF(conn)
+		output.Println("Done")
+	}()
 
 	output.Println("Sending action list notes...")
 
