@@ -18,6 +18,8 @@ func NewOutputFyneTextGrid() (*OutputFyneTextGrid, *widget.TextGrid) {
 }
 
 func (self *OutputFyneTextGrid) Println(text string) {
+	// I'm adding `fyne.Do` since as of right now everywhere in the code
+	// where `.Append` is called is wrapped in `fyne.Do`
 	fyne.Do(func() {
 		self.textGrid.Append(text)
 	})

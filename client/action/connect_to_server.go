@@ -5,18 +5,15 @@ import (
 	"crypto/tls"
 	"fmt"
 
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/quic-go/quic-go"
 )
 
-func connectToServer(window *window.Window, output *widget.TextGrid, settings *settings.Settings) (*quic.Conn, error) {
-	fyne.Do(func() {
-		output.Append("Connecting to server...")
-	})
+func connectToServer(window *window.Window, output output.Output, settings *settings.Settings) (*quic.Conn, error) {
+	output.Println("Connecting to server...")
 
 	conn, err := quic.DialAddr(
 		context.Background(),
@@ -41,9 +38,7 @@ func connectToServer(window *window.Window, output *widget.TextGrid, settings *s
 		return nil, retErr
 	}
 
-	fyne.Do(func() {
-		output.Append("Connected!")
-	})
+	output.Println("Connected!")
 
 	return conn, nil
 }

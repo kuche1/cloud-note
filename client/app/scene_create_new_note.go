@@ -7,6 +7,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
+	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
@@ -19,8 +20,8 @@ func (self *App) SceneCreateNewNote(settings *settings.Settings) {
 		"Ok",
 		func() {
 			// ok.Disable()
-			output := widget.NewTextGrid()
-			self.window.SetContent(output)
+			output, textGrid := output.NewOutputFyneTextGrid()
+			self.window.SetContent(textGrid)
 
 			go func() {
 				newNoteName := entry.Text

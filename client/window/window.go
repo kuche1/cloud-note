@@ -3,7 +3,7 @@ package window
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/output"
 )
 
 type Window struct {
@@ -27,14 +27,14 @@ func (self *Window) SetContent(content fyne.CanvasObject) {
 // TODO: Yes, just get rid of this
 func (self *Window) ShowDialogOutput(
 	title string,
-	newThread func(output *widget.TextGrid),
+	newThread func(output output.Output),
 ) {
 	fyne.Do(func() {
-		output := widget.NewTextGrid()
+		output, textGrid := output.NewOutputFyneTextGrid()
 
 		dialog := dialog.NewCustomWithoutButtons(
 			title,
-			output,
+			textGrid,
 			*self.FyneWindow,
 		)
 

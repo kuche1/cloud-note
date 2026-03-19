@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
@@ -12,8 +12,8 @@ func (self *App) SceneLoadSettings() {
 	self.window.ShowDialogOutput(
 		"Load Settings",
 
-		func(output *widget.TextGrid) {
-			fyne.Do(func() { output.Append("Loading settings...") })
+		func(output output.Output) {
+			output.Println("Loading settings...")
 
 			settings, err :=
 				settings.Settings{}.NewFromPersistentStorage(self.app.Storage().RootURI().Path())
@@ -22,7 +22,7 @@ func (self *App) SceneLoadSettings() {
 				return
 			}
 
-			fyne.Do(func() { output.Append("Done!") })
+			output.Println("Done!")
 
 			fyne.Do(func() { self.SceneSelectNote(settings) })
 		},
