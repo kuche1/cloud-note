@@ -19,6 +19,10 @@ func (self *Window) ShowAndRun() {
 	(*self.FyneWindow).ShowAndRun()
 }
 
+func (self *Window) Content() fyne.CanvasObject {
+	return (*self.FyneWindow).Content()
+}
+
 func (self *Window) SetContent(content fyne.CanvasObject) {
 	(*self.FyneWindow).SetContent(content)
 }

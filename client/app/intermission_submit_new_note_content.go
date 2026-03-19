@@ -10,7 +10,7 @@ import (
 // IMPROVE000: Ideally we would only send the new note if the content has actually changed
 func (self *App) IntermissionSubmitNewNoteContent(newText string, settings *settings.Settings, noteName string) {
 	// TODO: If this works, export it
-	previousFyneContent := (*self.window.FyneWindow).Content()
+	previousFyneContent := self.window.Content()
 
 	output, textGrid := output.NewOutputFyneTextGrid()
 	self.window.SetContent(textGrid)
