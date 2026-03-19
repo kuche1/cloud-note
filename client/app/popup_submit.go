@@ -3,38 +3,30 @@ package app
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
 // IMPROVE000: Ideally we would only send the new note if the content has actually changed
-func (self *App) SceneSubmit(newText string, settings *settings.Settings, noteName string) {
+func (self *App) PopupSubmitNewNoteContent(newText string, settings *settings.Settings, noteName string) {
 	output, textGrid := output.NewOutputFyneTextGrid()
-	self.window.SetContent(textGrid)
+
+	popup := dialog.NewCustomWithoutButtons(
+		"Submit Note",
+		textGrid,
+		*self.window.FyneWindow,
+	)
+
+	popup.Show()
 
 	go func() {
+		defer fyne.Do(popup.Dismiss)
+
 		err := action.ActionSetNoteContent(self.window, output, newText, settings, noteName)
 		if err != nil {
 			self.ScenePanic(err.Error())
 			return
 		}
-
-		fyne.Do(func() {
-			var popup *dialog.CustomDialog
-			popup = dialog.NewCustomWithoutButtons(
-				"Upload Successful",
-				widget.NewButton(
-					"Ok",
-					func() {
-						popup.Dismiss()
-						self.SceneEditNote(newText, settings, noteName)
-					},
-				),
-				*self.window.FyneWindow,
-			)
-			popup.Show()
-		})
 	}()
 }
