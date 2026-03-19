@@ -19,8 +19,6 @@ func NewOutputFyneRichText() (*OutputFyneRichText, *widget.RichText) {
 }
 
 func (self *OutputFyneRichText) Println(text string) {
-	// I'm adding `fyne.Do` since as of right now everywhere in the code
-	// where `.Append` is called is wrapped in `fyne.Do`
 	fyne.Do(func() {
 		self.richText.AppendMarkdown(text)
 	})

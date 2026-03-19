@@ -4,27 +4,39 @@ import (
 	"fmt"
 
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/dialog"
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
 func (self *App) SceneLoadSettings() {
-	self.window.ShowDialogOutput(
+	output, textGrid := output.NewOutputFyneTextGrid()
+
+	dialog := dialog.NewCustomWithoutButtons(
 		"Load Settings",
-
-		func(output output.Output) {
-			output.Println("Loading settings...")
-
-			settings, err :=
-				settings.Settings{}.NewFromPersistentStorage(self.app.Storage().RootURI().Path())
-			if err != nil {
-				self.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
-				return
-			}
-
-			output.Println("Done!")
-
-			fyne.Do(func() { self.SceneSelectNote(settings) })
-		},
+		textGrid,
+		*self.window.FyneWindow,
 	)
+
+	dialog.Show()
+
+	go func() {
+		defer dialog.Dismiss()
+		// Won't be perfect but at least I'll know that it will be dismissed 100%
+
+		output.Println("Loading settings...")
+
+		settings, err :=
+			settings.Settings{}.NewFromPersistentStorage(self.app.Storage().RootURI().Path())
+		if err != nil {
+			self.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
+			return
+		}
+
+		output.Println("Done!")
+
+		fyne.Do(func() {
+			self.SceneSelectNote(settings)
+		})
+	}()
 }

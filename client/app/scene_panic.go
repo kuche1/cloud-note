@@ -11,9 +11,6 @@ import (
 // Theoretically it is still possible to bug the panic screen, if
 // any `self.window.SetContent`s have call queued after the panic
 func (self *App) ScenePanic(info string) {
-	// output := widget.NewRichTextWithText(fmt.Sprintf("Panic:\n%v", info))
-	// output.Wrapping = fyne.TextWrapWord
-	// TODO: test this
 	output, richText := output.NewOutputFyneRichText()
 	output.Println("Panic:")
 	output.Println(info)
