@@ -24,6 +24,8 @@ sudo apt install libxxf86vm-dev
 
 ## Build: Phone
 
+TODO: use another app id and make a better icon
+
 ```
 ~/go/bin/fyne package -os android -app-id com.example.myapp -icon mobile_icon.png -name "Cloud Note"
 ```
