@@ -10,7 +10,14 @@ import (
 )
 
 // IMPROVE000: Ideally we would only send the new note if the content has actually changed
-func (self *App) IntermissionSubmitNewNoteContent(newText string, settings *settings.Settings, noteName string) {
+// BUT if we are to do that we need to make that a setting as to let paranoid users send
+// the same note a billion time
+func (self *App) IntermissionSubmitNewNoteContent(
+	newText string,
+	settings *settings.Settings,
+	noteName string,
+	callbackSuccess func(),
+) {
 	previousFyneContent := self.window.Content()
 
 	output, outputWidget := output.NewOutputFyneAny()
@@ -27,7 +34,10 @@ func (self *App) IntermissionSubmitNewNoteContent(newText string, settings *sett
 		fyne.Do(func() {
 			self.IntermissionInfo(
 				message,
-				func() { self.window.SetContent(previousFyneContent) },
+				func() {
+					self.window.SetContent(previousFyneContent)
+					callbackSuccess()
+				},
 			)
 		})
 	}()

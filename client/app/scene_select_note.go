@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"slices"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -35,13 +36,19 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 		notes,
 		func(selection string) {},
 	)
-	// list.PlaceHolder = "[Select Note]"
-	list.PlaceHolder = "[No Pre-Existing Notes]"
 
-	if len(notes) > 0 {
-		// TODO: Instead of automatically picking the first one, remember the
-		// user's choice
-		list.SetSelected(notes[0])
+	if len(notes) == 0 {
+		list.PlaceHolder = "[No Pre-Existing Notes]"
+	} else {
+		if settings.LastEditedNote == "" {
+			list.PlaceHolder = "[Select Note]"
+		} else {
+			if slices.Contains(notes, settings.LastEditedNote) {
+				list.SetSelected(settings.LastEditedNote)
+			} else {
+				list.PlaceHolder = fmt.Sprintf("[No Longer Available] %v", settings.LastEditedNote)
+			}
+		}
 	}
 
 	/////
@@ -53,6 +60,7 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 			if selection == "" {
 				return
 			}
+			settings.SetLastEditedNote(selection)
 			app.SceneReceiveNote(settings, selection)
 		},
 	)

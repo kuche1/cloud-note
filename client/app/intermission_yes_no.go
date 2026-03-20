@@ -30,7 +30,7 @@ func (self *App) IntermissionYesNo(messaage string, callbackYes func(), callback
 
 	container := container.NewBorder(
 		nil,
-		container.NewAdaptiveGrid(2, yes, no),
+		container.NewAdaptiveGrid(2, no, yes),
 		nil,
 		nil,
 		outputWidget,

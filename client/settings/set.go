@@ -22,3 +22,22 @@ func (self *Settings) SetServerAddr(new string) error {
 
 	return nil
 }
+
+func (self *Settings) SetLastEditedNote(new string) error {
+	old := self.ServerAddr
+
+	if old == new {
+		return nil
+	}
+
+	self.LastEditedNote = new
+
+	// IMPROVE000: No need to rewrite all settings for a single item
+	err := self.Save()
+	if err != nil {
+		self.LastEditedNote = old
+		return fmt.Errorf("Could not set last edited server note:\n%v", err)
+	}
+
+	return nil
+}

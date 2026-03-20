@@ -11,10 +11,14 @@ import (
 )
 
 type Settings struct {
+	// private
 	persistentStorage string
 
+	// actual settings
 	ServerAddr string
-	// TODO: Save the last edited note here (if it does not exist, say that it was deleted in the template text, maybe use the scratch style if it is available)
+
+	// app-related persistent stuff
+	LastEditedNote string
 	// TODO: Save the user token/password here
 }
 
@@ -22,6 +26,7 @@ func (self Settings) NewFromDefaults(persistentStorage string) *Settings {
 	return &Settings{
 		persistentStorage: persistentStorage,
 		ServerAddr:        "localhost:4242",
+		LastEditedNote:    "",
 	}
 }
 

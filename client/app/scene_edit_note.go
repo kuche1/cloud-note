@@ -37,7 +37,14 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 
 	submit := widget.NewButton(
 		"Submit",
-		func() { self.IntermissionSubmitNewNoteContent(editor.Text, settings, noteName) },
+		func() {
+			self.IntermissionSubmitNewNoteContent(
+				editor.Text,
+				settings,
+				noteName,
+				func() { previousText = editor.Text },
+			)
+		},
 	)
 
 	scrollToTop := widget.NewButton(
