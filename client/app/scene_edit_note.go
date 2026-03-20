@@ -9,6 +9,7 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
+// TODO: Make this more pleasent to work with
 func (self *App) SceneEditNote(previousText string, settings *settings.Settings, noteName string) {
 	editor := widget.NewMultiLineEntry()
 	editor.Text = previousText
