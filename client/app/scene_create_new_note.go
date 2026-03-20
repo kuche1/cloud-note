@@ -53,4 +53,5 @@ func (self *App) SceneCreateNewNote(settings *settings.Settings) {
 	)
 
 	self.window.SetContent(container)
+	self.window.Focus(entry)
 }

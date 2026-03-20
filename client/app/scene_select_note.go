@@ -39,15 +39,22 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 
 	if len(notes) == 0 {
 		list.PlaceHolder = "[No Pre-Existing Notes]"
+		settings.SetLastEditedNote("")
 	} else {
-		if settings.LastEditedNote == "" {
-			list.PlaceHolder = "[Select Note]"
+		list.PlaceHolder = "[Select Note]"
+	}
+
+	if settings.LastEditedNote == "" {
+		if len(notes) == 1 {
+			onlyNote := notes[0]
+			list.SetSelected(onlyNote)
+			settings.SetLastEditedNote(onlyNote)
+		}
+	} else {
+		if slices.Contains(notes, settings.LastEditedNote) {
+			list.SetSelected(settings.LastEditedNote)
 		} else {
-			if slices.Contains(notes, settings.LastEditedNote) {
-				list.SetSelected(settings.LastEditedNote)
-			} else {
-				list.PlaceHolder = fmt.Sprintf("[No Longer Available] %v", settings.LastEditedNote)
-			}
+			list.PlaceHolder = fmt.Sprintf("[No Longer Available] %v", settings.LastEditedNote)
 		}
 	}
 
@@ -61,6 +68,7 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 				return
 			}
 			settings.SetLastEditedNote(selection)
+
 			app.SceneReceiveNote(settings, selection)
 		},
 	)
@@ -69,6 +77,19 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 		"Create New Note",
 		func() {
 			app.SceneCreateNewNote(settings)
+		},
+	)
+
+	deleteNote := widget.NewButton(
+		"Delete Note",
+		func() {
+			selection := list.Selected
+			if selection == "" {
+				return
+			}
+			settings.SetLastEditedNote(selection) // Actually it turns out better if this is here
+
+			app.SceneDeleteNote(settings, selection)
 		},
 	)
 
@@ -85,6 +106,8 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 			edit,
 			widget.NewSeparator(),
 			newNote,
+			widget.NewSeparator(),
+			deleteNote,
 			widget.NewSeparator(),
 			quit,
 		),

@@ -7,8 +7,9 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionCreateNewNote(
-	newNoteName string,
+// TODO: Add to GUI
+func ActionDeleteExistingNote(
+	noteName string,
 	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
@@ -25,14 +26,14 @@ func ActionCreateNewNote(
 
 	output.Println("Sending action...")
 
-	err = lib.ChanSendActionEOF(conn, lib.ActionCreateNewNote)
+	err = lib.ChanSendActionEOF(conn, lib.ActionDeleteExistingNote)
 	if err != nil {
 		return err
 	}
 
 	output.Println("Sending new note name...")
 
-	err = lib.ChanSendStringEOF(conn, newNoteName)
+	err = lib.ChanSendStringEOF(conn, noteName)
 	if err != nil {
 		return err
 	}

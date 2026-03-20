@@ -21,9 +21,15 @@ func NewOutputFyneRichText() (*OutputFyneRichText, *widget.RichText) {
 }
 
 func (self *OutputFyneRichText) Println(text string) {
+	// IMPROVE000: This is not great, we need to find (or make) a better widget that
+	// does not rely on hacks
+	// IMPROVE000: We can use this to insert 1 new line, but if we want to inser
+	// 2 new lines this does not work
 	fixedText := strings.ReplaceAll(text, "\n", "\n\n")
 
 	fyne.Do(func() {
+		// IMPROVE000: Actually, does this automatically append a new line or not?
+		// IMPROVE000: "This API is intended for appending complete markdown documents or standalone fragments, and should not be used to parse a single markdown document piecewise"
 		self.richText.AppendMarkdown(fixedText)
 	})
 }

@@ -114,16 +114,29 @@ func (self *Filesystem) FileCreateNew(unsafePath string) error {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
-	// fmt.Printf("DBG: Creating file named `%v`\n", persistent)
-
 	file, err := os.OpenFile(persistent, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
 	if err != nil {
-		// fmt.Printf("DBG: Creating file named `%v: Failure`\n", persistent)
 		return err
 	}
-	// fmt.Printf("DBG: Creating file named `%v: Success`\n", persistent)
 
 	err = file.Close()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (self *Filesystem) FileDeleteExisting(unsafePath string) error {
+	persistent, _, err := self.makePathLocal(unsafePath)
+	if err != nil {
+		return err
+	}
+
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
+	err = os.Remove(persistent)
 	if err != nil {
 		return err
 	}
