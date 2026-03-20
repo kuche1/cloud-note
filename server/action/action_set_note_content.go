@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/kuche1/cloud-note/lib"
-	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
 	"github.com/kuche1/cloud-note/server/srvnet"
 	"github.com/quic-go/quic-go"
@@ -16,7 +15,7 @@ func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
-	noteContent, err := lib.ChanRecvStringEOF(conn, config.NoteContentsMaxLength)
+	noteContent, err := srvnet.ChanRecvNotecontentEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)
 	}
