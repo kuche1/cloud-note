@@ -20,8 +20,19 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 
 	cancel := widget.NewButton(
 		"Cancel",
-		// TODO: Need to add confirmation here
-		func() { self.SceneSelectNote(settings) },
+
+		func() {
+			if editor.Text == previousText {
+				self.SceneSelectNote(settings)
+				return
+			}
+
+			self.IntermissionYesNo(
+				"Note content has changed.\nAre you sure you want to discard the new changes?",
+				func() { self.SceneSelectNote(settings) },
+				func() {},
+			)
+		},
 	)
 
 	submit := widget.NewButton(
