@@ -28,7 +28,7 @@ func ConnRecvEOF(conn *quic.Conn) error {
 		// 	}
 		// }
 
-		return fmt.Errorf("Could not receive connection EOF: %v", err)
+		return err
 
 	}
 
