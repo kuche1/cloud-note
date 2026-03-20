@@ -30,7 +30,7 @@ func deleteNote(app *App, noteName string, output output.Output, settings *setti
 		fyne.Do(func() {
 			app.IntermissionInfo(
 				fmt.Sprintf("Could not delete note:\n%v\n\nReason:\n%v", noteName, err),
-				func() { app.SceneSelectNote(settings) }, // TODO(vb): test this
+				func() { app.SceneSelectNote(settings) },
 			)
 		})
 		return

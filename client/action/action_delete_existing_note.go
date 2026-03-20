@@ -7,7 +7,6 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-// TODO: Add to GUI
 func ActionDeleteExistingNote(
 	noteName string,
 	window *window.Window,
