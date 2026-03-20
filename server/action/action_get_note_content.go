@@ -26,7 +26,6 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
-	// IMPROVE000: Read the file by chunks
 	noteContent, err := fs.FileRead(string(noteName))
 	if err != nil {
 		return fmt.Errorf("Could not read note content: %v", err)

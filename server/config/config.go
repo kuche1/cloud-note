@@ -10,13 +10,12 @@ const CertValidity = time.Hour * 24 * 365
 // account
 // Same goes for the client
 
-// TODO: Make message readable for the end user
+// IMPROVE000: Make message readable for the end user
 // Lowering this will make previously created notes with
 // names longer than this inaccessible
 const NoteNameMaxLength uint64 = 512
 
-// TODO: Make message readable for the end user
-// TODO: Remove the improve notes for reading chunk by chunk
+// IMPROVE000: Make message readable for the end user
 // A note's content is read in one go (as to make it
 // impossible for malicious clients to keep the filesystem locked
 // almost indefinetely by lowering their download speed to the bare

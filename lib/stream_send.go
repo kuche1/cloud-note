@@ -9,7 +9,6 @@ func StreamSendDatalenString[T io.Writer](stream T, data string) error {
 	return StreamSendDatalenSliceByte(stream, []byte(data))
 }
 
-// IMPROVE000: Make a variant that sends the data chunk by chunk rather than all of it at once
 func StreamSendDatalenSliceByte[T io.Writer](stream T, data []byte) error {
 	err := StreamSendUint64(stream, uint64(len(data)))
 	if err != nil {
