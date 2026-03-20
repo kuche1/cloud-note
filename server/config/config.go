@@ -10,7 +10,6 @@ const CertValidity = time.Hour * 24 * 365
 // account
 // Same goes for the client
 
-// IMPROVE000: Make message readable for the end user
 // Lowering this will make previously created notes with
 // names longer than this inaccessible
 const NoteNameMaxLength uint64 = 512

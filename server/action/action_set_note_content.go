@@ -6,11 +6,12 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
+	"github.com/kuche1/cloud-note/server/srvnet"
 	"github.com/quic-go/quic-go"
 )
 
 func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := lib.ChanRecvStringEOF(conn, config.NoteNameMaxLength)
+	noteName, err := srvnet.ChanRecvNotenameEOF(conn)
 	if err != nil {
 		return err
 	}

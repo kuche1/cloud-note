@@ -2,13 +2,13 @@ package action
 
 import (
 	"github.com/kuche1/cloud-note/lib"
-	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
+	"github.com/kuche1/cloud-note/server/srvnet"
 	"github.com/quic-go/quic-go"
 )
 
 func actionCreateNewNote(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	newNoteName, err := lib.ChanRecvStringEOF(conn, config.NoteNameMaxLength)
+	newNoteName, err := srvnet.ChanRecvNotenameEOF(conn)
 	if err != nil {
 		return err
 	}
