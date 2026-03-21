@@ -16,10 +16,10 @@ type Settings struct {
 
 	// actual settings
 	ServerAddr string
+	// TODO: Add a "user token"/"server password
 
 	// app-related persistent stuff
 	LastEditedNote string
-	// TODO: Save the user token/password here
 }
 
 func (self Settings) NewFromDefaults(persistentStorage string) *Settings {
