@@ -1,4 +1,4 @@
-// TODO: Just reduce the usage of `dialog.New` as they are buggy
+// IMPROVE000: Just reduce the usage of `dialog.New` as they are buggy
 
 package client
 
