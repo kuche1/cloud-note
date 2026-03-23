@@ -9,7 +9,7 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 )
 
-// TODO: Make this more pleasent to work with
+// IMPROVE001: Make this more pleasent to work with
 func (self *App) SceneEditNote(
 	previousText string,
 	settings *settings.Settings,

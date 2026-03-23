@@ -16,7 +16,7 @@ type Settings struct {
 
 	// actual settings
 	ServerAddr string
-	// ServerPassword string // TODO: Add a "user token"/"server password" -> if this field is empty, ask the user for a password, then fill in that field with the password, and connect to the server
+	// ServerPassword string // IMPROVE001: Add a "user token"/"server password" -> if this field is empty, ask the user for a password, then fill in that field with the password, and connect to the server
 
 	// app-related persistent stuff
 	LastEditedNote string

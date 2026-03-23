@@ -1,6 +1,6 @@
 // Package for network-related shorthands for the server
 
-// TODO:
+// IMPROVE001:
 // Make equivalent functions but for the client ?
 
 package srvnet
