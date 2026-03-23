@@ -10,13 +10,27 @@ import (
 )
 
 // TODO: Make this more pleasent to work with
-func (self *App) SceneEditNote(previousText string, settings *settings.Settings, noteName string) {
+func (self *App) SceneEditNote(
+	previousText string,
+	settings *settings.Settings,
+	noteName string,
+	viewingCachedCopy bool,
+) {
 	editor := widget.NewMultiLineEntry()
+
 	editor.Text = previousText
 	editor.TextStyle.Monospace = true
 	editor.Wrapping = fyne.TextWrapBreak // TextWrapWord
 	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
 	// editor.PlaceHolder = "Enter some text"
+
+	if viewingCachedCopy {
+		// IMPROVE001: Would be much better if instead we overwrite the TypedRune and TypedKey or
+		// whatever they're called methods
+		editor.OnChanged = func(idk string) {
+			editor.Text = previousText
+		}
+	}
 
 	cancel := widget.NewButton(
 		"Cancel",
@@ -47,6 +61,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		},
 	)
 
+	if viewingCachedCopy {
+		submit.Disable()
+	}
+
 	scrollToTop := widget.NewButton(
 		"Jump Top",
 
@@ -61,6 +79,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 			self.window.Focus(editor)
 		},
 	)
+
+	if viewingCachedCopy {
+		scrollToTop.Disable()
+	}
 
 	scrollToBottom := widget.NewButton(
 		"Jump bottom",
@@ -83,6 +105,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		},
 	)
 
+	if viewingCachedCopy {
+		scrollToBottom.Disable()
+	}
+
 	undo := widget.NewButton(
 		"Undo",
 		func() {
@@ -91,6 +117,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		},
 	)
 
+	if viewingCachedCopy {
+		undo.Disable()
+	}
+
 	redo := widget.NewButton(
 		"Redo",
 		func() {
@@ -98,6 +128,10 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 			self.window.Focus(editor)
 		},
 	)
+
+	if viewingCachedCopy {
+		redo.Disable()
+	}
 
 	buttons := container.NewGridWithColumns(
 		2,
@@ -109,8 +143,16 @@ func (self *App) SceneEditNote(previousText string, settings *settings.Settings,
 		scrollToBottom,
 	)
 
-	container := container.NewBorder(
+	containerTop := container.NewVBox(
 		buttons,
+	)
+
+	if viewingCachedCopy {
+		containerTop.Add(container.NewCenter(widget.NewLabel("Viewing Read-Only Cached Copy")))
+	}
+
+	container := container.NewBorder(
+		containerTop,
 		nil,
 		nil,
 		nil,
