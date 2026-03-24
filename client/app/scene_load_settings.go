@@ -22,10 +22,11 @@ func (self *App) SceneLoadSettings() {
 	go func() {
 		output.Println("Loading settings...")
 
+		dialog.Dismiss()
+
 		err :=
 			self.settings.LoadFromPersistentStorage()
 		if err != nil {
-			dialog.Dismiss()
 			self.ScenePanic(fmt.Sprintf("Could not load settings:\n%v", err))
 			return
 		}
@@ -33,8 +34,10 @@ func (self *App) SceneLoadSettings() {
 		output.Println("Done!")
 
 		fyne.Do(func() {
-			dialog.Dismiss()
-			self.SceneSelectNote()
+			self.settings.SceneInputMissing(
+				self.window,
+				self.SceneSelectNote,
+			)
 		})
 	}()
 }
