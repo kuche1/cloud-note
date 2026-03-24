@@ -23,6 +23,24 @@ func (self *Settings) SetServerAddr(new string) error {
 	return nil
 }
 
+func (self *Settings) SetServerPassword(new string) error {
+	old := self.ServerPassword
+
+	if old == new {
+		return nil
+	}
+
+	self.ServerPassword = new
+
+	err := self.Save()
+	if err != nil {
+		self.ServerPassword = old
+		return fmt.Errorf("Could not set server password:\n%v", err)
+	}
+
+	return nil
+}
+
 func (self *Settings) SetLastEditedNote(new string) error {
 	old := self.ServerAddr
 

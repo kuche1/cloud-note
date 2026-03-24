@@ -8,7 +8,7 @@ import (
 
 func (self *Settings) sceneInputMissingServerAddr(window *window.Window, callbackWhenAllDone func()) {
 	if self.ServerAddr != "" {
-		callbackWhenAllDone()
+		self.sceneInputMissingServerPassword(window, callbackWhenAllDone)
 		return
 	}
 
@@ -24,9 +24,9 @@ func (self *Settings) sceneInputMissingServerAddr(window *window.Window, callbac
 			if addr == "" {
 				return
 			}
-			self.ServerAddr = addr
+			self.SetServerAddr(addr)
 
-			callbackWhenAllDone()
+			self.sceneInputMissingServerPassword(window, callbackWhenAllDone)
 		},
 	)
 
