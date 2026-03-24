@@ -6,13 +6,11 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/settings"
 )
 
 // IMPROVE001: Make this more pleasent to work with
 func (self *App) SceneEditNote(
 	previousText string,
-	settings *settings.Settings,
 	noteName string,
 	viewingCachedCopy bool,
 ) {
@@ -37,13 +35,13 @@ func (self *App) SceneEditNote(
 
 		func() {
 			if editor.Text == previousText {
-				self.SceneSelectNote(settings)
+				self.SceneSelectNote()
 				return
 			}
 
 			self.IntermissionYesNo(
 				"Note content has changed.\nAre you sure you want to discard the new changes?",
-				func() { self.SceneSelectNote(settings) },
+				func() { self.SceneSelectNote() },
 				func() {},
 			)
 		},
@@ -54,7 +52,6 @@ func (self *App) SceneEditNote(
 		func() {
 			self.IntermissionSubmitNewNoteContent(
 				editor.Text,
-				settings,
 				noteName,
 				func() { previousText = editor.Text },
 			)

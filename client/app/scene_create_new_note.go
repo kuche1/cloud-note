@@ -8,10 +8,9 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
-	"github.com/kuche1/cloud-note/client/settings"
 )
 
-func (self *App) SceneCreateNewNote(settings *settings.Settings) {
+func (self *App) SceneCreateNewNote() {
 	entry := widget.NewEntry()
 	entry.PlaceHolder = "New Note Name"
 
@@ -26,14 +25,14 @@ func (self *App) SceneCreateNewNote(settings *settings.Settings) {
 			go func() {
 				newNoteName := entry.Text
 
-				err := action.ActionCreateNewNote(newNoteName, self.window, output, settings)
+				err := action.ActionCreateNewNote(newNoteName, self.window, output, self.settings)
 				if err != nil {
 					self.ScenePanic(fmt.Sprintf("Could not create new note:\n%v", err))
 					return
 				}
 
 				fyne.Do(func() {
-					self.SceneEditNote("", settings, newNoteName, false)
+					self.SceneEditNote("", newNoteName, false)
 				})
 			}()
 		},
@@ -42,7 +41,7 @@ func (self *App) SceneCreateNewNote(settings *settings.Settings) {
 	cancel := widget.NewButton(
 		"Cancel",
 		func() {
-			self.SceneSelectNote(settings)
+			self.SceneSelectNote()
 		},
 	)
 

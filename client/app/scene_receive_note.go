@@ -5,10 +5,9 @@ import (
 	"fyne.io/fyne/v2/dialog"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
-	"github.com/kuche1/cloud-note/client/settings"
 )
 
-func (self *App) SceneReceiveNote(settings *settings.Settings, noteName string) {
+func (self *App) SceneReceiveNote(noteName string) {
 	output, outputWidget := output.NewOutputFyneAny()
 
 	dialog := dialog.NewCustomWithoutButtons(
@@ -22,14 +21,14 @@ func (self *App) SceneReceiveNote(settings *settings.Settings, noteName string) 
 	go func() {
 		defer fyne.Do(func() { dialog.Dismiss() })
 
-		data, err := action.ActionGetNoteContent(self.window, output, settings, noteName)
+		data, err := action.ActionGetNoteContent(self.window, output, self.settings, noteName)
 		if err != nil {
 			self.ScenePanic(err.Error())
 			return
 		}
 
 		fyne.Do(func() {
-			self.SceneEditNote(string(data), settings, noteName, false)
+			self.SceneEditNote(string(data), noteName, false)
 		})
 	}()
 }

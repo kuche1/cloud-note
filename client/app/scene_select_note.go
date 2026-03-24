@@ -9,27 +9,26 @@ import (
 	"fyne.io/fyne/v2/widget"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
-	"github.com/kuche1/cloud-note/client/settings"
 )
 
-func (self *App) SceneSelectNote(settings *settings.Settings) {
+func (self *App) SceneSelectNote() {
 	output, outputWidget := output.NewOutputFyneAny()
 	self.window.SetContent(outputWidget)
 
-	go fetchNotes(self, output, settings)
+	go fetchNotes(self, output)
 }
 
-func fetchNotes(app *App, output output.Output, settings *settings.Settings) {
-	notes, err := action.ActionListNotes(app.window, output, settings)
+func fetchNotes(app *App, output output.Output) {
+	notes, err := action.ActionListNotes(app.window, output, app.settings)
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not fetch notes: %v", err))
 		return
 	}
 
-	fyne.Do(func() { sceneSelectNote(app, settings, notes) })
+	fyne.Do(func() { sceneSelectNote(app, notes) })
 }
 
-func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
+func sceneSelectNote(app *App, notes []string) {
 	/////
 
 	list := widget.NewSelect(
@@ -39,22 +38,22 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 
 	if len(notes) == 0 {
 		list.PlaceHolder = "[No Pre-Existing Notes]"
-		settings.SetLastEditedNote("")
+		app.settings.SetLastEditedNote("")
 	} else {
 		list.PlaceHolder = "[Select Note]"
 	}
 
-	if settings.LastEditedNote == "" {
+	if app.settings.LastEditedNote == "" {
 		if len(notes) == 1 {
 			onlyNote := notes[0]
 			list.SetSelected(onlyNote)
-			settings.SetLastEditedNote(onlyNote)
+			app.settings.SetLastEditedNote(onlyNote)
 		}
 	} else {
-		if slices.Contains(notes, settings.LastEditedNote) {
-			list.SetSelected(settings.LastEditedNote)
+		if slices.Contains(notes, app.settings.LastEditedNote) {
+			list.SetSelected(app.settings.LastEditedNote)
 		} else {
-			list.PlaceHolder = fmt.Sprintf("[No Longer Available] %v", settings.LastEditedNote)
+			list.PlaceHolder = fmt.Sprintf("[No Longer Available] %v", app.settings.LastEditedNote)
 		}
 	}
 
@@ -67,16 +66,16 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 			if selection == "" {
 				return
 			}
-			settings.SetLastEditedNote(selection)
+			app.settings.SetLastEditedNote(selection)
 
-			app.SceneReceiveNote(settings, selection)
+			app.SceneReceiveNote(selection)
 		},
 	)
 
 	newNote := widget.NewButton(
 		"Create New Note",
 		func() {
-			app.SceneCreateNewNote(settings)
+			app.SceneCreateNewNote()
 		},
 	)
 
@@ -87,9 +86,9 @@ func sceneSelectNote(app *App, settings *settings.Settings, notes []string) {
 			if selection == "" {
 				return
 			}
-			settings.SetLastEditedNote(selection) // Actually it turns out better if this is here
+			app.settings.SetLastEditedNote(selection) // Actually it turns out better if this is here
 
-			app.SceneDeleteNote(settings, selection)
+			app.SceneDeleteNote(selection)
 		},
 	)
 

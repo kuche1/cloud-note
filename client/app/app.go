@@ -5,12 +5,14 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 )
 
 type App struct {
-	app    fyne.App
-	window *window.Window
+	app      fyne.App
+	window   *window.Window
+	settings *settings.Settings
 }
 
 func RunApp() {
@@ -21,21 +23,13 @@ func RunApp() {
 
 	windo := window.Window{}.NewFromFyneWindow(&fyneWindow)
 
-	// IMPROVE000: Make something like that
-	// settings, err := settings.Settings{}.NewFromPersistentStorage(app.Storage().RootURI().Path())
-	// if err != nil {
-	// 	windo.ScenePanic(fmt.Sprintf("Could not initalise settings:\n%v", err))
-	// 	self.window.ShowAndRun()
-	//  quit(1)
-	// }
-
 	self := App{
-		app:    app,
-		window: windo,
+		app:      app,
+		window:   windo,
+		settings: settings.Settings{}.NewFromDefaults(app.Storage().RootURI().Path()),
 	}
 
 	self.FirstScene()
-
 	self.window.ShowAndRun()
 }
 

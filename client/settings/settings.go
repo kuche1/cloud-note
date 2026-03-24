@@ -11,7 +11,7 @@ import (
 )
 
 type Settings struct {
-	// private
+	// private (fields with lower case letters do not get saved to the settings file)
 	persistentStorage string
 
 	// actual settings
@@ -31,32 +31,30 @@ func (self Settings) NewFromDefaults(persistentStorage string) *Settings {
 	}
 }
 
-func (self Settings) NewFromPersistentStorage(persistentStorage string) (*Settings, error) {
-	settings := Settings{}.NewFromDefaults(persistentStorage)
-
-	settingsFile, _ := getSettingsFile(settings.persistentStorage)
+func (self *Settings) LoadFromPersistentStorage() error {
+	settingsFile, _ := getSettingsFile(self.persistentStorage)
 
 	data, err := os.ReadFile(settingsFile)
 	if err == nil {
 		decoder := toml.NewDecoder(strings.NewReader(string(data)))
 		// decoder = decoder.DisallowUnknownFields()
 
-		err = decoder.Decode(settings)
+		err = decoder.Decode(self)
 		if err != nil {
-			return nil, fmt.Errorf("Could not decode settings file:\n%v", err)
+			return fmt.Errorf("Could not decode settings file:\n%v", err)
 		}
 	} else {
 		if os.IsNotExist(err) {
-			err := settings.Save()
+			err := self.Save()
 			if err != nil {
-				return nil, fmt.Errorf("Could not save settings:\n%v", err)
+				return fmt.Errorf("Could not save settings:\n%v", err)
 			}
 		} else {
-			return nil, fmt.Errorf("Could not load settings file:\n%v", err)
+			return fmt.Errorf("Could not load settings file:\n%v", err)
 		}
 	}
 
-	return settings, nil
+	return nil
 }
 
 func (self *Settings) Save() error {

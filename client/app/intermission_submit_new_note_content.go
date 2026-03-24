@@ -6,15 +6,16 @@ import (
 	"fyne.io/fyne/v2"
 	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
-	"github.com/kuche1/cloud-note/client/settings"
 )
 
 // IMPROVE000: Ideally we would only send the new note if the content has actually changed
 // BUT if we are to do that we need to make that a setting as to let paranoid users send
-// the same note a billion time
+// the same note a billion time (perhaps add a setting for this, and when the button is clicked,
+// perform a check weather the content has changed or not)
+// IMPROVE000: For some reason after we switch back to the previous scene the window expands
+// ddramatically (vertically) on desktop
 func (self *App) IntermissionSubmitNewNoteContent(
 	newText string,
-	settings *settings.Settings,
 	noteName string,
 	callbackSuccess func(),
 ) {
@@ -26,7 +27,7 @@ func (self *App) IntermissionSubmitNewNoteContent(
 	go func() {
 		message := "Upload Successful"
 
-		err := action.ActionSetNoteContent(self.window, output, newText, settings, noteName)
+		err := action.ActionSetNoteContent(self.window, output, newText, self.settings, noteName)
 		if err != nil {
 			message = fmt.Sprintf("Could not set note content:\n%v", err)
 		}
