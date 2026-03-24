@@ -16,8 +16,10 @@ type App struct {
 func RunApp() {
 	app := app.NewWithID("cloud-note")
 
-	windo := app.NewWindow("Cloud Note")
-	windo.Resize(fyne.NewSize(400, 600))
+	fyneWindow := app.NewWindow("Cloud Note")
+	fyneWindow.Resize(fyne.NewSize(400, 600))
+
+	windo := window.Window{}.NewFromFyneWindow(&fyneWindow)
 
 	// IMPROVE000: Make something like that
 	// settings, err := settings.Settings{}.NewFromPersistentStorage(app.Storage().RootURI().Path())
@@ -29,7 +31,7 @@ func RunApp() {
 
 	self := App{
 		app:    app,
-		window: window.Window{}.NewFromFyneWindow(&windo),
+		window: windo,
 	}
 
 	self.FirstScene()
