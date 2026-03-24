@@ -5,10 +5,21 @@ import (
 
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/kuche1/cloud-note/server/filesystem"
+	"github.com/kuche1/cloud-note/server/srvnet"
 	"github.com/quic-go/quic-go"
 )
 
 func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
+	password, err := srvnet.ChanRecvPassword(conn)
+	if err != nil {
+		return fmt.Errorf("Could not receive password: %v", err)
+	}
+
+	err = fs.CheckPassword(password)
+	if err != nil {
+		return err
+	}
+
 	action, err := lib.ChanRecvActionEOF(conn)
 	if err != nil {
 		return fmt.Errorf("Could not receive action: %v", err)

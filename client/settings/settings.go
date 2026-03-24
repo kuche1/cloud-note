@@ -16,7 +16,7 @@ type Settings struct {
 
 	// actual settings
 	ServerAddr     string
-	ServerPassword string // TODO: Actually implement this on the server
+	ServerPassword string
 
 	// app-related persistent stuff
 	LastEditedNote string
@@ -65,7 +65,7 @@ func (self *Settings) Save() error {
 
 	settingsFile, settingsFileTmp := getSettingsFile(self.persistentStorage)
 
-	err = lib.WriteFileAtomic(settingsFile, data, settingsFileTmp)
+	err = lib.FileWriteAtomic(settingsFile, data, settingsFileTmp)
 	if err != nil {
 		return fmt.Errorf("Could not save settings to persistent storage:\n%v", err)
 	}

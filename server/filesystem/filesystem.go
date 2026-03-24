@@ -1,6 +1,7 @@
 package filesystem
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -9,12 +10,18 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
+const _IncorrectPasswordMessage string = "Incorrect password"
+
 type Filesystem struct {
 	storagePersistent string
 	storageTemporary  string
 
 	// IMPROVE000: Having a single lock for the whole filesystem sucks
 	lock sync.RWMutex
+
+	passwordFile          string
+	passwordFileTemporary string
+	passwordLock          sync.RWMutex
 }
 
 func NewFilesystem(storageRoot string) (*Filesystem, error) {
@@ -31,9 +38,12 @@ func NewFilesystem(storageRoot string) (*Filesystem, error) {
 	}
 
 	return &Filesystem{
-		storagePersistent: storagePersistent,
-		storageTemporary:  storageTemporary,
-		lock:              sync.RWMutex{},
+		storagePersistent:     storagePersistent,
+		storageTemporary:      storageTemporary,
+		lock:                  sync.RWMutex{},
+		passwordFile:          filepath.Join(storageRoot, "password"),
+		passwordFileTemporary: filepath.Join(storageRoot, "password-tmp"),
+		passwordLock:          sync.RWMutex{},
 	}, nil
 }
 
@@ -45,6 +55,65 @@ func (self *Filesystem) makePathLocal(path string) (_persistent string, _tempora
 	}
 
 	return filepath.Join(self.storagePersistent, path), filepath.Join(self.storageTemporary, path), nil
+}
+
+func (self *Filesystem) readPasswordFileUnsafe() (string, error) {
+	passwordBytes, err := os.ReadFile(self.passwordFile)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return "", nil
+		}
+		return "", fmt.Errorf("Could not read password file: %v", err)
+	}
+
+	return string(passwordBytes), nil
+}
+
+func (self *Filesystem) CheckPassword(userPassword string) error {
+	if userPassword == "" {
+		return fmt.Errorf("Empty passwords are not accepted")
+	}
+
+	self.passwordLock.RLock()
+
+	actualPassword, err := self.readPasswordFileUnsafe()
+	if err != nil {
+		self.passwordLock.RUnlock()
+		return err
+	}
+
+	if actualPassword == "" {
+		self.passwordLock.RUnlock()
+
+		self.passwordLock.Lock()
+		defer self.passwordLock.Unlock()
+
+		doubleCheckPassword, err := self.readPasswordFileUnsafe()
+		if doubleCheckPassword != actualPassword {
+			// Another thread must have changed the password while we were waiting
+			// for the lock
+			return fmt.Errorf(_IncorrectPasswordMessage)
+		}
+
+		err = lib.FileWriteAtomic(
+			self.passwordFile,
+			[]byte(userPassword),
+			self.passwordFileTemporary,
+		)
+		if err != nil {
+			return fmt.Errorf("Could not save new password file: %v", err)
+		}
+
+		return nil
+	}
+
+	defer self.passwordLock.RUnlock()
+
+	if actualPassword != userPassword {
+		return fmt.Errorf(_IncorrectPasswordMessage)
+	}
+
+	return nil
 }
 
 func (self *Filesystem) FileRead(unsafePath string) ([]byte, error) {
@@ -73,7 +142,7 @@ func (self *Filesystem) FileWrite(unsafePath string, data []byte) error {
 	self.lock.Lock()
 	defer self.lock.Unlock()
 
-	err = lib.WriteFileAtomic(persistent, data, temporary)
+	err = lib.FileWriteAtomic(persistent, data, temporary)
 	if err != nil {
 		return err
 	}

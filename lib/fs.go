@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func WriteFileAtomic(file string, content []byte, temporaryFile string) error {
+func FileWriteAtomic(file string, content []byte, temporaryFile string) error {
 	err := os.WriteFile(temporaryFile, content, 0600)
 	if err != nil {
 		return fmt.Errorf("Could not create a new temporary file: %v", err)

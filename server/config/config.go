@@ -15,3 +15,7 @@ const NoteNameMaxLength uint64 = 512
 // Rising this to too high of a value may dramatically
 // increase RAM usage.
 const NoteContentsMaxLength uint64 = 1024 * 1024 * 2
+
+// We cannot receive as many bytes as the current actual password
+// since this would allow an attacker to deduce the password length
+const PasswordMaxLength uint64 = 32

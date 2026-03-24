@@ -22,3 +22,9 @@ func ChanRecvNotecontentEOF(conn *quic.Conn) (string, error) {
 	// if the disconnect reason is the length
 	return lib.ChanRecvStringEOF(conn, config.NoteContentsMaxLength)
 }
+
+func ChanRecvPassword(conn *quic.Conn) (string, error) {
+	// IMPROVE000: Send a readable message for the end user
+	// if the disconnect reason is the length
+	return lib.ChanRecvStringEOF(conn, config.PasswordMaxLength)
+}
