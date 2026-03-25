@@ -13,7 +13,7 @@ import (
 )
 
 func connectToServer(
-	window *window.Window, // TODO: No longer needed
+	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
 ) (_conn *quic.Conn, _err error) {
@@ -31,14 +31,13 @@ func connectToServer(
 	if err != nil {
 		retErr := fmt.Errorf("Could not connect to server:\n%v", err)
 
-		//// TODO: This no longer makes much sense
-		// ok := settings.PromptNewServerAddr(
-		// 	window,
-		// 	retErr.Error(),
-		// )
-		// if ok {
-		// 	return connectToServer(window, output, settings)
-		// }
+		ok := settings.PromptNewServerAddr(
+			window,
+			retErr.Error(),
+		)
+		if ok {
+			return connectToServer(window, output, settings)
+		}
 
 		return nil, retErr
 	}
