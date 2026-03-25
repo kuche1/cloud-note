@@ -36,7 +36,7 @@ func (self *App) SceneLoadSettings() {
 		fyne.Do(func() {
 			self.settings.SceneInputMissing(
 				self.window,
-				self.SceneSelectNote,
+				func() { self.ScenePing() },
 			)
 		})
 	}()

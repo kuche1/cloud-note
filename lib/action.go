@@ -11,6 +11,7 @@ const (
 	ActionListNotes
 	ActionCreateNewNote
 	ActionDeleteExistingNote
+	ActionPing
 	Actions
 )
 

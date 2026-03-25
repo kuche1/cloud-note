@@ -40,6 +40,8 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		actionFunc = actionCreateNewNote
 	case lib.ActionDeleteExistingNote:
 		actionFunc = actionDeleteExistingNote
+	case lib.ActionPing:
+		actionFunc = actionPing
 	default:
 		return fmt.Errorf("Unhandled action: %v", action)
 	}
