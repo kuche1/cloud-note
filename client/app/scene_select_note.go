@@ -1,3 +1,5 @@
+// TODO: Add the option to change the settings
+
 package app
 
 import (
