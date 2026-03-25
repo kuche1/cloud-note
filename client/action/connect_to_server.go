@@ -46,8 +46,6 @@ func connectToServer(
 
 	err = lib.ChanSendStringEOF(conn, settings.ServerPassword)
 	if err != nil {
-		// TODO: Ask for new password if this fails OR ask for both new password and
-		// server address OR redirect to the settings setup
 		return nil, fmt.Errorf("Could not send password to server:\n%v", err)
 	}
 
