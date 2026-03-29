@@ -1,5 +1,3 @@
-// TODO: Add the option to change the settings
-
 package app
 
 import (
@@ -82,7 +80,7 @@ func sceneSelectNote(app *App, notes []string) {
 	)
 
 	deleteNote := widget.NewButton(
-		"Delete Note",
+		"Delete Selected Note",
 		func() {
 			selection := list.Selected
 			if selection == "" {
@@ -91,6 +89,22 @@ func sceneSelectNote(app *App, notes []string) {
 			app.settings.SetLastEditedNote(selection) // Actually it turns out better if this is here
 
 			app.SceneDeleteNote(selection)
+		},
+	)
+
+	btnSettings := widget.NewButton(
+		"Settings",
+		func() {
+			app.settings.SceneChangeSettings(
+				app.window,
+				func(previousSceneErr error) {
+					if previousSceneErr != nil {
+						app.ScenePanic(previousSceneErr.Error())
+						return
+					}
+					app.ScenePing()
+				},
+			)
 		},
 	)
 
@@ -109,6 +123,10 @@ func sceneSelectNote(app *App, notes []string) {
 			newNote,
 			widget.NewSeparator(),
 			deleteNote,
+			widget.NewSeparator(),
+			widget.NewLabel(""),
+			widget.NewSeparator(),
+			btnSettings,
 			widget.NewSeparator(),
 			quit,
 		),

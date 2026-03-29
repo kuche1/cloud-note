@@ -34,6 +34,8 @@ func (self *Settings) SceneChangeSettings(window *window.Window, callbackWhenDon
 		widget.NewSeparator(),
 		widgetServerPassword,
 		widget.NewSeparator(),
+		widget.NewLabel(""),
+		widget.NewSeparator(),
 		save,
 	)
 
