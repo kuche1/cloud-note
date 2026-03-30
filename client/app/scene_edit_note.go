@@ -8,6 +8,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+// IMPROVE001: Marking some text and then pressing scroll bottom deletes some of the text
 // IMPROVE001: Make this more pleasent to work with
 func (self *App) SceneEditNote(
 	previousText string,
