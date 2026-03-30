@@ -27,7 +27,7 @@ sudo apt install libxxf86vm-dev
 IMPROVE001: Make a better icon
 
 ```
-~/go/bin/fyne package -os android -app-id com.kuche1.cloudnote -icon mobile_icon.png -name "Cloud Note" --app-version 0.3
+~/go/bin/fyne package -os android -app-id com.kuche1.cloudnote -icon mobile_icon.png -name "Cloud Note" --app-version 0.4
 ```
 
 For ios you need to replace `-os android` with `-os ios`
