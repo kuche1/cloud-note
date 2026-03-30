@@ -31,6 +31,8 @@ func (self *App) SceneCreateNewNote() {
 					return
 				}
 
+				self.settings.SetLastEditedNote(newNoteName)
+
 				fyne.Do(func() {
 					self.SceneEditNote("", newNoteName, false)
 				})
