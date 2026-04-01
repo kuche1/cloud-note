@@ -9,7 +9,7 @@ type OutputFyneTextGrid struct {
 	textGrid *widget.TextGrid
 }
 
-// Deprecated: (At least on desktop) when a message gets too long this does not wrap
+// TODO: (At least on desktop) when a message gets too long this does not wrap
 // the text
 func NewOutputFyneTextGrid() (*OutputFyneTextGrid, *widget.TextGrid) {
 	widget := widget.NewTextGrid()

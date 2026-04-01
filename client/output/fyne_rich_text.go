@@ -11,7 +11,9 @@ type OutputFyneRichText struct {
 	richText *widget.RichText
 }
 
-func NewOutputFyneRichText() (*OutputFyneRichText, *widget.RichText) {
+// TODO: This is what causes the bug where after submitting a note the app increases
+// it's heights dramatically on desktop
+func DeprecatedNewOutputFyneRichText() (*OutputFyneRichText, *widget.RichText) {
 	widget := widget.NewRichText()
 	widget.Wrapping = fyne.TextWrapWord
 

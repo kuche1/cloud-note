@@ -1,9 +1,7 @@
 package output
 
-import (
-	"fyne.io/fyne/v2/widget"
-)
+import "fyne.io/fyne/v2"
 
-func NewOutputFyneAny() (*OutputFyneRichText, *widget.RichText) {
-	return NewOutputFyneRichText()
+func NewOutputFyneAny() (Output, fyne.CanvasObject) {
+	return NewOutputFyneTextGrid() // NewOutputFyneRichText()
 }

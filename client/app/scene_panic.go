@@ -11,7 +11,7 @@ import (
 // Theoretically it is still possible to bug the panic screen, if
 // any `self.window.SetContent`s have call queued after the panic
 func (self *App) ScenePanic(info string) {
-	output, richText := output.NewOutputFyneRichText()
+	output, richText := output.DeprecatedNewOutputFyneRichText()
 	output.Println("Panic:")
 	output.Println(info)
 
