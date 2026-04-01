@@ -14,12 +14,16 @@ func (self *App) SceneEditNote(
 	previousText string,
 	noteName string,
 	viewingCachedCopy bool,
+	cursorColumn int,
+	cursorRow int,
 ) {
 	editor := widget.NewMultiLineEntry()
 
 	editor.Text = previousText
 	editor.TextStyle.Monospace = true
-	editor.Wrapping = fyne.TextWrapBreak // TextWrapWord
+	editor.Wrapping = fyne.TextWrapWord // TextWrapBreak
+	editor.CursorColumn = cursorColumn
+	editor.CursorRow = cursorRow
 	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
 	// editor.PlaceHolder = "Enter some text"
 
@@ -158,4 +162,5 @@ func (self *App) SceneEditNote(
 	)
 
 	self.window.SetContent(container)
+	self.window.Focus(editor)
 }
