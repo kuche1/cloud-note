@@ -11,8 +11,8 @@ import (
 // Theoretically it is still possible to bug the panic screen, if
 // any `self.window.SetContent`s have call queued after the panic
 func (self *App) ScenePanic(info string) {
-	output, richText := output.DeprecatedNewOutputFyneRichText()
-	output.Println("Panic:")
+	output, outputWidget := output.NewOutputFyneAny()
+	output.Println("Panic:\n")
 	output.Println(info)
 
 	button := widget.NewButton("Quit", func() { self.Quit() })
@@ -22,7 +22,7 @@ func (self *App) ScenePanic(info string) {
 		button,
 		nil,
 		nil,
-		richText,
+		outputWidget,
 	)
 
 	// Wrapping this in a `fyne.Do` so that it can be called from anywhere, even other threads

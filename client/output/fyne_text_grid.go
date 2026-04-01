@@ -9,9 +9,9 @@ type OutputFyneTextGrid struct {
 	textGrid *widget.TextGrid
 }
 
-// TODO: (At least on desktop) when a message gets too long this does not wrap
+// (At least on desktop) when a message gets too long this does not wrap
 // the text
-func NewOutputFyneTextGrid() (*OutputFyneTextGrid, *widget.TextGrid) {
+func DeprecatedNewOutputFyneTextGrid() (*OutputFyneTextGrid, *widget.TextGrid) {
 	widget := widget.NewTextGrid()
 	// widget.Scroll = fyne.ScrollBoth // This isn't a great solution
 
