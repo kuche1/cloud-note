@@ -12,13 +12,13 @@ import (
 // BUT if we are to do that we need to make that a setting as to let paranoid users send
 // the same note a billion time (perhaps add a setting for this, and when the button is clicked,
 // perform a check weather the content has changed or not)
-func (self *App) SceneSubmitNewNoteContent(
+func (self *App) IntermissionSubmitNewNoteContent(
 	newText string,
 	noteName string,
-	cursorColumn int,
-	cursorRow int,
 	callbackSuccess func(),
 ) {
+	previousContent := self.window.Content()
+
 	output, outputWidget := output.NewOutputFyneAny()
 	self.window.SetContent(outputWidget)
 
@@ -34,17 +34,8 @@ func (self *App) SceneSubmitNewNoteContent(
 			self.IntermissionInfo(
 				message,
 				func() {
-
-					self.SceneEditNote(
-						newText,
-						noteName,
-						false,
-						cursorColumn,
-						cursorRow,
-					)
-
+					self.window.SetContent(previousContent)
 					callbackSuccess()
-
 				},
 			)
 		})

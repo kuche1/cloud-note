@@ -55,11 +55,9 @@ func (self *App) SceneEditNote(
 	submit := widget.NewButton(
 		"Submit",
 		func() {
-			self.SceneSubmitNewNoteContent(
+			self.IntermissionSubmitNewNoteContent(
 				editor.Text,
 				noteName,
-				editor.CursorColumn,
-				editor.CursorRow,
 				func() { previousText = editor.Text },
 			)
 		},
