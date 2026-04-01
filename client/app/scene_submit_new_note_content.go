@@ -12,16 +12,16 @@ import (
 // BUT if we are to do that we need to make that a setting as to let paranoid users send
 // the same note a billion time (perhaps add a setting for this, and when the button is clicked,
 // perform a check weather the content has changed or not)
-// IMPROVE000: For some reason after we switch back to the previous scene the window expands
+// [TODO: fix in progress] IMPROVE000: For some reason after we switch back to the previous scene the window expands
 // dramatically (vertically) on desktop; and this happens exclusively after having pressed the
 // submit button
-func (self *App) IntermissionSubmitNewNoteContent(
+func (self *App) SceneSubmitNewNoteContent(
 	newText string,
 	noteName string,
+	cursorColumn int,
+	cursorRow int,
 	callbackSuccess func(),
 ) {
-	previousFyneContent := self.window.Content()
-
 	output, outputWidget := output.NewOutputFyneAny()
 	self.window.SetContent(outputWidget)
 
@@ -37,8 +37,17 @@ func (self *App) IntermissionSubmitNewNoteContent(
 			self.IntermissionInfo(
 				message,
 				func() {
-					self.window.SetContent(previousFyneContent)
+
 					callbackSuccess()
+
+					self.SceneEditNote(
+						newText,
+						noteName,
+						false,
+						cursorColumn,
+						cursorRow,
+					)
+
 				},
 			)
 		})
