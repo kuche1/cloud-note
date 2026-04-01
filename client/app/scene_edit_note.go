@@ -58,7 +58,10 @@ func (self *App) SceneEditNote(
 			self.IntermissionSubmitNewNoteContent(
 				editor.Text,
 				noteName,
-				func() { previousText = editor.Text },
+				func() {
+					previousText = editor.Text
+					self.window.Focus(editor)
+				},
 			)
 		},
 	)
