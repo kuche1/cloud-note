@@ -42,6 +42,10 @@ func StreamSendSliceByte[T io.Writer](stream T, data []byte) error {
 	return nil
 }
 
+// TODO: This is actually not quite right - a regular "EOF" frame
+// cannot cancel out the data sent before it, but what can cancel
+// it is `conn.CloseWithError`
+//
 // It seems that if you send some data and then EOF it is not
 // guaranteed that the data will be received before the EOF.
 // So the receiver might first get EOF and then never get
