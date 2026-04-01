@@ -38,8 +38,6 @@ func (self *App) SceneSubmitNewNoteContent(
 				message,
 				func() {
 
-					callbackSuccess()
-
 					self.SceneEditNote(
 						newText,
 						noteName,
@@ -47,6 +45,8 @@ func (self *App) SceneSubmitNewNoteContent(
 						cursorColumn,
 						cursorRow,
 					)
+
+					callbackSuccess()
 
 				},
 			)

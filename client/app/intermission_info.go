@@ -6,6 +6,8 @@ import (
 	"github.com/kuche1/cloud-note/client/output"
 )
 
+// Deprecated: IMPROVE001: I think this is what causes the app to resize to insane height on desktop after
+// the users clicks `submit`
 func (self *App) IntermissionInfo(messaage string, callbackAfterTheUserHasPressedOk func()) {
 	previousFyneContent := self.window.Content()
 
