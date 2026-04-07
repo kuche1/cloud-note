@@ -11,8 +11,8 @@ import (
 // IMPROVE001: Marking some text and then pressing scroll bottom deletes some of the text
 // IMPROVE001: Make this more pleasent to work with
 func (self *App) SceneEditNote(
-	previousText string,
 	noteName string,
+	previousText string,
 	viewingCachedCopy bool,
 	cursorColumn int,
 	cursorRow int,
@@ -74,6 +74,8 @@ func (self *App) SceneEditNote(
 		"Jump Top",
 
 		func() {
+			// TODO: pressing this button while any text is
+			// selected causes the selected text to be deleted
 			editor.CursorColumn = 0
 			editor.CursorRow = 0
 			editor.TypedRune('\n')

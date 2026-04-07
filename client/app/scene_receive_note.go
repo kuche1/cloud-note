@@ -28,12 +28,9 @@ func (self *App) SceneReceiveNote(noteName string) {
 		}
 
 		fyne.Do(func() {
-			self.SceneEditNote(
-				string(data),
+			self.SceneViewNote(
 				noteName,
-				false,
-				0,
-				0,
+				string(data),
 			)
 		})
 	}()
