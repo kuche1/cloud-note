@@ -5,6 +5,7 @@ import (
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"github.com/kuche1/cloud-note/client/app/theme"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 )
@@ -17,6 +18,7 @@ type App struct {
 
 func RunApp() {
 	app := app.NewWithID("cloud-note")
+	app.Settings().SetTheme(theme.NewTheme())
 
 	fyneWindow := app.NewWindow("Cloud Note")
 	fyneWindow.Resize(fyne.NewSize(400, 600))
