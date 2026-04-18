@@ -12,6 +12,7 @@ const (
 	ActionCreateNewNote
 	ActionDeleteExistingNote
 	ActionPing
+	// TODO: ActionRenameNote
 	Actions
 )
 
