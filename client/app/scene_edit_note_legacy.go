@@ -1,7 +1,5 @@
 package app
 
-// TODO: this editor needs to be kept BUT NOT MAINTAINED for a while
-
 import (
 	"math"
 
