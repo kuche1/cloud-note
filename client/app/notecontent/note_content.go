@@ -8,7 +8,7 @@ import (
 
 type NoteContent struct {
 	lines       []*NoteLine
-	oldLenLines int
+	oldLinesLen int
 }
 
 func NewNoteContent(content string) *NoteContent {
@@ -22,7 +22,7 @@ func NewNoteContent(content string) *NoteContent {
 
 	return &NoteContent{
 		lines:       lines,
-		oldLenLines: len(lines),
+		oldLinesLen: len(lines),
 	}
 }
 
@@ -35,7 +35,7 @@ func (self *NoteContent) Line(index int) *NoteLine {
 }
 
 func (self *NoteContent) HasBeenChanged() bool {
-	if len(self.lines) != self.oldLenLines {
+	if len(self.lines) != self.oldLinesLen {
 		return true
 	}
 
