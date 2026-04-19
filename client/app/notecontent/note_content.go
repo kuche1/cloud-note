@@ -2,11 +2,13 @@ package notecontent
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
 type NoteContent struct {
-	lines []*NoteLine
+	lines       []*NoteLine
+	oldLenLines int
 }
 
 func NewNoteContent(content string) *NoteContent {
@@ -19,7 +21,8 @@ func NewNoteContent(content string) *NoteContent {
 	}
 
 	return &NoteContent{
-		lines: lines,
+		lines:       lines,
+		oldLenLines: len(lines),
 	}
 }
 
@@ -32,6 +35,10 @@ func (self *NoteContent) Line(index int) *NoteLine {
 }
 
 func (self *NoteContent) HasBeenChanged() bool {
+	if len(self.lines) != self.oldLenLines {
+		return true
+	}
+
 	// TODO: not effecient but errorless-prone
 
 	for _, line := range self.lines {
@@ -98,4 +105,8 @@ func (self *NoteContent) AddLineTop() {
 
 func (self *NoteContent) AddLineBot() {
 	self.lines = append(self.lines, _NewNoteLineFromNoLine())
+}
+
+func (self *NoteContent) Delete(index int) {
+	self.lines = slices.Delete(self.lines, index, index+1)
 }

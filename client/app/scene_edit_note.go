@@ -51,10 +51,17 @@ func (self *App) SceneEditNote(
 	)
 
 	editor.OnSelected = func(index widget.ListItemID) {
+		editor.UnselectAll()
+
 		self.IntermissionEditLine(
 			noteContent.Line(index),
-			func() {
-				editor.UnselectAll()
+			func(deleteLine bool) {
+				if deleteLine {
+					// TODO: maybe instead mark it as deleted and add a `-` symbol
+					// OR maybe just always show the old line with that `-` symbol
+					noteContent.Delete(index)
+				}
+				editor.Refresh()
 			},
 		)
 	}

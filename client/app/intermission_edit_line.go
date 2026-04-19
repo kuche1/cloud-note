@@ -6,7 +6,10 @@ import (
 	"github.com/kuche1/cloud-note/client/app/notecontent"
 )
 
-func (self *App) IntermissionEditLine(noteLine *notecontent.NoteLine, callbackWhenDone func()) {
+func (self *App) IntermissionEditLine(
+	noteLine *notecontent.NoteLine,
+	callbackWhenDone func(deleteLine bool),
+) {
 	previousFyneContent := self.window.Content()
 
 	editor := widget.NewEntry()
@@ -16,6 +19,12 @@ func (self *App) IntermissionEditLine(noteLine *notecontent.NoteLine, callbackWh
 	// editor.Wrapping = fyne.TextWrapBreak // fyne.TextWrapWord
 	// editorMinSizeY := editor.MinSize().Height
 
+	editor.OnSubmitted = func(newContent string) {
+		noteLine.SetContent(newContent)
+		self.window.SetContent(previousFyneContent)
+		callbackWhenDone(false)
+	}
+
 	btnCancel := widget.NewButton(
 		"Cancel",
 		func() {
@@ -24,7 +33,7 @@ func (self *App) IntermissionEditLine(noteLine *notecontent.NoteLine, callbackWh
 			// // TODO: actually it might be a good idea to add it back
 			// TODO?: add undo and redo
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone()
+			callbackWhenDone(false)
 		},
 	)
 
@@ -33,19 +42,31 @@ func (self *App) IntermissionEditLine(noteLine *notecontent.NoteLine, callbackWh
 		func() {
 			noteLine.SetContent(editor.Text)
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone()
+			callbackWhenDone(false)
 		},
+	)
+
+	// TODO: I hate this, there needs to be a way to delete entries from the note edit scene
+	btnDelete := widget.NewButton(
+		"Delete",
+		func() {
+			self.window.SetContent(previousFyneContent)
+			callbackWhenDone(true)
+		},
+	)
+
+	containerTop := container.NewVBox(
+		container.NewGridWithColumns(
+			2,
+			btnCancel,
+			btnOk,
+		),
+		btnDelete,
 	)
 
 	self.window.SetContent(
 		container.NewBorder(
-			container.NewVBox(
-				container.NewGridWithColumns(
-					2,
-					btnCancel,
-					btnOk,
-				),
-			),
+			containerTop,
 			nil,
 			nil,
 			nil,
