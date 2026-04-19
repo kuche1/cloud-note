@@ -127,7 +127,7 @@ func (self *App) SceneEditNote(
 				noteName,
 				newContent,
 				func() {
-					// TODO: actually, there is ScrollTo (I think)
+					// IMPROVE000: We could use `editor.ScrollTo` if we wanted to be super fancy
 					note.ConsiderContentUpdated()
 					editor.Refresh() // update any items that previously have been marked as outdated
 				},
