@@ -4,8 +4,14 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/app/notecontent"
+	"github.com/kuche1/cloud-note/client/app/libnote"
 )
+
+// Eyeball it (not great)
+const _ItemHeightOneLine float32 = 32.296875 // TODO: wow
+const _ItemHeightTwoLines float32 = 47.5     // 45-50
+
+// TODO: would be better if we instead got the label regular height and doubled it
 
 // TODO: I really want to simplify the logic, I dont want to risk any data corruption
 
@@ -19,29 +25,42 @@ func (self *App) SceneEditNote(
 	noteName string,
 	noteContentStarting string, // TODO: I dont like that we're keeping this in RAM (or is it being optimised ????)
 ) {
-	noteContent := notecontent.NewNoteContent(noteContentStarting)
+	// noteContent := notecontent.NewNoteContent(noteContentStarting)
+	note := libnote.NewNote(noteContentStarting)
 
-	editor := widget.NewList(
+	var editor *widget.List
+
+	editor = widget.NewList(
 		func() int {
-			return noteContent.Len()
+			return note.Len()
 		},
 
 		func() fyne.CanvasObject {
 			label := widget.NewLabel("")
 			label.TextStyle.Monospace = true
+			// label.Alignment = fyne.TextAlignCenter // horizontal alignment
 			return label
 		},
 
 		func(index widget.ListItemID, canvas fyne.CanvasObject) {
-			label := canvas.(*widget.Label)
+			// TODO: I dont like this solution, only use it if we have to
+			// if noteContent.IsEmpty() {
+			// 	label.SetText("<Click to Edit>")
+			// 	return
+			// }
 
-			if noteContent.IsEmpty() {
-				label.SetText("<Click to Edit>")
-				return
+			repr, twoLines := note.LineStatusAndContent(index)
+
+			label := canvas.(*widget.Label)
+			label.SetText(repr)
+			// fmt.Printf("DBG: height is %v\n", label.Size().Height)
+
+			height := _ItemHeightOneLine
+			if twoLines {
+				height = _ItemHeightTwoLines
 			}
 
-			line := noteContent.Line(index)
-			label.SetText(line.ContentWithStatus())
+			editor.SetItemHeight(index, height)
 
 			//// this cannot be relied upon since some of the labels will be re-used
 			// if line.contentHasBeenChanged {
@@ -55,20 +74,22 @@ func (self *App) SceneEditNote(
 	editor.OnSelected = func(index widget.ListItemID) {
 		editor.UnselectAll()
 
+		content, _ := note.LineContent(index)
+		// we can forbid editing of notes that do not exist
+		// if we want to
+
 		self.IntermissionEditLine(
-			noteContent.Line(index).Content(),
+			content,
 
 			func(newLineContent string, deleteLine bool) {
 				defer editor.Refresh()
 
 				if deleteLine {
-					// TODO: maybe instead mark it as deleted and add a `-` symbol
-					// OR maybe just always show the old line with that `-` symbol
-					noteContent.Delete(index)
+					note.LineDelete(index)
 					return
 				}
 
-				noteContent.Line(index).SetContent(newLineContent)
+				note.SetLineContent(index, newLineContent)
 			},
 		)
 	}
@@ -77,7 +98,7 @@ func (self *App) SceneEditNote(
 		"Cancel",
 
 		func() {
-			if noteContent.HasBeenChanged() {
+			if note.HasBeenChanged() {
 				self.IntermissionYesNo(
 					"Note content has changed.\nAre you sure you want to discard the new changes?",
 					func() { self.SceneSelectNote() },
@@ -94,17 +115,14 @@ func (self *App) SceneEditNote(
 		"Submit",
 
 		func() {
-			newContent, err := noteContent.AsString()
-			if err != nil {
-				self.ScenePanic(err.Error())
-				return
-			}
+			newContent := note.Content()
 
 			self.IntermissionSubmitNewNoteContent(
 				newContent,
 				noteName,
 				func() {
-					noteContent.SetHasNotBeenChanged()
+					// noteContent.SetHasNotBeenChanged() // TODO: this is now missing, better reset the whole scene
+					// TODO: actually, there is ScrollTo (I think)
 					editor.Refresh() // update any items that previously have been marked as outdated
 				},
 			)
@@ -114,7 +132,7 @@ func (self *App) SceneEditNote(
 	btnAddLineTop := widget.NewButton(
 		"v Add Line v",
 		func() {
-			noteContent.AddLineTop()
+			note.AddLineTop()
 			editor.Refresh()
 		},
 	)
@@ -122,7 +140,7 @@ func (self *App) SceneEditNote(
 	btnAddLineBot := widget.NewButton(
 		"^ Add Line ^",
 		func() {
-			noteContent.AddLineBot()
+			note.AddLineBot()
 			editor.Refresh()
 		},
 	)

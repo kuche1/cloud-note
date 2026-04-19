@@ -38,6 +38,13 @@ func (self *App) IntermissionEditLine(
 		},
 	)
 
+	btnRestoreOriginal := widget.NewButton(
+		"Restore Original",
+		func() {
+			// TODO
+		},
+	)
+
 	// TODO: I hate this, there needs to be a way to delete entries from the note edit scene
 	btnDelete := widget.NewButton(
 		"Delete",
@@ -62,10 +69,8 @@ func (self *App) IntermissionEditLine(
 			2,
 			btnCancel,
 			btnOk,
-		),
-		btnDelete,
-		container.NewGridWithColumns(
-			2,
+			btnRestoreOriginal,
+			btnDelete,
 			btnUndo,
 			btnRedo,
 		),
