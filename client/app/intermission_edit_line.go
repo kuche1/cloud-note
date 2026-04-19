@@ -6,13 +6,15 @@ import (
 )
 
 func (self *App) IntermissionEditLine(
-	lineContent string,
+	contentCurrent string,
+	contentOriginal string,
+	existsOriginal bool,
 	callbackWhenDone func(newLineContent string, deleteLine bool),
 ) {
 	previousFyneContent := self.window.Content()
 
 	editor := widget.NewEntry()
-	editor.Text = lineContent
+	editor.Text = contentCurrent
 	editor.TextStyle.Monospace = true
 
 	editor.OnSubmitted = func(newContent string) {
@@ -26,7 +28,7 @@ func (self *App) IntermissionEditLine(
 			// I don't think we need to ask the user is he wants to discard the
 			// changes considering the fact that he is editing a single line
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone(lineContent, false)
+			callbackWhenDone(contentCurrent, false)
 		},
 	)
 
@@ -41,9 +43,15 @@ func (self *App) IntermissionEditLine(
 	btnRestoreOriginal := widget.NewButton(
 		"Restore Original",
 		func() {
-			// TODO
+			editor.Text = contentOriginal
+			editor.Refresh()
+			self.window.Focus(editor)
 		},
 	)
+	if !existsOriginal {
+		btnRestoreOriginal.Text += " ---> "
+		btnRestoreOriginal.Disable()
+	}
 
 	// TODO: I hate this, there needs to be a way to delete entries from the note edit scene
 	btnDelete := widget.NewButton(
@@ -56,12 +64,18 @@ func (self *App) IntermissionEditLine(
 
 	btnUndo := widget.NewButton(
 		"Undo",
-		func() { editor.Undo() },
+		func() {
+			editor.Undo()
+			self.window.Focus(editor)
+		},
 	)
 
 	btnRedo := widget.NewButton(
 		"Redo",
-		func() { editor.Redo() },
+		func() {
+			editor.Redo()
+			self.window.Focus(editor)
+		},
 	)
 
 	containerTop := container.NewVBox(

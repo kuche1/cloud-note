@@ -74,12 +74,16 @@ func (self *App) SceneEditNote(
 	editor.OnSelected = func(index widget.ListItemID) {
 		editor.UnselectAll()
 
-		content, _ := note.LineContent(index)
+		contentCurrent, _ := note.LineContent(index)
 		// we can forbid editing of notes that do not exist
 		// if we want to
 
+		contentOriginal, existsOriginal := note.LineContentOriginal(index)
+
 		self.IntermissionEditLine(
-			content,
+			contentCurrent,
+			contentOriginal,
+			existsOriginal,
 
 			func(newLineContent string, deleteLine bool) {
 				defer editor.Refresh()

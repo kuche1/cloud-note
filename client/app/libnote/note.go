@@ -38,6 +38,10 @@ func (self *Note) SetLineContent(index int, content string) {
 	self.lines[index].SetContent(content)
 }
 
+func (self *Note) LineContentOriginal(index int) (_content string, _exists bool) {
+	return self.lines[index].ContentOriginal()
+}
+
 func (self *Note) LineStatusAndContent(index int) (_repr string, _twoLines bool) {
 	return self.lines[index].StatusAndContent()
 }

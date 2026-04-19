@@ -36,6 +36,10 @@ func (self *Line) SetContent(newContent string) {
 	self.existsCurrent = true
 }
 
+func (self *Line) ContentOriginal() (_content string, _exists bool) {
+	return self.contentOriginal, self.existsOriginal
+}
+
 func (self *Line) StatusAndContent() (_repr string, _twoLines bool) {
 	if (!self.existsOriginal) && (self.existsCurrent) {
 		return fmt.Sprintf("%c %v", LineStatusAdded, self.contentCurrent), false
