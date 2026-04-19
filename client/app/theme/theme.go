@@ -32,6 +32,7 @@ func (t *Theme) Icon(name fyne.ThemeIconName) fyne.Resource {
 }
 
 func (t *Theme) Size(name fyne.ThemeSizeName) float32 {
+	//// make scroll bar usable on phone
 	if fyne.CurrentDevice().IsMobile() {
 		if name == theme.SizeNameScrollBarSmall { // unselected (not being held down)
 			return theme.DefaultTheme().Size(theme.SizeNameScrollBar) * _PhoneScrollbarUnselectedSizeMultiplier

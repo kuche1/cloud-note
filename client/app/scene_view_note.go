@@ -28,6 +28,16 @@ func (self *App) SceneViewNote(
 			self.SceneEditNote(
 				noteName,
 				noteContents,
+			)
+		},
+	)
+
+	editLegacy := widget.NewButton(
+		"Edit [Legacy Editor]",
+		func() {
+			self.SceneEditNoteLegacy(
+				noteName,
+				noteContents,
 				false,
 				0,
 				0,
@@ -36,9 +46,10 @@ func (self *App) SceneViewNote(
 	)
 
 	buttons := container.NewGridWithColumns(
-		2,
+		3,
 		cancel,
 		edit,
+		editLegacy,
 	)
 
 	containerTop := container.NewVBox(

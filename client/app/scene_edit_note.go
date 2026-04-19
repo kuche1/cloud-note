@@ -1,171 +1,139 @@
 package app
 
 import (
-	"math"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
+	"github.com/kuche1/cloud-note/client/app/notecontent"
 )
 
 // IMPROVE001: Marking some text and then pressing scroll bottom deletes some of the text
 // IMPROVE001: Make this more pleasent to work with
+// TODO: I would like to put this scene (and maybe all others) in their own folders
+// if they need to change to another scene, they can take the given scene as argument OR the `*App` methods can
+// be spread across different folder (if this works, but I dont think it will)
+// TODO: add some indication if a given line has been changed or not
 func (self *App) SceneEditNote(
 	noteName string,
-	previousText string,
-	viewingCachedCopy bool,
-	cursorColumn int,
-	cursorRow int,
+	noteContentStarting string, // TODO: I dont like that we're keeping this in RAM (or is it being optimised ????)
 ) {
-	editor := widget.NewMultiLineEntry()
+	noteContent := notecontent.NewNoteContent(noteContentStarting)
 
-	editor.Text = previousText
-	editor.TextStyle.Monospace = true
-	editor.Wrapping = fyne.TextWrapWord // TextWrapBreak
-	editor.CursorColumn = cursorColumn
-	editor.CursorRow = cursorRow
-	// editor.Append("asd gfd hgf\nfdsfdsafdsaf")
-	// editor.PlaceHolder = "Enter some text"
+	editor := widget.NewList(
+		func() int {
+			return noteContent.Len()
+		},
 
-	if viewingCachedCopy {
-		// IMPROVE001: Would be much better if instead we overwrite the TypedRune and TypedKey or
-		// whatever they're called methods
-		editor.OnChanged = func(idk string) {
-			editor.Text = previousText
-		}
+		func() fyne.CanvasObject {
+			label := widget.NewLabel("")
+			label.TextStyle.Monospace = true
+			return label
+		},
+
+		func(index widget.ListItemID, canvas fyne.CanvasObject) {
+			label := canvas.(*widget.Label)
+
+			if noteContent.IsEmpty() {
+				label.SetText("<Click to Edit>")
+				return
+			}
+
+			line := noteContent.Line(index)
+			label.SetText(line.ContentWithStatus())
+
+			//// this cannot be relied upon since some of the labels will be re-used
+			// if line.contentHasBeenChanged {
+			// 	label.Importance = widget.HighImportance
+			// } else {
+			// 	label.Importance = widget.MediumImportance
+			// }
+		},
+	)
+
+	editor.OnSelected = func(index widget.ListItemID) {
+		self.IntermissionEditLine(
+			noteContent.Line(index),
+			func() {
+				editor.UnselectAll()
+			},
+		)
 	}
 
 	cancel := widget.NewButton(
 		"Cancel",
 
 		func() {
-			if editor.Text == previousText {
-				self.SceneSelectNote()
+			if noteContent.HasBeenChanged() {
+				self.IntermissionYesNo(
+					"Note content has changed.\nAre you sure you want to discard the new changes?",
+					func() { self.SceneSelectNote() },
+					func() {},
+				)
 				return
 			}
 
-			self.IntermissionYesNo(
-				"Note content has changed.\nAre you sure you want to discard the new changes?",
-				func() { self.SceneSelectNote() },
-				func() {},
-			)
+			self.SceneSelectNote()
 		},
 	)
 
 	submit := widget.NewButton(
 		"Submit",
+
 		func() {
+			newContent, err := noteContent.AsString()
+			if err != nil {
+				self.ScenePanic(err.Error())
+				return
+			}
+
 			self.IntermissionSubmitNewNoteContent(
-				editor.Text,
+				newContent,
 				noteName,
 				func() {
-					previousText = editor.Text
-					self.window.Focus(editor)
+					noteContent.SetHasNotBeenChanged()
+					editor.Refresh() // update any items that previously have been marked as outdated
 				},
 			)
 		},
 	)
 
-	if viewingCachedCopy {
-		submit.Disable()
-	}
-
-	scrollToTop := widget.NewButton(
-		"Jump Top",
-
+	btnAddLineTop := widget.NewButton(
+		"v Add Line v",
 		func() {
-			// TODO: pressing this button while any text is
-			// selected causes the selected text to be deleted
-			editor.CursorColumn = 0
-			editor.CursorRow = 0
-			editor.TypedRune('\n')
-			editor.CursorColumn = 0
-			editor.CursorRow = 0
+			noteContent.AddLineTop()
 			editor.Refresh()
-
-			self.window.Focus(editor)
 		},
 	)
 
-	if viewingCachedCopy {
-		scrollToTop.Disable()
-	}
-
-	scrollToBottom := widget.NewButton(
-		"Jump bottom",
-
+	btnAddLineBot := widget.NewButton(
+		"^ Add Line ^",
 		func() {
-			editor.CursorRow = math.MaxInt
+			noteContent.AddLineBot()
 			editor.Refresh()
-			editor.TypedRune('\n')
-
-			self.window.Focus(editor)
-
-			//// This also works but is also hacky
-			// editor.CursorRow = len(editor.Text)
-			// editor.Refresh()
-
-			//// This works but is hacky
-			// editor.CursorColumn = 99999
-			// editor.CursorRow = 99999
-			// editor.Refresh()
 		},
 	)
 
-	if viewingCachedCopy {
-		scrollToBottom.Disable()
-	}
-
-	undo := widget.NewButton(
-		"Undo",
-		func() {
-			editor.Undo()
-			self.window.Focus(editor)
-		},
-	)
-
-	if viewingCachedCopy {
-		undo.Disable()
-	}
-
-	redo := widget.NewButton(
-		"Redo",
-		func() {
-			editor.Redo()
-			self.window.Focus(editor)
-		},
-	)
-
-	if viewingCachedCopy {
-		redo.Disable()
-	}
-
-	buttons := container.NewGridWithColumns(
+	containerButtons := container.NewGridWithColumns(
 		2,
 		cancel,
 		submit,
-		undo,
-		redo,
-		scrollToTop,
-		scrollToBottom,
 	)
 
 	containerTop := container.NewVBox(
-		buttons,
+		containerButtons,
+		btnAddLineTop,
 	)
 
-	if viewingCachedCopy {
-		containerTop.Add(container.NewCenter(widget.NewLabel("Viewing Read-Only Cached Copy")))
-	}
+	containerBot := btnAddLineBot
 
-	container := container.NewBorder(
-		containerTop,
-		nil,
-		nil,
-		nil,
-		editor,
+	self.window.SetContent(
+		container.NewBorder(
+			containerTop,
+			containerBot,
+			nil,
+			nil,
+			editor,
+		),
 	)
-
-	self.window.SetContent(container)
-	self.window.Focus(editor)
+	// self.window.Focus(editor)
 }

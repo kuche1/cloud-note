@@ -37,9 +37,6 @@ func (self *App) SceneCreateNewNote() {
 					self.SceneEditNote(
 						newNoteName,
 						"",
-						false,
-						0,
-						0,
 					)
 				})
 			}()

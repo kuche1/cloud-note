@@ -14,7 +14,7 @@ import (
 // perform a check weather the content has changed or not)
 func (self *App) IntermissionSubmitNewNoteContent(
 	newText string,
-	noteName string,
+	noteName string, // TODO: this needs to be first
 	callbackSuccess func(),
 ) {
 	previousContent := self.window.Content()
