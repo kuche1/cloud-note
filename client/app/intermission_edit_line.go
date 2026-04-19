@@ -49,7 +49,7 @@ func (self *App) IntermissionEditLine(
 		},
 	)
 	if !existsOriginal {
-		btnRestoreOriginal.Text += " ---> "
+		btnRestoreOriginal.Text += " >"
 		btnRestoreOriginal.Disable()
 	}
 
@@ -78,15 +78,31 @@ func (self *App) IntermissionEditLine(
 		},
 	)
 
+	btnCursorLeft := widget.NewButton(
+		"< Cursor",
+		func() {
+			editor.CursorColumn-- // not adjusting the row is OK since we're editing a single line
+			editor.Refresh()
+			self.window.Focus(editor)
+		},
+	)
+
+	btnCursorRight := widget.NewButton(
+		"Cursor >",
+		func() {
+			editor.CursorColumn++
+			editor.Refresh()
+			self.window.Focus(editor)
+		},
+	)
+
 	containerTop := container.NewVBox(
 		container.NewGridWithColumns(
 			2,
-			btnCancel,
-			btnOk,
-			btnRestoreOriginal,
-			btnDelete,
-			btnUndo,
-			btnRedo,
+			btnCancel, btnOk,
+			btnRestoreOriginal, btnDelete,
+			btnUndo, btnRedo,
+			btnCursorLeft, btnCursorRight,
 		),
 	)
 
