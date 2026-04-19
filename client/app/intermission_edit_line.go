@@ -30,7 +30,6 @@ func (self *App) IntermissionEditLine(
 		func() {
 			// I don't think we need to ask the user is he wants to discard the
 			// changes considering the fact that he is editing a single line
-			// // TODO: actually it might be a good idea to add it back
 			// TODO?: add undo and redo
 			self.window.SetContent(previousFyneContent)
 			callbackWhenDone(false)
@@ -55,6 +54,16 @@ func (self *App) IntermissionEditLine(
 		},
 	)
 
+	btnUndo := widget.NewButton(
+		"Undo",
+		func() { editor.Undo() },
+	)
+
+	btnRedo := widget.NewButton(
+		"Redo",
+		func() { editor.Redo() },
+	)
+
 	containerTop := container.NewVBox(
 		container.NewGridWithColumns(
 			2,
@@ -62,6 +71,11 @@ func (self *App) IntermissionEditLine(
 			btnOk,
 		),
 		btnDelete,
+		container.NewGridWithColumns(
+			2,
+			btnUndo,
+			btnRedo,
+		),
 	)
 
 	self.window.SetContent(
