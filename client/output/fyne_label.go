@@ -26,7 +26,7 @@ func NewOutputFyneLabel() (*OutputFyneLabel, *container.Scroll) {
 
 func (self *OutputFyneLabel) Println(text string) {
 	fyne.Do(func() {
-		self.label.Text += text
+		self.label.Text += text + "\n"
 		self.label.Refresh()
 	})
 }
