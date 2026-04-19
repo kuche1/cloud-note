@@ -56,14 +56,19 @@ func (self *App) SceneEditNote(
 		editor.UnselectAll()
 
 		self.IntermissionEditLine(
-			noteContent.Line(index),
-			func(deleteLine bool) {
+			noteContent.Line(index).Content(),
+
+			func(newLineContent string, deleteLine bool) {
+				defer editor.Refresh()
+
 				if deleteLine {
 					// TODO: maybe instead mark it as deleted and add a `-` symbol
 					// OR maybe just always show the old line with that `-` symbol
 					noteContent.Delete(index)
+					return
 				}
-				editor.Refresh()
+
+				noteContent.Line(index).SetContent(newLineContent)
 			},
 		)
 	}

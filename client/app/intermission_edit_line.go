@@ -3,26 +3,21 @@ package app
 import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/app/notecontent"
 )
 
 func (self *App) IntermissionEditLine(
-	noteLine *notecontent.NoteLine,
-	callbackWhenDone func(deleteLine bool),
+	lineContent string,
+	callbackWhenDone func(newLineContent string, deleteLine bool),
 ) {
 	previousFyneContent := self.window.Content()
 
 	editor := widget.NewEntry()
-	editor.Text = noteLine.Content()
-	// editor.MultiLine = true // wrapping does not work if it is a single line entry
+	editor.Text = lineContent
 	editor.TextStyle.Monospace = true
-	// editor.Wrapping = fyne.TextWrapBreak // fyne.TextWrapWord
-	// editorMinSizeY := editor.MinSize().Height
 
 	editor.OnSubmitted = func(newContent string) {
-		noteLine.SetContent(newContent)
 		self.window.SetContent(previousFyneContent)
-		callbackWhenDone(false)
+		callbackWhenDone(newContent, false)
 	}
 
 	btnCancel := widget.NewButton(
@@ -31,16 +26,15 @@ func (self *App) IntermissionEditLine(
 			// I don't think we need to ask the user is he wants to discard the
 			// changes considering the fact that he is editing a single line
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone(false)
+			callbackWhenDone(lineContent, false)
 		},
 	)
 
 	btnOk := widget.NewButton(
 		"Ok",
 		func() {
-			noteLine.SetContent(editor.Text)
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone(false)
+			callbackWhenDone(editor.Text, false)
 		},
 	)
 
@@ -49,7 +43,7 @@ func (self *App) IntermissionEditLine(
 		"Delete",
 		func() {
 			self.window.SetContent(previousFyneContent)
-			callbackWhenDone(true)
+			callbackWhenDone("", true)
 		},
 	)
 
