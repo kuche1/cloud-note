@@ -7,6 +7,8 @@ import (
 	"github.com/kuche1/cloud-note/client/app/notecontent"
 )
 
+// TODO: I really want to simplify the logic, I dont want to risk any data corruption
+
 // TODO: there is a bug where if you delete ALL notes, submit, then press cancel
 // you get a message "are you sure you want to discard"
 
