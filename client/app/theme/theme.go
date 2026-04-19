@@ -7,7 +7,7 @@ import (
 	"fyne.io/fyne/v2/theme"
 )
 
-const _PhoneScrollbarUnselectedSizeMultiplier = 1.8
+const _PhoneScrollbarUnselectedSizeMultiplier = 1.9 // 1.8 is a bit too small for me
 const _PhoneScrollbarSelectedSizeMultiplier = 0.5
 
 // ensure fyne.Theme is implemented
