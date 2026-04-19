@@ -7,25 +7,14 @@ import (
 	"github.com/kuche1/cloud-note/client/app/libnote"
 )
 
-// Eyeball it (not great)
-const _ItemHeightOneLine float32 = 32.296875 // TODO: need to dynamically determine this
+const _ItemHeightOneLine float32 = 32.296875 // IMPROVE001: Ideally we would dynamically get this value HOWEVER this actually seems to be good enough for both desktop and phone so I'll keep it as is
 const _ItemHeightTwoLines float32 = 47.5
 
 // TODO: allow for inserting new lines in the middle of the note
 
-// TODO: would be better if we instead got the label regular height and doubled it
-
-// TODO: I really want to simplify the logic, I dont want to risk any data corruption
-
-// TODO: there is a bug where if you delete ALL notes, submit, then press cancel
-// you get a message "are you sure you want to discard"
-
-// TODO: I would like to put this scene (and maybe all others) in their own folders
-// if they need to change to another scene, they can take the given scene as argument OR the `*App` methods can
-// be spread across different folder (if this works, but I dont think it will)
 func (self *App) SceneEditNote(
 	noteName string,
-	noteContentStarting string, // TODO: I dont like that we're keeping this in RAM (or is it being optimised ????)
+	noteContentStarting string,
 ) {
 	// noteContent := notecontent.NewNoteContent(noteContentStarting)
 	note := libnote.NewNote(noteContentStarting)
@@ -45,12 +34,6 @@ func (self *App) SceneEditNote(
 		},
 
 		func(index widget.ListItemID, canvas fyne.CanvasObject) {
-			// TODO: I dont like this solution, only use it if we have to
-			// if noteContent.IsEmpty() {
-			// 	label.SetText("<Click to Edit>")
-			// 	return
-			// }
-
 			repr, twoLines := note.LineStatusAndContent(index)
 
 			label := canvas.(*widget.Label)
@@ -160,9 +143,13 @@ func (self *App) SceneEditNote(
 	containerTop := container.NewVBox(
 		containerButtons,
 		btnAddLineTop,
+		// widget.NewSeparator(),
 	)
 
-	containerBot := btnAddLineBot
+	containerBot := container.NewVBox(
+		// widget.NewSeparator(),
+		btnAddLineBot,
+	)
 
 	self.window.SetContent(
 		container.NewBorder(
