@@ -38,7 +38,6 @@ func (self *App) SceneEditNote(
 
 			label := canvas.(*widget.Label)
 			label.SetText(repr)
-			// fmt.Printf("DBG: height is %v\n", label.Size().Height)
 
 			height := _ItemHeightOneLine
 			if twoLines {
