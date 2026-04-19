@@ -10,8 +10,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-// IMPROVE001: Marking some text and then pressing scroll bottom deletes some of the text
-// IMPROVE001: Make this more pleasent to work with
+// IMPR0VE001: Marking some text and then pressing scroll bottom deletes some of the text
+// IMPR0VE001: Make this more pleasent to work with
 func (self *App) SceneEditNoteLegacy(
 	noteName string,
 	previousText string,
@@ -30,7 +30,7 @@ func (self *App) SceneEditNoteLegacy(
 	// editor.PlaceHolder = "Enter some text"
 
 	if viewingCachedCopy {
-		// IMPROVE001: Would be much better if instead we overwrite the TypedRune and TypedKey or
+		// IMPR0VE001: Would be much better if instead we overwrite the TypedRune and TypedKey or
 		// whatever they're called methods
 		editor.OnChanged = func(idk string) {
 			editor.Text = previousText
@@ -76,7 +76,7 @@ func (self *App) SceneEditNoteLegacy(
 		"Jump Top",
 
 		func() {
-			// TODO: pressing this button while any text is
+			// T0DO: pressing this button while any text is
 			// selected causes the selected text to be deleted
 			editor.CursorColumn = 0
 			editor.CursorRow = 0

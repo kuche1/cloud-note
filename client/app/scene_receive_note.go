@@ -7,7 +7,7 @@ import (
 	"github.com/kuche1/cloud-note/client/output"
 )
 
-func (self *App) SceneReceiveNote(noteName string) {
+func (self *App) SceneReceiveNote(noteName string, useLegacyEditor bool) {
 	output, outputWidget := output.NewOutputFyneAny()
 
 	dialog := dialog.NewCustomWithoutButtons(
@@ -27,11 +27,22 @@ func (self *App) SceneReceiveNote(noteName string) {
 			return
 		}
 
-		fyne.Do(func() {
-			self.SceneViewNote(
-				noteName,
-				string(data),
-			)
-		})
+		noteContent := string(data)
+
+		if useLegacyEditor {
+			fyne.Do(func() {
+				self.SceneViewNoteLegacy(
+					noteName,
+					noteContent,
+				)
+			})
+		} else {
+			fyne.Do(func() {
+				self.SceneEditNote(
+					noteName,
+					noteContent,
+				)
+			})
+		}
 	}()
 }

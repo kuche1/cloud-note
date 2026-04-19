@@ -60,7 +60,7 @@ func sceneSelectNote(app *App, notes []string) {
 	/////
 
 	edit := widget.NewButton(
-		"View / Edit", // TODO: just make 2 separate buttons
+		"Edit",
 		func() {
 			selection := list.Selected
 			if selection == "" {
@@ -68,7 +68,20 @@ func sceneSelectNote(app *App, notes []string) {
 			}
 			app.settings.SetLastEditedNote(selection)
 
-			app.SceneReceiveNote(selection)
+			app.SceneReceiveNote(selection, false)
+		},
+	)
+
+	editLegacy := widget.NewButton(
+		"Edit [Legacy]",
+		func() {
+			selection := list.Selected
+			if selection == "" {
+				return
+			}
+			app.settings.SetLastEditedNote(selection)
+
+			app.SceneReceiveNote(selection, true)
 		},
 	)
 
@@ -120,6 +133,8 @@ func sceneSelectNote(app *App, notes []string) {
 		container.NewVBox(
 			widget.NewSeparator(),
 			edit,
+			widget.NewSeparator(),
+			editLegacy,
 			widget.NewSeparator(),
 			widget.NewLabel(""),
 			widget.NewSeparator(),

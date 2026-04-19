@@ -6,7 +6,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func (self *App) SceneViewNote(
+// It's not that the code here is bad, it's just that the new editor already covers read-only cases
+func (self *App) SceneViewNoteLegacy(
 	noteName string,
 	noteContents string,
 ) {
@@ -19,16 +20,6 @@ func (self *App) SceneViewNote(
 		"Cancel",
 		func() {
 			self.SceneSelectNote()
-		},
-	)
-
-	edit := widget.NewButton(
-		"Edit [Beta]",
-		func() {
-			self.SceneEditNote(
-				noteName,
-				noteContents,
-			)
 		},
 	)
 
@@ -46,10 +37,9 @@ func (self *App) SceneViewNote(
 	)
 
 	buttons := container.NewGridWithColumns(
-		3,
+		2,
 		cancel,
 		editLegacy,
-		edit,
 	)
 
 	containerTop := container.NewVBox(
