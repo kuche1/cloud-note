@@ -81,6 +81,20 @@ func (self *Line) HasBeenChanged() bool {
 	return (self.existsOriginal != self.existsCurrent) || (self.contentOriginal != self.contentCurrent)
 }
 
+//// Wrote this code since I has a suspicion that something went wrong, but
+//// I found the problem and it was not here
+// func (self *Line) HasBeenChanged() bool {
+// 	if self.existsOriginal != self.existsCurrent {
+// 		return true
+// 	}
+//
+// 	if self.existsCurrent == false {
+// 		return false
+// 	}
+//
+// 	return self.contentOriginal != self.contentCurrent
+// }
+
 func (self *Line) ConsiderUpdated() (_needsToBeDeleted bool) {
 	if !self.existsCurrent {
 		return true

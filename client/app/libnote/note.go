@@ -112,8 +112,6 @@ func (self *Note) AddLineBot() {
 }
 
 func (self *Note) ConsiderContentUpdated() {
-	self.linesLenOriginal = len(self.lines)
-
 	for lineIdx := len(self.lines) - 1; lineIdx >= 0; lineIdx-- {
 		line := self.lines[lineIdx]
 
@@ -122,4 +120,6 @@ func (self *Note) ConsiderContentUpdated() {
 			self.lines = slices.Delete(self.lines, lineIdx, lineIdx+1)
 		}
 	}
+
+	self.linesLenOriginal = len(self.lines)
 }

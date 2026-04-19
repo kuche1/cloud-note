@@ -89,7 +89,7 @@ func (self *App) SceneEditNote(
 		func() {
 			if note.HasBeenChanged() {
 				self.IntermissionYesNo(
-					"Note content has changed.\nAre you sure you want to discard the new changes?",
+					"Note has changed.\nAre you sure you want to discard the new changes?",
 					func() { self.SceneSelectNote() },
 					func() {},
 				)
