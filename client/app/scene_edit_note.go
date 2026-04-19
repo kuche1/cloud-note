@@ -127,8 +127,8 @@ func (self *App) SceneEditNote(
 				noteName,
 				newContent,
 				func() {
-					// noteContent.SetHasNotBeenChanged() // TODO: this is now missing, better reset the whole scene
 					// TODO: actually, there is ScrollTo (I think)
+					note.ConsiderContentUpdated()
 					editor.Refresh() // update any items that previously have been marked as outdated
 				},
 			)

@@ -80,3 +80,14 @@ func (self *Line) Delete() (_hasAlsoNotExistedBefore bool) {
 func (self *Line) HasBeenChanged() bool {
 	return (self.existsOriginal != self.existsCurrent) || (self.contentOriginal != self.contentCurrent)
 }
+
+func (self *Line) ConsiderUpdated() (_needsToBeDeleted bool) {
+	if !self.existsCurrent {
+		return true
+	}
+
+	self.contentOriginal = self.contentCurrent
+	self.existsOriginal = self.existsCurrent
+
+	return false
+}

@@ -110,3 +110,16 @@ func (self *Note) AddLineBot() {
 		_NewLine("", false),
 	)
 }
+
+func (self *Note) ConsiderContentUpdated() {
+	self.linesLenOriginal = len(self.lines)
+
+	for lineIdx := len(self.lines) - 1; lineIdx >= 0; lineIdx-- {
+		line := self.lines[lineIdx]
+
+		needsToBeDeleted := line.ConsiderUpdated()
+		if needsToBeDeleted {
+			self.lines = slices.Delete(self.lines, lineIdx, lineIdx+1)
+		}
+	}
+}
