@@ -7,12 +7,12 @@ import (
 	"github.com/kuche1/cloud-note/client/app/notecontent"
 )
 
-// IMPROVE001: Marking some text and then pressing scroll bottom deletes some of the text
-// IMPROVE001: Make this more pleasent to work with
+// TODO: there is a bug where if you delete ALL notes, submit, then press cancel
+// you get a message "are you sure you want to discard"
+
 // TODO: I would like to put this scene (and maybe all others) in their own folders
 // if they need to change to another scene, they can take the given scene as argument OR the `*App` methods can
 // be spread across different folder (if this works, but I dont think it will)
-// TODO: add some indication if a given line has been changed or not
 func (self *App) SceneEditNote(
 	noteName string,
 	noteContentStarting string, // TODO: I dont like that we're keeping this in RAM (or is it being optimised ????)
