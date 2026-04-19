@@ -30,7 +30,6 @@ func (self *App) IntermissionEditLine(
 		func() {
 			// I don't think we need to ask the user is he wants to discard the
 			// changes considering the fact that he is editing a single line
-			// TODO?: add undo and redo
 			self.window.SetContent(previousFyneContent)
 			callbackWhenDone(false)
 		},
