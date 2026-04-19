@@ -29,6 +29,7 @@ func (self *App) SceneEditNote(
 		func() fyne.CanvasObject {
 			label := widget.NewLabel("")
 			label.TextStyle.Monospace = true
+			// label.Wrapping = fyne.TextWrapBreak // this does not automatically set the height
 			// label.Alignment = fyne.TextAlignCenter // horizontal alignment
 			return label
 		},
