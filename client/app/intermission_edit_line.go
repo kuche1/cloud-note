@@ -53,7 +53,7 @@ func (self *App) IntermissionEditLine(
 		btnRestoreOriginal.Disable()
 	}
 
-	// TODO: I hate this, there needs to be a way to delete entries from the note edit scene
+	// IMPROVE000: Ideally we would be also able to delete a line from the note edit scene
 	btnDelete := widget.NewButton(
 		"Delete",
 		func() {

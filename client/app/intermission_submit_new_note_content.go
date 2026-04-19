@@ -13,8 +13,8 @@ import (
 // the same note a billion time (perhaps add a setting for this, and when the button is clicked,
 // perform a check weather the content has changed or not)
 func (self *App) IntermissionSubmitNewNoteContent(
+	noteName string,
 	newText string,
-	noteName string, // TODO: this needs to be first
 	callbackSuccess func(),
 ) {
 	previousContent := self.window.Content()

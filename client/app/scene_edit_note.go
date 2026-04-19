@@ -8,8 +8,10 @@ import (
 )
 
 // Eyeball it (not great)
-const _ItemHeightOneLine float32 = 32.296875 // TODO: wow
-const _ItemHeightTwoLines float32 = 47.5     // 45-50
+const _ItemHeightOneLine float32 = 32.296875 // TODO: need to dynamically determine this
+const _ItemHeightTwoLines float32 = 47.5
+
+// TODO: allow for inserting new lines in the middle of the note
 
 // TODO: would be better if we instead got the label regular height and doubled it
 
@@ -122,8 +124,8 @@ func (self *App) SceneEditNote(
 			newContent := note.Content()
 
 			self.IntermissionSubmitNewNoteContent(
-				newContent,
 				noteName,
+				newContent,
 				func() {
 					// noteContent.SetHasNotBeenChanged() // TODO: this is now missing, better reset the whole scene
 					// TODO: actually, there is ScrollTo (I think)

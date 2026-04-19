@@ -58,8 +58,8 @@ func (self *App) SceneEditNoteLegacy(
 		"Submit",
 		func() {
 			self.IntermissionSubmitNewNoteContent(
-				editor.Text,
 				noteName,
+				editor.Text,
 				func() {
 					previousText = editor.Text
 					self.window.Focus(editor)
