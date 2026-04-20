@@ -10,8 +10,6 @@ import (
 const _ItemHeightOneLine float32 = 32.296875 // IMPROVE001: Ideally we would dynamically get this value HOWEVER this actually seems to be good enough for both desktop and phone so I'll keep it as is
 const _ItemHeightTwoLines float32 = 47.5
 
-// TODO: allow for inserting new lines in the middle of the note
-
 func (self *App) SceneEditNote(
 	noteName string,
 	noteContentStarting string,
