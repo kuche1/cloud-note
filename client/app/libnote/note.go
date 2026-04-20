@@ -98,15 +98,25 @@ func (self *Note) Content() string {
 }
 
 func (self *Note) AddLineTop() {
-	self.lines = append(
-		[]*Line{_NewLine("", false)},
-		self.lines...,
-	)
+	self.InsertLine(0)
+	// self.lines = append(
+	// 	[]*Line{_NewLine("", false)},
+	// 	self.lines...,
+	// )
 }
 
 func (self *Note) AddLineBot() {
-	self.lines = append(
+	self.InsertLine(len(self.lines))
+	// self.lines = append(
+	// 	self.lines,
+	// 	_NewLine("", false),
+	// )
+}
+
+func (self *Note) InsertLine(index int) {
+	self.lines = slices.Insert(
 		self.lines,
+		index,
 		_NewLine("", false),
 	)
 }

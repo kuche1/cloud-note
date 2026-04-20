@@ -19,6 +19,20 @@ func (self *App) SceneEditNote(
 	// noteContent := notecontent.NewNoteContent(noteContentStarting)
 	note := libnote.NewNote(noteContentStarting)
 
+	toggleInsertLineAbove := widget.NewCheck(
+		"Insert Line Above",
+		func(bool) {
+			// TODO
+		},
+	)
+
+	toggleInsertLineBelow := widget.NewCheck(
+		"Insert Line Below",
+		func(bool) {
+			// TODO
+		},
+	)
+
 	var editor *widget.List
 
 	editor = widget.NewList(
@@ -58,6 +72,24 @@ func (self *App) SceneEditNote(
 
 	editor.OnSelected = func(index widget.ListItemID) {
 		editor.UnselectAll()
+
+		requestWasInsertLine := false
+
+		if toggleInsertLineBelow.Checked {
+			// first do this so that it doesnt mess with the indexes
+			requestWasInsertLine = true
+			note.InsertLine(index + 1)
+		}
+
+		if toggleInsertLineAbove.Checked {
+			requestWasInsertLine = true
+			note.InsertLine(index)
+		}
+
+		if requestWasInsertLine {
+			editor.Refresh()
+			return
+		}
 
 		contentCurrent, _ := note.LineContent(index)
 		// we can forbid editing of notes that do not exist
@@ -136,8 +168,8 @@ func (self *App) SceneEditNote(
 
 	containerButtons := container.NewGridWithColumns(
 		2,
-		cancel,
-		submit,
+		cancel, submit,
+		toggleInsertLineAbove, toggleInsertLineBelow,
 	)
 
 	containerTop := container.NewVBox(
