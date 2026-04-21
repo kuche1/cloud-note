@@ -6,7 +6,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 )
 
@@ -27,7 +26,7 @@ func (self *App) SceneCreateNewNote() {
 			go func() {
 				newNoteName := entry.Text
 
-				err := action.ActionCreateNewNote(newNoteName, self.window, output, self.settings)
+				err := self.net.ActionCreateNewNote(newNoteName, self.window, output, self.settings)
 				if err != nil {
 					self.ScenePanic(fmt.Sprintf("Could not create new note:\n%v", err))
 					return

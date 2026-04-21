@@ -1,24 +1,21 @@
-package action
+package net
 
 import (
-	"fmt"
-
-	"github.com/kuche1/cloud-note/client/config"
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionGetNoteContent(
+func (self *Net) ActionCreateNewNote(
+	newNoteName string,
 	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
-	noteName string,
-) ([]byte, error) {
+) error {
 	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer func() {
 		output.Println("Closing stream...")
@@ -30,27 +27,26 @@ func ActionGetNoteContent(
 
 	output.Println("Sending action...")
 
-	err = lib.StreamSendAction(stream, lib.ActionGetNoteContent)
+	err = lib.StreamSendAction(stream, lib.ActionCreateNewNote)
 	if err != nil {
-		return nil, fmt.Errorf("Could not send action get note: %v", err)
+		return err
 	}
 
 	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
-	output.Println("Sending note name...")
+	output.Println("Sending new note name...")
 
-	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(noteName))
+	err = lib.ChanSendStringEOF(conn, newNoteName)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	output.Println("Receiving note content...")
+	output.Println("Waiting for ACK...")
 
-	// IMPROVE000: ? Add a loading bar, maybe when sending too
-	data, err := lib.ChanRecvDatalenSliceByteEOF(conn, config.NoteContentsMaxLength)
+	err = lib.ChanRecvEOF(conn)
 	if err != nil {
-		return nil, fmt.Errorf("Could not receive note content:\n%v", err)
+		return err
 	}
 
-	return data, nil
+	return nil
 }

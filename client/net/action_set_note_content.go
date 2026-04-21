@@ -1,17 +1,20 @@
-package action
+package net
 
 import (
+	"fmt"
+
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionDeleteExistingNote(
-	noteName string,
+func (self *Net) ActionSetNoteContent(
 	window *window.Window,
 	output output.Output,
+	newText string,
 	settings *settings.Settings,
+	noteName string,
 ) error {
 	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
@@ -25,27 +28,34 @@ func ActionDeleteExistingNote(
 		output.Println("Done")
 	}()
 
-	output.Println("Sending action...")
+	output.Println("Sending action set note...")
 
-	err = lib.StreamSendAction(stream, lib.ActionDeleteExistingNote)
+	err = lib.StreamSendAction(stream, lib.ActionSetNoteContent)
 	if err != nil {
-		return err
+		return fmt.Errorf("Could not send action set note: %v", err)
 	}
 
 	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
-	output.Println("Sending new note name...")
+	output.Println("Sending note name...")
 
 	err = lib.ChanSendStringEOF(conn, noteName)
 	if err != nil {
 		return err
 	}
 
-	output.Println("Waiting for ACK...")
+	output.Println("Sending note content...")
+
+	err = lib.ChanSendStringEOF(conn, newText)
+	if err != nil {
+		return fmt.Errorf("Could not send new note content:\n%v", err)
+	}
+
+	output.Println("Receiving save confirmation...")
 
 	err = lib.ChanRecvEOF(conn)
 	if err != nil {
-		return err
+		return fmt.Errorf("Did not receive save confirmation:\n%v", err)
 	}
 
 	return nil

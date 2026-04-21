@@ -7,7 +7,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 )
 
@@ -19,7 +18,7 @@ func (self *App) SceneSelectNote() {
 }
 
 func fetchNotes(app *App, output output.Output) {
-	notes, err := action.ActionListNotes(app.window, output, app.settings)
+	notes, err := app.net.ActionListNotes(app.window, output, app.settings)
 	if err != nil {
 		app.ScenePanic(fmt.Sprintf("Could not fetch notes: %v", err))
 		return

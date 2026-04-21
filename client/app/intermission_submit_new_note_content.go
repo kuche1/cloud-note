@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"fyne.io/fyne/v2"
-	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 )
 
@@ -25,7 +24,7 @@ func (self *App) IntermissionSubmitNewNoteContent(
 	go func() {
 		message := "Upload Successful"
 
-		err := action.ActionSetNoteContent(self.window, output, newText, self.settings, noteName)
+		err := self.net.ActionSetNoteContent(self.window, output, newText, self.settings, noteName)
 		if err != nil {
 			message = fmt.Sprintf("Could not set note content:\n%v", err)
 		}

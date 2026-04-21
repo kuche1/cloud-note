@@ -1,4 +1,4 @@
-package action
+package net
 
 import (
 	"github.com/kuche1/cloud-note/client/output"
@@ -7,8 +7,7 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionCreateNewNote(
-	newNoteName string,
+func (self *Net) ActionPing(
 	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
@@ -25,21 +24,14 @@ func ActionCreateNewNote(
 		output.Println("Done")
 	}()
 
-	output.Println("Sending action...")
+	output.Println("Sending ping...")
 
-	err = lib.StreamSendAction(stream, lib.ActionCreateNewNote)
+	err = lib.StreamSendAction(stream, lib.ActionPing)
 	if err != nil {
 		return err
 	}
 
 	lib.StreamSendEOFUnchecked(stream) // TODO: not great
-
-	output.Println("Sending new note name...")
-
-	err = lib.ChanSendStringEOF(conn, newNoteName)
-	if err != nil {
-		return err
-	}
 
 	output.Println("Waiting for ACK...")
 

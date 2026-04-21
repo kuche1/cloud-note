@@ -6,6 +6,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"github.com/kuche1/cloud-note/client/app/theme"
+	"github.com/kuche1/cloud-note/client/net"
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 )
@@ -14,6 +15,7 @@ type App struct {
 	app      fyne.App
 	window   *window.Window
 	settings *settings.Settings
+	net      *net.Net
 }
 
 func RunApp() {
@@ -29,6 +31,7 @@ func RunApp() {
 		app:      app,
 		window:   windo,
 		settings: settings.Settings{}.NewFromDefaults(app.Storage().RootURI().Path()),
+		net:      net.NewNet(),
 	}
 
 	self.FirstScene()

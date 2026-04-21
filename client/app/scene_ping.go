@@ -6,7 +6,6 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
-	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 )
 
@@ -15,7 +14,7 @@ func (self *App) ScenePing() {
 	self.window.SetContent(outputWidget)
 
 	go func() {
-		err := action.ActionPing(self.window, output, self.settings)
+		err := self.net.ActionPing(self.window, output, self.settings)
 		if err != nil {
 			pingFailed(self, err)
 			return

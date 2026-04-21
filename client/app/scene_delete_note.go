@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"fyne.io/fyne/v2"
-	"github.com/kuche1/cloud-note/client/action"
 	"github.com/kuche1/cloud-note/client/output"
 )
 
@@ -24,7 +23,7 @@ func (self *App) SceneDeleteNote(noteName string) {
 }
 
 func deleteNote(app *App, noteName string, output output.Output) {
-	err := action.ActionDeleteExistingNote(noteName, app.window, output, app.settings)
+	err := app.net.ActionDeleteExistingNote(noteName, app.window, output, app.settings)
 	if err != nil {
 		fyne.Do(func() {
 			app.IntermissionInfo(
