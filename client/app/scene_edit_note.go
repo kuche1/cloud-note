@@ -19,16 +19,12 @@ func (self *App) SceneEditNote(
 
 	toggleInsertLineAbove := widget.NewCheck(
 		"Insert Line Above",
-		func(bool) {
-			// TODO
-		},
+		func(bool) {},
 	)
 
 	toggleInsertLineBelow := widget.NewCheck(
 		"Insert Line Below",
-		func(bool) {
-			// TODO
-		},
+		func(bool) {},
 	)
 
 	var editor *widget.List

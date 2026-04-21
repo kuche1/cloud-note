@@ -16,11 +16,13 @@ func ActionSetNoteContent(
 	settings *settings.Settings,
 	noteName string,
 ) error {
-	conn, err := connectToServer(window, output, settings)
+	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
 		return err
 	}
 	defer func() {
+		output.Println("Closing stream...")
+		lib.StreamSendEOFUnchecked(stream)
 		output.Println("Closing connection...")
 		lib.ConnSendEOF(conn)
 		output.Println("Done")
@@ -28,10 +30,12 @@ func ActionSetNoteContent(
 
 	output.Println("Sending action set note...")
 
-	err = lib.ChanSendActionEOF(conn, lib.ActionSetNoteContent)
+	err = lib.StreamSendAction(stream, lib.ActionSetNoteContent)
 	if err != nil {
 		return fmt.Errorf("Could not send action set note: %v", err)
 	}
+
+	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
 	output.Println("Sending note name...")
 

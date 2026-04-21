@@ -13,14 +13,12 @@ func (self *App) IntermissionEditLine(
 ) {
 	previousFyneContent := self.window.Content()
 
+	var btnOk *widget.Button
+
 	editor := widget.NewEntry()
 	editor.Text = contentCurrent
 	editor.TextStyle.Monospace = true
-
-	editor.OnSubmitted = func(newContent string) {
-		self.window.SetContent(previousFyneContent)
-		callbackWhenDone(newContent, false)
-	}
+	editor.OnSubmitted = func(string) { btnOk.OnTapped() }
 
 	btnCancel := widget.NewButton(
 		"Cancel",
@@ -32,7 +30,7 @@ func (self *App) IntermissionEditLine(
 		},
 	)
 
-	btnOk := widget.NewButton(
+	btnOk = widget.NewButton(
 		"Ok",
 		func() {
 			self.window.SetContent(previousFyneContent)

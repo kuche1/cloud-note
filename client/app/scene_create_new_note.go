@@ -11,10 +11,12 @@ import (
 )
 
 func (self *App) SceneCreateNewNote() {
+	var ok *widget.Button
+
 	entry := widget.NewEntry()
 	entry.PlaceHolder = "New Note Name"
+	entry.OnSubmitted = func(string) { ok.OnTapped() }
 
-	var ok *widget.Button
 	ok = widget.NewButton(
 		"Ok",
 		func() {

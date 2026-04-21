@@ -13,11 +13,13 @@ func ActionCreateNewNote(
 	output output.Output,
 	settings *settings.Settings,
 ) error {
-	conn, err := connectToServer(window, output, settings)
+	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
 		return err
 	}
 	defer func() {
+		output.Println("Closing stream...")
+		lib.StreamSendEOFUnchecked(stream)
 		output.Println("Closing connection...")
 		lib.ConnSendEOF(conn)
 		output.Println("Done")
@@ -25,10 +27,12 @@ func ActionCreateNewNote(
 
 	output.Println("Sending action...")
 
-	err = lib.ChanSendActionEOF(conn, lib.ActionCreateNewNote)
+	err = lib.StreamSendAction(stream, lib.ActionCreateNewNote)
 	if err != nil {
 		return err
 	}
+
+	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
 	output.Println("Sending new note name...")
 

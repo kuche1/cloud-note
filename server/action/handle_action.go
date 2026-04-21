@@ -1,6 +1,7 @@
 package action
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/kuche1/cloud-note/lib"
@@ -10,7 +11,13 @@ import (
 )
 
 func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	password, err := srvnet.ChanRecvPassword(conn)
+
+	stream, err := conn.AcceptStream(context.Background())
+	if err != nil {
+		return fmt.Errorf("Could not acceept stream: %v", err)
+	}
+
+	password, err := srvnet.StreamRecvPassword(stream)
 	if err != nil {
 		return fmt.Errorf("Could not receive password: %v", err)
 	}
@@ -20,9 +27,14 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
-	action, err := lib.ChanRecvActionEOF(conn)
+	action, err := lib.StreamRecvAction(stream)
 	if err != nil {
-		return fmt.Errorf("Could not receive action: %v", err)
+		return err
+	}
+
+	err = lib.StreamRecvEOF(stream)
+	if err != nil {
+		return err
 	}
 
 	actionFunc := func(conn *quic.Conn, fs *filesystem.Filesystem) error {

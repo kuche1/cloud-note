@@ -12,11 +12,13 @@ func ActionPing(
 	output output.Output,
 	settings *settings.Settings,
 ) error {
-	conn, err := connectToServer(window, output, settings)
+	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
 		return err
 	}
 	defer func() {
+		output.Println("Closing stream...")
+		lib.StreamSendEOFUnchecked(stream)
 		output.Println("Closing connection...")
 		lib.ConnSendEOF(conn)
 		output.Println("Done")
@@ -24,10 +26,12 @@ func ActionPing(
 
 	output.Println("Sending ping...")
 
-	err = lib.ChanSendActionEOF(conn, lib.ActionPing)
+	err = lib.StreamSendAction(stream, lib.ActionPing)
 	if err != nil {
 		return err
 	}
+
+	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
 	output.Println("Waiting for ACK...")
 

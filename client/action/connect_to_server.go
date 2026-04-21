@@ -16,7 +16,7 @@ func connectToServer(
 	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
-) (_conn *quic.Conn, _err error) {
+) (_conn *quic.Conn, _stream *quic.Stream, _err error) {
 	output.Println("Connecting to server...")
 
 	conn, err := quic.DialAddr(
@@ -39,17 +39,25 @@ func connectToServer(
 			return connectToServer(window, output, settings)
 		}
 
-		return nil, retErr
-	}
-
-	output.Println("Sending password...")
-
-	err = lib.ChanSendStringEOF(conn, settings.ServerPassword)
-	if err != nil {
-		return nil, fmt.Errorf("Could not send password to server:\n%v", err)
+		return nil, nil, retErr
 	}
 
 	output.Println("Connected!")
 
-	return conn, nil
+	output.Println("Sending password...")
+
+	stream, err := conn.OpenStream()
+	if err != nil {
+		return nil, nil, fmt.Errorf("Could not open stream:\n%v", err)
+	}
+
+	err = lib.StreamSendDatalenString(stream, settings.ServerPassword)
+	if err != nil {
+		lib.StreamSendEOFUnchecked(stream)
+		return nil, nil, fmt.Errorf("Could not send password:\n%v", err)
+	}
+
+	output.Println("Sent!")
+
+	return conn, stream, nil
 }

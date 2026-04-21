@@ -10,23 +10,32 @@ import (
 	"github.com/kuche1/cloud-note/lib"
 )
 
-func ActionGetNoteContent(window *window.Window, output output.Output, settings *settings.Settings, noteName string) ([]byte, error) {
-	conn, err := connectToServer(window, output, settings)
+func ActionGetNoteContent(
+	window *window.Window,
+	output output.Output,
+	settings *settings.Settings,
+	noteName string,
+) ([]byte, error) {
+	conn, stream, err := connectToServer(window, output, settings)
 	if err != nil {
 		return nil, err
 	}
 	defer func() {
+		output.Println("Closing stream...")
+		lib.StreamSendEOFUnchecked(stream)
 		output.Println("Closing connection...")
 		lib.ConnSendEOF(conn)
 		output.Println("Done")
 	}()
 
-	output.Println("Sending action get note...")
+	output.Println("Sending action...")
 
-	err = lib.ChanSendActionEOF(conn, lib.ActionGetNoteContent)
+	err = lib.StreamSendAction(stream, lib.ActionGetNoteContent)
 	if err != nil {
 		return nil, fmt.Errorf("Could not send action get note: %v", err)
 	}
+
+	lib.StreamSendEOFUnchecked(stream) // TODO: not great
 
 	output.Println("Sending note name...")
 

@@ -6,6 +6,20 @@ import (
 	"io"
 )
 
+func StreamRecvAction[T io.Reader](stream T) (Action, error) {
+	data, err := StreamRecvUint8(stream)
+	if err != nil {
+		return 0, fmt.Errorf("Could not receive action: %v", err)
+	}
+
+	action, err := Action(0).FromUint8(data)
+	if err != nil {
+		return 0, fmt.Errorf("Could not convert uint8 to action: %v", err)
+	}
+
+	return action, nil
+}
+
 func StreamRecvDatalenString[T io.Reader](stream T, maxLength uint64) (string, error) {
 	data, err := StreamRecvDatalenSliceByte(stream, maxLength)
 	if err != nil {
@@ -53,14 +67,22 @@ func StreamRecvSliceByte[T io.Reader](stream T, length uint64) ([]byte, error) {
 	data := make([]byte, length)
 	// Allocating this on every receive should not be a big deal since
 	// the network should be much slower than the allocation of the memory
+	// (That is to say, IF an actual allocation is performed here)
 
 	buf := data
 	for len(buf) > 0 {
 		read, err := stream.Read(buf)
+
+		// OH MY FUCKING GOD
+		// QUICK RETURNS BOTH `1` AND `EOF` HERE WHAT THE FUCK
+		if read > 0 {
+			buf = buf[read:]
+			continue
+		}
+
 		if err != nil {
 			return nil, err
 		}
-		buf = buf[read:]
 	}
 
 	return data, nil
