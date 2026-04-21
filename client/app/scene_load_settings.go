@@ -34,7 +34,7 @@ func (self *App) SceneLoadSettings() {
 		output.Println("Done!")
 
 		fyne.Do(func() {
-			self.settings.SceneInputMissing(
+			self.settings.SceneInputEssential(
 				self.window,
 				func() { self.ScenePing() },
 			)
