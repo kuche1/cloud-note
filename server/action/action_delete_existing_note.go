@@ -7,8 +7,8 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func actionDeleteExistingNote(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := srvnet.ChanRecvNotenameEOF(conn)
+func actionDeleteExistingNote(conn *quic.Conn, stream *quic.Stream, fs *filesystem.Filesystem) error {
+	noteName, err := srvnet.StreamRecvNotename(stream)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func actionDeleteExistingNote(conn *quic.Conn, fs *filesystem.Filesystem) error 
 		return err
 	}
 
-	err = lib.ChanSendEOF(conn)
+	err = lib.StreamSendACK(stream)
 	if err != nil {
 		return err
 	}

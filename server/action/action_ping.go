@@ -6,8 +6,8 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func actionPing(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	err := lib.ChanSendEOF(conn)
+func actionPing(conn *quic.Conn, stream *quic.Stream, fs *filesystem.Filesystem) error {
+	err := lib.StreamSendACK(stream)
 	if err != nil {
 		return err
 	}

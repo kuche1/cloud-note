@@ -6,6 +6,42 @@ import (
 	"io"
 )
 
+func StreamRecvSliceString[T io.Reader](stream T, sliceMaxLength uint64, stringMaxLength uint64) ([]string, error) {
+	numberOfItems, err := StreamRecvUint64(stream)
+	if err != nil {
+		return nil, err
+	}
+
+	if numberOfItems > sliceMaxLength {
+		return nil, fmt.Errorf("Attempt to receive %v items, whereas the maximum is %v", numberOfItems, sliceMaxLength)
+	}
+
+	data := make([]string, 0, numberOfItems)
+
+	for range numberOfItems {
+		item, err := StreamRecvDatalenString(stream, stringMaxLength)
+		if err != nil {
+			return nil, err
+		}
+		data = append(data, item)
+	}
+
+	return data, nil
+}
+
+func StreamRecvACK[T io.Reader](stream T) error {
+	data, err := StreamRecvUint8(stream)
+	if err != nil {
+		return err
+	}
+
+	if data != ACK {
+		return fmt.Errorf("Did not receive ACK (%v), instead got %v", ACK, data)
+	}
+
+	return nil
+}
+
 func StreamRecvAction[T io.Reader](stream T) (Action, error) {
 	data, err := StreamRecvUint8(stream)
 	if err != nil {

@@ -11,16 +11,16 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func ChanRecvNotenameEOF(conn *quic.Conn) (string, error) {
+func StreamRecvNotename(stream *quic.Stream) (string, error) {
 	// IMPROVE000: Send a readable message for the end user
 	// if the disconnect reason is the length
-	return lib.ChanRecvStringEOF(conn, config.NoteNameMaxLength)
+	return lib.StreamRecvDatalenString(stream, config.NoteNameMaxLength)
 }
 
-func ChanRecvNotecontentEOF(conn *quic.Conn) (string, error) {
+func StreamRecvNotecontent(stream *quic.Stream) (string, error) {
 	// IMPROVE000: Send a readable message for the end user
 	// if the disconnect reason is the length
-	return lib.ChanRecvStringEOF(conn, config.NoteContentsMaxLength)
+	return lib.StreamRecvDatalenString(stream, config.NoteContentsMaxLength)
 }
 
 func StreamRecvPassword(stream *quic.Stream) (string, error) {

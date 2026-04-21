@@ -9,8 +9,8 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := srvnet.ChanRecvNotenameEOF(conn)
+func actionGetNoteContent(conn *quic.Conn, stream *quic.Stream, fs *filesystem.Filesystem) error {
+	noteName, err := srvnet.StreamRecvNotename(stream)
 	if err != nil {
 		return err
 	}
@@ -20,21 +20,10 @@ func actionGetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return fmt.Errorf("Could not read note content: %v", err)
 	}
 
-	err = lib.ChanSendDatalenSliceByteEOF(conn, noteContent)
+	err = lib.StreamSendDatalenSliceByte(stream, noteContent)
 	if err != nil {
 		return fmt.Errorf("Could not send note content: %v", err)
 	}
-
-	// if _, err := os.Stat(config.NoteFile); err != nil {
-	// 	if errors.Is(err, importFs.ErrNotExist) {
-	// 		err = os.WriteFile(config.NoteFile, []byte{}, 0600)
-	// 		if err != nil {
-	// 			return fmt.Errorf("Could not create initial note file: %v", err)
-	// 		}
-	// 	} else {
-	// 		return fmt.Errorf("Could not check for note file's existance: %v", err)
-	// 	}
-	// }
 
 	return nil
 }

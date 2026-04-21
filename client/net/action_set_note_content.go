@@ -16,17 +16,10 @@ func (self *Net) ActionSetNoteContent(
 	settings *settings.Settings,
 	noteName string,
 ) error {
-	conn, stream, err := connectToServer(window, output, settings)
+	stream, err := self.getStream(window, output, settings)
 	if err != nil {
 		return err
 	}
-	defer func() {
-		output.Println("Closing stream...")
-		lib.StreamSendEOFUnchecked(stream)
-		output.Println("Closing connection...")
-		lib.ConnSendEOF(conn)
-		output.Println("Done")
-	}()
 
 	output.Println("Sending action set note...")
 
@@ -35,25 +28,25 @@ func (self *Net) ActionSetNoteContent(
 		return fmt.Errorf("Could not send action set note: %v", err)
 	}
 
-	lib.StreamSendEOFUnchecked(stream) // TODO: not great
+	output.Println("Sent!")
 
 	output.Println("Sending note name...")
 
-	err = lib.ChanSendStringEOF(conn, noteName)
+	err = lib.StreamSendDatalenString(stream, noteName)
 	if err != nil {
 		return err
 	}
 
 	output.Println("Sending note content...")
 
-	err = lib.ChanSendStringEOF(conn, newText)
+	err = lib.StreamSendDatalenString(stream, newText)
 	if err != nil {
 		return fmt.Errorf("Could not send new note content:\n%v", err)
 	}
 
 	output.Println("Receiving save confirmation...")
 
-	err = lib.ChanRecvEOF(conn)
+	err = lib.StreamRecvACK(stream)
 	if err != nil {
 		return fmt.Errorf("Did not receive save confirmation:\n%v", err)
 	}

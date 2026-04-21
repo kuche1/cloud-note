@@ -9,13 +9,13 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	noteName, err := srvnet.ChanRecvNotenameEOF(conn)
+func actionSetNoteContent(conn *quic.Conn, stream *quic.Stream, fs *filesystem.Filesystem) error {
+	noteName, err := srvnet.StreamRecvNotename(stream)
 	if err != nil {
 		return err
 	}
 
-	noteContent, err := srvnet.ChanRecvNotecontentEOF(conn)
+	noteContent, err := srvnet.StreamRecvNotecontent(stream)
 	if err != nil {
 		return fmt.Errorf("Could not receive new note content: %v", err)
 	}
@@ -25,7 +25,7 @@ func actionSetNoteContent(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return fmt.Errorf("Could not write new note content: %v", err)
 	}
 
-	err = lib.ChanSendEOF(conn)
+	err = lib.StreamSendACK(stream)
 	if err != nil {
 		return fmt.Errorf("Could not send save confirmation: %v", err)
 	}

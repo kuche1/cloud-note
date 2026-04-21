@@ -2,17 +2,36 @@ package lib
 
 import (
 	"encoding/binary"
-	"fmt"
 	"io"
 	"log"
 )
+
+func StreamSendSliceString[T io.Writer](stream T, data []string) error {
+	err := StreamSendUint64(stream, uint64(len(data)))
+	if err != nil {
+		return err
+	}
+
+	for _, item := range data {
+		err := StreamSendDatalenString(stream, item)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func StreamSendACK[T io.Writer](stream T) error {
+	return StreamSendUint8(stream, ACK)
+}
 
 func StreamSendAction[T io.Writer](stream T, action Action) error {
 	data := action.ToUint8()
 
 	err := StreamSendUint8(stream, data)
 	if err != nil {
-		return fmt.Errorf("Could not send action: %v", err)
+		return err
 	}
 
 	return nil
@@ -79,6 +98,7 @@ func StreamSendEOF[T io.Closer](stream T) error {
 	return stream.Close()
 }
 
+// TODO: check all callers and then comment
 func StreamSendEOFUnchecked[T io.Closer](stream T) {
 	err := StreamSendEOF(stream)
 	if err != nil {

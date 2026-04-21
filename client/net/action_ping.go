@@ -5,6 +5,7 @@ import (
 	"github.com/kuche1/cloud-note/client/settings"
 	"github.com/kuche1/cloud-note/client/window"
 	"github.com/kuche1/cloud-note/lib"
+	"github.com/quic-go/quic-go"
 )
 
 func (self *Net) ActionPing(
@@ -12,33 +13,35 @@ func (self *Net) ActionPing(
 	output output.Output,
 	settings *settings.Settings,
 ) error {
-	conn, stream, err := connectToServer(window, output, settings)
+	stream, err := self.getStream(window, output, settings)
 	if err != nil {
 		return err
 	}
-	defer func() {
-		output.Println("Closing stream...")
-		lib.StreamSendEOFUnchecked(stream)
-		output.Println("Closing connection...")
-		lib.ConnSendEOF(conn)
-		output.Println("Done")
-	}()
 
+	return self.actionPingCompact(output, stream)
+}
+
+func (self *Net) actionPingCompact(
+	output output.Output,
+	stream *quic.Stream,
+) error {
 	output.Println("Sending ping...")
 
-	err = lib.StreamSendAction(stream, lib.ActionPing)
+	err := lib.StreamSendAction(stream, lib.ActionPing)
 	if err != nil {
 		return err
 	}
 
-	lib.StreamSendEOFUnchecked(stream) // TODO: not great
+	output.Println("Sent!")
 
 	output.Println("Waiting for ACK...")
 
-	err = lib.ChanRecvEOF(conn)
+	err = lib.StreamRecvACK(stream)
 	if err != nil {
 		return err
 	}
+
+	output.Println("Got ACK!")
 
 	return nil
 }

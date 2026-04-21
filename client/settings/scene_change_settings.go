@@ -7,7 +7,7 @@ import (
 	"github.com/kuche1/cloud-note/client/window"
 )
 
-func (self *Settings) SceneChangeSettings(window *window.Window, callbackWhenDone func(previousSceneErr error)) {
+func (self *Settings) SceneChangeSettings(window *window.Window, netRestartFunc func(), callbackWhenDone func(previousSceneErr error)) {
 	widgetServerAddr, getServerAddr := generateWidgetServerAddr(self)
 	widgetServerPassword, getServerPassword := generateWidgetServerPassword(self)
 
@@ -20,6 +20,12 @@ func (self *Settings) SceneChangeSettings(window *window.Window, callbackWhenDon
 			if new := getServerPassword(); new != "" {
 				self.ServerPassword = new
 			}
+
+			// TODO: this is getting complicated
+			// maybe we would need to leave only 1
+			// settings screen (get rid of the "enter seesntials"
+			// and "enter new server address")
+			netRestartFunc()
 
 			err := self.Save()
 

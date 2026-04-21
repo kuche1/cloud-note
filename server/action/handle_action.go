@@ -27,46 +27,47 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
-	action, err := lib.StreamRecvAction(stream)
-	if err != nil {
-		return err
+	for {
+		action, err := lib.StreamRecvAction(stream)
+		if err != nil {
+			return err
+		}
+
+		actionFunc := func(
+			conn *quic.Conn,
+			stream *quic.Stream,
+			fs *filesystem.Filesystem,
+		) error {
+			return fmt.Errorf("Unreachable code reached, there is something wrong with the action dispatch")
+		}
+
+		switch action {
+		case lib.ActionGetNoteContent:
+			actionFunc = actionGetNoteContent
+		case lib.ActionSetNoteContent:
+			actionFunc = actionSetNoteContent
+		case lib.ActionListNotes:
+			actionFunc = actionListNotes
+		case lib.ActionCreateNewNote:
+			actionFunc = actionCreateNewNote
+		case lib.ActionDeleteExistingNote:
+			actionFunc = actionDeleteExistingNote
+		case lib.ActionPing:
+			actionFunc = actionPing
+		default:
+			return fmt.Errorf("Unhandled action: %v", action)
+		}
+
+		err = actionFunc(conn, stream, fs)
+		if err != nil {
+			return fmt.Errorf("Could not execute action with ID %v: %v", action, err)
+		}
+
+		// err = lib.ConnRecvEOF(conn)
+		// if err != nil {
+		// 	return fmt.Errorf("Could not receive connection EOF: %v", err)
+		// }
 	}
 
-	err = lib.StreamRecvEOF(stream)
-	if err != nil {
-		return err
-	}
-
-	actionFunc := func(conn *quic.Conn, fs *filesystem.Filesystem) error {
-		return fmt.Errorf("Unreachable code reached, there is something wrong with the action dispatch")
-	}
-
-	switch action {
-	case lib.ActionGetNoteContent:
-		actionFunc = actionGetNoteContent
-	case lib.ActionSetNoteContent:
-		actionFunc = actionSetNoteContent
-	case lib.ActionListNotes:
-		actionFunc = actionListNotes
-	case lib.ActionCreateNewNote:
-		actionFunc = actionCreateNewNote
-	case lib.ActionDeleteExistingNote:
-		actionFunc = actionDeleteExistingNote
-	case lib.ActionPing:
-		actionFunc = actionPing
-	default:
-		return fmt.Errorf("Unhandled action: %v", action)
-	}
-
-	err = actionFunc(conn, fs)
-	if err != nil {
-		return fmt.Errorf("Could not execute action with ID %v: %v", action, err)
-	}
-
-	err = lib.ConnRecvEOF(conn)
-	if err != nil {
-		return fmt.Errorf("Could not receive connection EOF: %v", err)
-	}
-
-	return nil
+	// return nil
 }

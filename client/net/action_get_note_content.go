@@ -16,30 +16,23 @@ func (self *Net) ActionGetNoteContent(
 	settings *settings.Settings,
 	noteName string,
 ) ([]byte, error) {
-	conn, stream, err := connectToServer(window, output, settings)
+	stream, err := self.getStream(window, output, settings)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		output.Println("Closing stream...")
-		lib.StreamSendEOFUnchecked(stream)
-		output.Println("Closing connection...")
-		lib.ConnSendEOF(conn)
-		output.Println("Done")
-	}()
 
 	output.Println("Sending action...")
 
 	err = lib.StreamSendAction(stream, lib.ActionGetNoteContent)
 	if err != nil {
-		return nil, fmt.Errorf("Could not send action get note: %v", err)
+		return nil, fmt.Errorf("Send action get note content: %v", err)
 	}
 
-	lib.StreamSendEOFUnchecked(stream) // TODO: not great
+	output.Println("Sent!")
 
 	output.Println("Sending note name...")
 
-	err = lib.ChanSendDatalenSliceByteEOF(conn, []byte(noteName))
+	err = lib.StreamSendDatalenString(stream, noteName)
 	if err != nil {
 		return nil, err
 	}
@@ -47,10 +40,12 @@ func (self *Net) ActionGetNoteContent(
 	output.Println("Receiving note content...")
 
 	// IMPROVE000: ? Add a loading bar, maybe when sending too
-	data, err := lib.ChanRecvDatalenSliceByteEOF(conn, config.NoteContentsMaxLength)
+	data, err := lib.StreamRecvDatalenSliceByte(stream, config.NoteContentsMaxLength)
 	if err != nil {
 		return nil, fmt.Errorf("Could not receive note content:\n%v", err)
 	}
+
+	output.Println("Done!")
 
 	return data, nil
 }

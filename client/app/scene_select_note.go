@@ -109,6 +109,7 @@ func sceneSelectNote(app *App, notes []string) {
 		func() {
 			app.settings.SceneChangeSettings(
 				app.window,
+				func() { app.net.Disconnect() },
 				func(previousSceneErr error) {
 					if previousSceneErr != nil {
 						app.ScenePanic(previousSceneErr.Error())

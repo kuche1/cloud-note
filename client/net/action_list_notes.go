@@ -11,17 +11,10 @@ import (
 )
 
 func (self *Net) ActionListNotes(window *window.Window, output output.Output, settings *settings.Settings) ([]string, error) {
-	conn, stream, err := connectToServer(window, output, settings)
+	stream, err := self.getStream(window, output, settings)
 	if err != nil {
 		return nil, err
 	}
-	defer func() {
-		output.Println("Closing stream...")
-		lib.StreamSendEOFUnchecked(stream)
-		output.Println("Closing connection...")
-		lib.ConnSendEOF(conn)
-		output.Println("Done")
-	}()
 
 	output.Println("Sending action list notes...")
 
@@ -30,16 +23,16 @@ func (self *Net) ActionListNotes(window *window.Window, output output.Output, se
 		return nil, fmt.Errorf("Could not send action get note: %v", err)
 	}
 
-	lib.StreamSendEOFUnchecked(stream) // TODO: not great
+	output.Println("Sent!")
 
 	output.Println("Receiving list of notes...")
 
-	notes, err := lib.ChanRecvSliceStringEOF(conn, config.NumberOfNotesMaxLength)
+	notes, err := lib.StreamRecvSliceString(stream, config.NumberOfNotesMaxLength, config.NoteNameMaxLength)
 	if err != nil {
 		return nil, err
 	}
 
-	output.Println("Received list of notes!")
+	output.Println("Done!")
 
 	return notes, nil
 }

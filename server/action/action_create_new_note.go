@@ -7,8 +7,8 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func actionCreateNewNote(conn *quic.Conn, fs *filesystem.Filesystem) error {
-	newNoteName, err := srvnet.ChanRecvNotenameEOF(conn)
+func actionCreateNewNote(conn *quic.Conn, stream *quic.Stream, fs *filesystem.Filesystem) error {
+	newNoteName, err := srvnet.StreamRecvNotename(stream)
 	if err != nil {
 		return err
 	}
@@ -18,7 +18,7 @@ func actionCreateNewNote(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		return err
 	}
 
-	err = lib.ChanSendEOF(conn)
+	err = lib.StreamSendACK(stream)
 	if err != nil {
 		return err
 	}
