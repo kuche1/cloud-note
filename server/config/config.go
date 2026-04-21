@@ -19,3 +19,8 @@ const NoteContentsMaxLength uint64 = 1024 * 1024 * 2
 // We cannot receive as many bytes as the current actual password
 // since this would allow an attacker to deduce the password length
 const PasswordMaxLength uint64 = 32
+
+// If this is too big we allow an attacker to fill our RAM fake
+// connections (even tho SWAP should help in that case) BUT it
+// still might cost some extra little bit of CPU
+const RecvActionDeadline = time.Minute * 5
