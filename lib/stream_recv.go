@@ -45,12 +45,12 @@ func StreamRecvACK[T io.Reader](stream T) error {
 func StreamRecvAction[T io.Reader](stream T) (Action, error) {
 	data, err := StreamRecvUint8(stream)
 	if err != nil {
-		return 0, fmt.Errorf("Could not receive action: %v", err)
+		return 0, err
 	}
 
 	action, err := Action(0).FromUint8(data)
 	if err != nil {
-		return 0, fmt.Errorf("Could not convert uint8 to action: %v", err)
+		return 0, err
 	}
 
 	return action, nil

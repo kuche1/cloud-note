@@ -2,8 +2,10 @@ package action
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"net"
 
 	"github.com/kuche1/cloud-note/lib"
 	"github.com/kuche1/cloud-note/server/config"
@@ -12,10 +14,10 @@ import (
 	"github.com/quic-go/quic-go"
 )
 
-func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
+func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) (_errString error, _errCode quic.ApplicationErrorCode) {
 	stream, err := conn.AcceptStream(context.Background())
 	if err != nil {
-		return fmt.Errorf("Could not acceept stream: %v", err)
+		return fmt.Errorf("Could not acceept stream: %v", err), 0
 	}
 	defer func() {
 		err := stream.Close()
@@ -26,18 +28,27 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 
 	password, err := srvnet.StreamRecvPassword(stream)
 	if err != nil {
-		return fmt.Errorf("Could not receive password: %v", err)
+		return fmt.Errorf("Could not receive password: %v", err), 0
 	}
 
 	err = fs.CheckPassword(password)
 	if err != nil {
-		return err
+		return err, 0
 	}
 
 	for {
 		action, err := recvAction(stream)
+
 		if err != nil {
-			return err
+
+			netErr, ok := errors.AsType[net.Error](err)
+			if ok {
+				if netErr.Timeout() {
+					return err, lib.ErrorCodeTimeoutDuringActionRead
+				}
+			}
+
+			return err, 0
 		}
 
 		actionFunc := func(
@@ -62,12 +73,12 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 		case lib.ActionPing:
 			actionFunc = actionPing
 		default:
-			return fmt.Errorf("Unhandled action: %v", action)
+			return fmt.Errorf("Unhandled action: %v", action), 0
 		}
 
 		err = actionFunc(conn, stream, fs)
 		if err != nil {
-			return fmt.Errorf("Could not execute action with ID %v: %v", action, err)
+			return fmt.Errorf("Could not execute action with ID %v: %v", action, err), 0
 		}
 
 		// err = lib.ConnRecvEOF(conn)
@@ -82,7 +93,7 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) error {
 func recvAction(stream *quic.Stream) (lib.Action, error) {
 	err := lib.DeadlineSet(stream, config.RecvActionDeadline)
 	if err != nil {
-		return 0, fmt.Errorf("Could not set read deadline: %v", err)
+		return 0, err
 	}
 
 	action, err := lib.StreamRecvAction(stream)
@@ -93,7 +104,7 @@ func recvAction(stream *quic.Stream) (lib.Action, error) {
 
 	err = lib.DeadlineClear(stream)
 	if err != nil {
-		return 0, fmt.Errorf("Could not clear deadline: %v", err)
+		return 0, err
 	}
 
 	return action, nil

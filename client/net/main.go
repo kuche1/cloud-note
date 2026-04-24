@@ -38,4 +38,7 @@ func (self *Net) Disconnect() {
 
 func (self *Net) Quit() {
 	// TODO: implement something (?)
+	// careful: if we are to call `Disconnect` it is theoretically
+	// possible that `self.stream` is `nil` and that would cause
+	// a crash
 }

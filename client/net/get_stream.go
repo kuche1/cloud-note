@@ -3,7 +3,6 @@ package net
 import (
 	"context"
 	"crypto/tls"
-	"errors"
 	"fmt"
 
 	"github.com/kuche1/cloud-note/client/output"
@@ -17,44 +16,39 @@ func (self *Net) getStream(
 	window *window.Window,
 	output output.Output,
 	settings *settings.Settings,
+	action lib.Action,
 ) (*quic.Stream, error) {
-	// TODO: And also make it auto-refresh if it has expired
-
 	if self.stream == nil {
 
 		conn, stream, err := connServer(window, output, settings)
 		if err != nil {
+			output.Println("Failure!")
 			return nil, err
 		}
 
 		self.conn = conn
 		self.stream = stream
 
-	} else {
+	}
 
-		// TODO:
-		// 1) I dont like how we have to wait for ACK before our request, ideally
-		//     we would check for timeout elsewhere
-		// 2) this makes the `ActionPing` actually send 2 pings
-		//     (except if we assume that it's only going to get called once at
-		//     startup since the if above does not call `actionPingCompact`)
-		err := self.actionPingCompact(output, self.stream)
-		if err != nil {
+	output.Println("Sending action...")
 
-			_, ok := errors.AsType[*quic.IdleTimeoutError](err)
-			if ok {
-				// remote peer's idle timeout expired
+	err := lib.StreamSendAction(self.stream, action)
 
-				self.Disconnect()
-				// will set `self.conn` and `self.stream` to nil
+	if err != nil {
 
-				return self.getStream(window, output, settings)
-			}
+		if lib.ErrorIsTimeout(err) {
+			self.Disconnect()
+			// will set `self.conn` and `self.stream` to nil
 
-			return nil, err
+			// TODO: we can potentially ented a never-ending timeout loop (or maybe not really)
+			return self.getStream(window, output, settings, action)
 		}
 
+		return nil, err
 	}
+
+	output.Println("Sent!")
 
 	return self.stream, nil
 }
