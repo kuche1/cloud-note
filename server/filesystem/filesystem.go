@@ -212,3 +212,30 @@ func (self *Filesystem) FileDeleteExisting(unsafePath string) error {
 
 	return nil
 }
+
+func (self *Filesystem) FileRename(unsafePathOld string, unsafePathNew string) error {
+	pathOld, _, err := self.makePathLocal(unsafePathOld)
+	if err != nil {
+		return err
+	}
+
+	pathNew, _, err := self.makePathLocal(unsafePathNew)
+	if err != nil {
+		return err
+	}
+
+	self.lock.Lock()
+	defer self.lock.Unlock()
+
+	_, err = os.Stat(pathNew)
+	if err == nil {
+		return fmt.Errorf("Destination already exists")
+	}
+
+	err = os.Rename(pathOld, pathNew)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

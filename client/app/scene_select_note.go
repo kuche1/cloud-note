@@ -91,6 +91,24 @@ func sceneSelectNote(app *App, notes []string) {
 		},
 	)
 
+	renameNote := widget.NewButton(
+		"Rename Note",
+		func() {
+			selection := list.Selected
+			if selection == "" {
+				return
+			}
+			app.settings.SetLastEditedNote(selection)
+
+			app.SceneRenameNote(
+				selection,
+				func(newName string) {
+					app.settings.SetLastEditedNote(newName)
+				},
+			)
+		},
+	)
+
 	deleteNote := widget.NewButton(
 		"Delete Note",
 		func() {
@@ -139,6 +157,8 @@ func sceneSelectNote(app *App, notes []string) {
 			widget.NewLabel(""),
 			widget.NewSeparator(),
 			newNote,
+			widget.NewSeparator(),
+			renameNote,
 			widget.NewSeparator(),
 			deleteNote,
 			widget.NewSeparator(),
