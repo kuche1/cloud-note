@@ -59,15 +59,23 @@ func renameNotePart2(oldName string, newName string, callbackSuccess func(), app
 }
 
 func renameNotePart3(oldName string, newName string, callbackSuccess func(), app *App, output output.Output) {
-	err := app.net.ActionRenameNote(oldName, newName, app.window, output, app.settings)
+	refusal, err := app.net.ActionRenameNote(oldName, newName, app.window, output, app.settings)
+
 	if err != nil {
+		fyne.Do(func() {
+			app.ScenePanic(err.Error())
+		})
+		return
+	}
+
+	if len(refusal) > 0 {
 		fyne.Do(func() {
 			app.IntermissionInfo(
 				fmt.Sprintf(
 					"Could not rename note\n%v\nto\n%v\n\nReason:\n%v",
 					oldName,
 					newName,
-					err,
+					refusal,
 				),
 				func() { app.SceneSelectNote() },
 			)

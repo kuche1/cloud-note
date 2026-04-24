@@ -22,21 +22,6 @@ func StreamSendSliceString[T io.Writer](stream T, data []string) error {
 	return nil
 }
 
-func StreamSendACK[T io.Writer](stream T) error {
-	return StreamSendUint8(stream, ACK)
-}
-
-func StreamSendAction[T io.Writer](stream T, action Action) error {
-	data := action.ToUint8()
-
-	err := StreamSendUint8(stream, data)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func StreamSendDatalenString[T io.Writer](stream T, data string) error {
 	return StreamSendDatalenSliceByte(stream, []byte(data))
 }
@@ -50,11 +35,6 @@ func StreamSendDatalenSliceByte[T io.Writer](stream T, data []byte) error {
 	StreamSendSliceByte(stream, data)
 
 	return nil
-}
-
-func StreamSendUint8[T io.Writer](stream T, data uint8) error {
-	buf := []byte{data}
-	return StreamSendSliceByte(stream, buf)
 }
 
 func StreamSendUint64[T io.Writer](stream T, data uint64) error {

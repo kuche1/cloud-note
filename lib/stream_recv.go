@@ -29,33 +29,6 @@ func StreamRecvSliceString[T io.Reader](stream T, sliceMaxLength uint64, stringM
 	return data, nil
 }
 
-func StreamRecvACK[T io.Reader](stream T) error {
-	data, err := StreamRecvUint8(stream)
-	if err != nil {
-		return err
-	}
-
-	if data != ACK {
-		return fmt.Errorf("Did not receive ACK (%v), instead got %v", ACK, data)
-	}
-
-	return nil
-}
-
-func StreamRecvAction[T io.Reader](stream T) (Action, error) {
-	data, err := StreamRecvUint8(stream)
-	if err != nil {
-		return 0, err
-	}
-
-	action, err := Action(0).FromUint8(data)
-	if err != nil {
-		return 0, err
-	}
-
-	return action, nil
-}
-
 func StreamRecvDatalenString[T io.Reader](stream T, maxLength uint64) (string, error) {
 	data, err := StreamRecvDatalenSliceByte(stream, maxLength)
 	if err != nil {
@@ -80,14 +53,6 @@ func StreamRecvDatalenSliceByte[T io.Reader](stream T, maxLength uint64) ([]byte
 	}
 
 	return data, nil
-}
-
-func StreamRecvUint8[T io.Reader](stream T) (uint8, error) {
-	buf, err := StreamRecvSliceByte(stream, 1)
-	if err != nil {
-		return 0, err
-	}
-	return buf[0], nil
 }
 
 func StreamRecvUint64[T io.Reader](stream T) (uint64, error) {

@@ -5,3 +5,4 @@ package config
 const NoteNameMaxLength uint64 = 512 * 2
 const NoteContentsMaxLength uint64 = 1024 * 1024 * 2 * 2
 const NumberOfNotesMaxLength uint64 = 512
+const NotOkRefusalReasonMaxLength uint64 = 1024
