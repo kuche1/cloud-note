@@ -22,11 +22,16 @@ func (self *App) IntermissionSubmitNewNoteContent(
 	self.window.SetContent(outputWidget)
 
 	go func() {
-		message := "Upload Successful"
+		failure := ""
 
 		err := self.net.ActionSetNoteContent(self.window, output, newText, self.settings, noteName)
 		if err != nil {
-			message = fmt.Sprintf("Could not set note content:\n%v", err)
+			failure = fmt.Sprintf("Could not set note content:\n%v", err)
+		}
+
+		message := "Upload Successful"
+		if len(failure) > 0 {
+			message = failure
 		}
 
 		fyne.Do(func() {
@@ -34,7 +39,9 @@ func (self *App) IntermissionSubmitNewNoteContent(
 				message,
 				func() {
 					self.window.SetContent(previousContent)
-					callbackSuccess()
+					if len(failure) == 0 {
+						callbackSuccess()
+					}
 				},
 			)
 		})
