@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
+	"time"
 
 	"github.com/kuche1/cloud-note/client/output"
 	"github.com/kuche1/cloud-note/client/settings"
@@ -37,7 +38,7 @@ func (self *Net) getStream(
 
 	if err != nil {
 
-		if lib.ErrorIsTimeout(err) {
+		if lib.ErrorIsTimeout(err) { // TODO: I don't know if this makes any sense anymore
 			self.Disconnect()
 			// will set `self.conn` and `self.stream` to nil
 
@@ -60,6 +61,14 @@ func connServer(
 ) (_conn *quic.Conn, _stream *quic.Stream, _err error) {
 	output.Println("Connecting to server...")
 
+	quicConfig := &quic.Config{
+		// why set this to something enormously big:
+		// the actual interval for sending the keep-alive packets is supposed
+		// to be the minimum of this value and 1/2 of the server's timeout
+		// value (which is supposed to get transmitted during the handshake)
+		KeepAlivePeriod: time.Hour * 24,
+	}
+
 	conn, err := quic.DialAddr(
 		context.Background(),
 		settings.ServerAddr,
@@ -67,7 +76,7 @@ func connServer(
 			InsecureSkipVerify: true,
 			NextProtos:         []string{lib.QuicProto},
 		},
-		nil,
+		quicConfig,
 	)
 	if err != nil {
 		retErr := fmt.Errorf("Could not connect to server:\n%v", err)

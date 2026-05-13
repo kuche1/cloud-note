@@ -8,7 +8,6 @@ import (
 	"net"
 
 	"github.com/kuche1/cloud-note/lib"
-	"github.com/kuche1/cloud-note/server/config"
 	"github.com/kuche1/cloud-note/server/filesystem"
 	"github.com/kuche1/cloud-note/server/srvnet"
 	"github.com/quic-go/quic-go"
@@ -93,10 +92,10 @@ func HandleAction(conn *quic.Conn, fs *filesystem.Filesystem) (_errString error,
 }
 
 func recvAction(stream *quic.Stream) (lib.Action, error) {
-	err := lib.DeadlineSet(stream, config.RecvActionDeadline)
-	if err != nil {
-		return 0, err
-	}
+	// err := lib.DeadlineSet(stream, config.RecvActionDeadline)
+	// if err != nil {
+	// 	return 0, err
+	// }
 
 	action, err := lib.StreamRecvAction(stream)
 
@@ -104,10 +103,10 @@ func recvAction(stream *quic.Stream) (lib.Action, error) {
 		return 0, err
 	}
 
-	err = lib.DeadlineClear(stream)
-	if err != nil {
-		return 0, err
-	}
+	// err = lib.DeadlineClear(stream)
+	// if err != nil {
+	// 	return 0, err
+	// }
 
 	return action, nil
 }

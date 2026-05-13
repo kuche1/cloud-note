@@ -14,7 +14,11 @@ func Main(address string, filesystemStorage string) {
 		log.Fatalf("Could not initialise filesystem interface: %v", err)
 	}
 
-	listener, err := quic.ListenAddr(address, generateTLSConfig(), nil)
+	listener, err := quic.ListenAddr(
+		address,
+		generateTLSConfig(),
+		nil,
+	)
 	if err != nil {
 		log.Fatalf("Could not listen: %v", err)
 	}
