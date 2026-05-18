@@ -40,7 +40,7 @@ func RunApp() {
 
 // Must not rely on `self.ScenePanic`
 func (self *App) Quit() {
-	self.net.Quit()
+	// self.net.Quit()
 
 	self.app.Quit()
 	// NOTE: This causes the GUI to freeze on mobile,

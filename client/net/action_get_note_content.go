@@ -16,10 +16,15 @@ func (self *Net) ActionGetNoteContent(
 	settings *settings.Settings,
 	noteName string,
 ) ([]byte, error) {
-	stream, err := self.getStream(window, output, settings, lib.ActionGetNoteContent)
+	stream, deferStream, err := self.Connect(window, output, settings)
 	if err != nil {
 		return nil, err
 	}
+	defer deferStream()
+
+	output.Println("Sending action...")
+
+	lib.StreamSendAction(stream, lib.ActionGetNoteContent)
 
 	output.Println("Sending note name...")
 

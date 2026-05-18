@@ -13,10 +13,15 @@ func (self *Net) ActionListNotes(
 	output output.Output,
 	settings *settings.Settings,
 ) ([]string, error) {
-	stream, err := self.getStream(window, output, settings, lib.ActionListNotes)
+	stream, deferStream, err := self.Connect(window, output, settings)
 	if err != nil {
 		return nil, err
 	}
+	defer deferStream()
+
+	output.Println("Sending action...")
+
+	lib.StreamSendAction(stream, lib.ActionListNotes)
 
 	output.Println("Receiving list of notes...")
 

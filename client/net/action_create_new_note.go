@@ -13,10 +13,15 @@ func (self *Net) ActionCreateNewNote(
 	output output.Output,
 	settings *settings.Settings,
 ) error {
-	stream, err := self.getStream(window, output, settings, lib.ActionCreateNewNote)
+	stream, deferStream, err := self.Connect(window, output, settings)
 	if err != nil {
 		return err
 	}
+	defer deferStream()
+
+	output.Println("Sending action...")
+
+	lib.StreamSendAction(stream, lib.ActionCreateNewNote)
 
 	output.Println("Sending new note name...")
 

@@ -15,10 +15,15 @@ func (self *Net) ActionRenameNote(
 	output output.Output,
 	settings *settings.Settings,
 ) (_refusal string, _err error) {
-	stream, err := self.getStream(window, output, settings, lib.ActionRenameNote)
+	stream, deferStreaam, err := self.Connect(window, output, settings)
 	if err != nil {
 		return "", err
 	}
+	defer deferStreaam()
+
+	output.Println("Sending action...")
+
+	lib.StreamSendAction(stream, lib.ActionRenameNote)
 
 	output.Println("Sending old name...")
 
